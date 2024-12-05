@@ -42,6 +42,7 @@ const exportWhiteListFromRouter = (router) => {
 	return res
 }
 const whiteList = exportWhiteListFromRouter(whiteListRouters)
+// 每个请求都拦截处理
 router.beforeEach(async (to, from, next) => {
 	NProgress.start()
 	const store = globalStore()
@@ -92,17 +93,14 @@ router.beforeEach(async (to, from, next) => {
 			// 验证menu或则用户信息是否存在，不存在那么就是被删除或者退出或者清理缓存了
 			if (!tool.data.get('MENU') || !tool.data.get('USER_INFO')) {
 				tool.data.remove('TOKEN')
-				next({
-					path: '/login'
-				})
+				next({ path: '/login' })
 				return false
 			}
 		}
 	}
+	// 如果没有登录，则跳转到登陆页面
 	if (!token) {
-		next({
-			path: '/login'
-		})
+		next({ path: '/login' })
 		return false
 	}
 	// 整页路由处理
