@@ -25,7 +25,7 @@ const DEFAULT_SETTINGS = {
 	REQUEST_CACHE: false,
 
 	// 布局 经典：classical，双排菜单：doublerow, 顶栏菜单：top
-	SNOWY_LAYOUT: 'doublerow',
+	SNOWY_LAYOUT: 'classical',
 
 	// 菜单是否折叠
 	SNOWY_MENU_COLLAPSE: false,
