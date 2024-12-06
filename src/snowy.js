@@ -1,5 +1,5 @@
 import * as antdvIcons from '@ant-design/icons-vue'
-import config from './config'
+import config from './config/settings'
 import tool from './utils/tool'
 import { hasPerm } from './utils/permission/index'
 import errorHandler from './utils/errorHandler'

@@ -85,7 +85,6 @@
 	import { useMenuStore } from '@/store/menu'
 	import { userStore } from '@/store/user'
 	import { getLocalHash, checkHash } from '@/utils/version'
-	import sysConfig from '@/config/index'
 	import dictApi from '@/api/dev/dictApi'
 
 	const store = globalStore()

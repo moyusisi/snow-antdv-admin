@@ -1,4 +1,5 @@
-const DEFAULT_CONFIG = {
+// 系统配置
+const DEFAULT_SETTINGS = {
 	// 是否是微服务cloud版本
 	CLOUD_SERVER: false,
 
@@ -91,4 +92,4 @@ const DEFAULT_CONFIG = {
 	}
 }
 
-export default DEFAULT_CONFIG
+export default DEFAULT_SETTINGS

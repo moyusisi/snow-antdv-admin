@@ -1,6 +1,6 @@
 import { generate } from '@ant-design/colors'
 import tool from '../utils/tool'
-import config from '../config'
+import config from '@/config/settings'
 import { themeEnum } from '@/layout/enum/themeEnum'
 
 const changeColor = (newPrimaryColor, theme, darkClass = 'snowy-theme-dark') => {

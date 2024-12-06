@@ -14,7 +14,7 @@ import enGB from 'ant-design-vue/es/locale/en_GB'
 import zh_cn from './lang/zh-cn.js'
 import en from './lang/en.js'
 import tool from '@/utils/tool'
-import sysConfig from '@/config/index'
+import sysConfig from '@/config/settings'
 
 export const messages = {
 	'zh-cn': {

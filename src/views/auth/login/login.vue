@@ -116,7 +116,7 @@
 	import smCrypto from '@/utils/smCrypto'
 	import { required } from '@/utils/formRules'
 	import { afterLogin } from './util'
-	import configData from '@/config'
+	import configData from '@/config/settings'
 	import configApi from '@/api/dev/configApi'
 	import tool from '@/utils/tool'
 	import { globalStore, iframeStore, keepAliveStore, viewTagsStore } from '@/store'

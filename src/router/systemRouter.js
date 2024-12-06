@@ -1,4 +1,4 @@
-import config from '@/config'
+import config from '@/config/settings'
 import tool from '@/utils/tool'
 import routerUtil from '@/utils/routerUtil'
 

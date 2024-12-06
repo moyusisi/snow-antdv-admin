@@ -1,4 +1,4 @@
-import config from '@/config'
+import config from '@/config/settings'
 // 业务自己新加了模块，当然只限制于微服务情况下，单体不用管
 const bizCustomization = [
 	{

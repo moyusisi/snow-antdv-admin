@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { changeColor } from '@/utils/themeUtil'
-import config from '@/config'
+import config from '@/config/settings'
 import { message } from 'ant-design-vue'
 import tool from '@/utils/tool'
 

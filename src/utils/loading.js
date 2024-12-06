@@ -3,7 +3,7 @@
  * @method start 创建 loading
  * @method done 移除 loading
  */
-import sysConfig from '@/config/index'
+import sysConfig from '@/config/settings'
 
 export const NextLoading = {
 	// 创建 loading

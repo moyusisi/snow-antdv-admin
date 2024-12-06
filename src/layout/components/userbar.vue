@@ -62,7 +62,7 @@
 	import Setting from './setting.vue'
 	import router from '@/router'
 	import tool from '@/utils/tool'
-	import config from '@/config/index'
+	import config from '@/config/settings'
 	import loginApi from '@/api/auth/loginApi'
 	import DevUserMessage from './message.vue'
 	import PanelSearch from './panel-search/index.vue'

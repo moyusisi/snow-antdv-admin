@@ -75,7 +75,7 @@
 
 <script setup name="uploadIndex">
 	import tool from '@/utils/tool'
-	import sysConfig from '@/config/index'
+	import sysConfig from '@/config/settings'
 	import { convertUrl } from '@/utils/apiAdaptive'
 	import { message, Upload } from 'ant-design-vue'
 	import { cloneDeep } from 'lodash-es'

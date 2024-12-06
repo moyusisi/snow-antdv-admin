@@ -109,7 +109,7 @@
 				</a-form-item>
 			</a-form>
 			<a-alert
-				message="以上配置可实时预览，开发者可在 config/index.js 中配置默认值，不建议在生产环境下开放布局设置"
+				message="以上配置可实时预览，开发者可在 config/settings.js 中配置默认值，不建议在生产环境下开放布局设置"
 				type="warning"
 			/>
 		</div>

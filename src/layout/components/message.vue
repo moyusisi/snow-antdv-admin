@@ -59,7 +59,7 @@
 	import { message } from 'ant-design-vue'
 	import router from '@/router'
 	import { onMounted } from 'vue'
-	import sysConfig from '@/config'
+	import sysConfig from '@/config/settings'
 	import { convertUrl } from '@/utils/apiAdaptive'
 	import { EventSourcePolyfill } from 'event-source-polyfill'
 	import tool from '@/utils/tool'
