@@ -2,7 +2,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import { Modal, message } from 'ant-design-vue'
-import sysConfig from '@/config/index'
+import sysConfig from '@/config/settings'
 import tool from '@/utils/tool'
 import { convertUrl } from './apiAdaptive'
 
