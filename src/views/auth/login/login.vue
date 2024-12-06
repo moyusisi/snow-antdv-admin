@@ -117,9 +117,8 @@
 	import { required } from '@/utils/formRules'
 	import { afterLogin } from './util'
 	import configData from '@/config/settings'
-	import configApi from '@/api/dev/configApi'
 	import tool from '@/utils/tool'
-	import { globalStore, iframeStore, keepAliveStore, viewTagsStore } from '@/store'
+	import { useGlobalStore, iframeStore, keepAliveStore, viewTagsStore } from '@/store'
 	const { proxy } = getCurrentInstance()
 
 	const activeKey = ref('userAccount')
@@ -154,42 +153,27 @@
 		theme: tool.data.get('APP_THEME') || 'default'
 	})
 
-	const store = globalStore()
+	const store = useGlobalStore()
 	const kStore = keepAliveStore()
 	const iStore = iframeStore()
 	const vStore = viewTagsStore()
 
-	const setSysBaseConfig = store.setSysBaseConfig
 	const clearKeepLive = kStore.clearKeepLive
 	const clearIframeList = iStore.clearIframeList
 	const clearViewTags = vStore.clearViewTags
 
-	const sysBaseConfig = computed(() => {
-		return store.sysBaseConfig
-	})
-
-	onMounted(() => {
-		let formData = ref(configData.SYS_BASE_CONFIG)
-		configApi
-			.configSysBaseList()
-			.then((data) => {
-				if (data) {
-					data.forEach((item) => {
-						formData.value[item.configKey] = item.configValue
-					})
-					captchaOpen.value = formData.value.SNOWY_SYS_DEFAULT_CAPTCHA_OPEN
-					tool.data.set('SNOWY_SYS_BASE_CONFIG', formData.value)
-					setSysBaseConfig(formData.value)
-					refreshSwitch()
-				}
-			})
-			.catch(() => {})
-	})
+	const sysBaseConfig = computed(() => store.sysBaseConfig)
 
 	onBeforeMount(() => {
 		clearViewTags()
 		clearKeepLive()
 		clearIframeList()
+	})
+
+	onMounted(() => {
+		let formData = ref(configData.SYS_BASE_CONFIG)
+		captchaOpen.value = formData.value.SNOWY_SYS_DEFAULT_CAPTCHA_OPEN
+		refreshSwitch()
 	})
 
 	// 监听语言
