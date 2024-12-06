@@ -116,7 +116,7 @@
 	</div>
 </template>
 <script setup>
-	import { colorList } from '@/config/settingConfig'
+	import { colorList } from '@/config/colorConfig'
 	import { themeEnum } from '@/layout/enum/themeEnum'
 	import { layoutEnum } from '@/layout/enum/layoutEnum'
 	import { globalStore } from '@/store'

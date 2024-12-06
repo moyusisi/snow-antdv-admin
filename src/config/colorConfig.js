@@ -1,3 +1,4 @@
+// 颜色配置
 const colorList = [
 	{
 		key: '薄暮',
