@@ -1,7 +1,7 @@
 // 登陆
 export default [
 	{
-		url: '/api/auth/login',
+		url: '/auth/b/doLogin',
 		method: 'post',
 		response: {
 			"code": 200,
@@ -10,7 +10,7 @@ export default [
 		}
 	},
 	{
-		url: '/api/auth/getLoginUser',
+		url: '/auth/b/getLoginUser',
 		method: 'get',
 		response: {
 			"code": 200,
@@ -157,8 +157,8 @@ export default [
 		}
 	},
 	{
-		url: '/api/auth/getLoginMenu',
-		method: 'post',
+		url: '/sys/userCenter/loginMenu',
+		method: 'get',
 		response: {
 			"code": 200,
 			"msg": "操作成功",
