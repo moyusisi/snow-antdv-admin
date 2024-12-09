@@ -25,21 +25,25 @@ const errorCodeMap = {
 const loginBack = ref(false)
 // 创建 axios 实例
 const service = axios.create({
-	baseURL: '/api', // api base_url
+	// baseURL: '/api', // api base_url
+	baseURL: import.meta.env.VITE_API_BASEURL,
 	timeout: sysConfig.TIMEOUT // 请求超时时间
 })
 
 // HTTP request 拦截器
 service.interceptors.request.use(
 	(config) => {
+		// header中携带token
 		const token = tool.data.get('TOKEN')
 		if (token) {
 			config.headers[sysConfig.TOKEN_NAME] = sysConfig.TOKEN_PREFIX + token
 		}
+		// get请求携带时间戳
 		if (!sysConfig.REQUEST_CACHE && config.method === 'get') {
 			config.params = config.params || {}
 			config.params._ = new Date().getTime()
 		}
+		// 携带配置中的固定header
 		Object.assign(config.headers, sysConfig.HEADERS)
 		return config
 	},
@@ -49,7 +53,7 @@ service.interceptors.request.use(
 )
 
 // 保持重新登录Modal的唯一性
-const error = () => {
+const reLogin = () => {
 	loginBack.value = true
 	Modal.error({
 		title: '提示：',
@@ -69,27 +73,24 @@ const error = () => {
 // HTTP response 拦截器
 service.interceptors.response.use(
 	(response) => {
-		// 配置了blob，不处理直接返回文件流
-		if (response.config.responseType === 'blob') {
-			if (response.status === 200) {
-				return response
-			} else {
-				message.warning('文件下载失败或此文件不存在')
-				return
-			}
+		// 二进制数据不处理，直接返回文件流
+		if (response.request.responseType === 'blob') {
+			return response
 		}
-		const data = response.data
-		const code = data.code
-		if (reloadCodes.includes(code)) {
+		// 返回的报文内容
+		const res = response.data
+		// 如果需要重新登陆
+		if (reloadCodes.includes(res.code)) {
 			if (!loginBack.value) {
-				error()
+				reLogin()
 			}
 			return
 		}
-		if (code !== 0) {
+		// 响应code不为0则认为失败
+		if (res.code !== 0) {
 			console.log("网络错误:" + response.config.url)
-			message.error(data.msg || "网络错误")
-			return Promise.reject(data)
+			message.error(res.msg || "网络错误")
+			return Promise.reject(res)
 		} else {
 			// 统一成功提示
 			const functionName = response.config.url.split('/').pop()
@@ -115,11 +116,11 @@ service.interceptors.response.use(
 			apiNameArray.forEach((apiName) => {
 				// 上面去掉接口路径后，方法内包含内置的进行统一提示成功
 				if (functionName.includes(apiName)) {
-					message.success(data.msg)
+					message.success(res.msg)
 				}
 			})
 		}
-		return Promise.resolve(data.data)
+		return Promise.resolve(res.data)
 	},
 	(error) => {
 		if (error) {
@@ -158,6 +159,58 @@ export const baseRequest = (url, value = {}, method = 'post', options = {}) => {
 			...options
 		})
 	}
+}
+
+// 自定义的通用下载方法
+service.download = function download(config) {
+	return service({
+		responseType: 'blob',
+		...config
+	}).then(async response => {
+		if (response.data.type === 'application/json') {
+			const resText = await response.data.text()
+			const res = JSON.parse(resText)
+			Message.error(res.message)
+			return
+		}
+		// 创建一个链接元素用于下载
+		const url = window.URL.createObjectURL(new Blob([response.data]))
+		const link = document.createElement('a')
+		link.href = url
+		// 设置下载文件名
+		link.setAttribute('download', 'moyu.zip')
+		document.body.appendChild(link)
+		link.click()
+		// 清理并移除链接元素
+		document.body.removeChild(link)
+		window.URL.revokeObjectURL(url)
+	}).catch(err => {
+		console.error(err)
+		Message.error('下载文件失败！')
+	})
+}
+
+// 提交表单
+service.postForm = function postForm(url, data, config) {
+	// 删除所有的null属性和未定义属性
+	const formData = new FormData()
+	for (const key in data) {
+		if (data[key] != null && typeof (data[key]) !== 'undefined') {
+			formData.append(key, data[key])
+		}
+	}
+	return service.post(url, formData, config)
+}
+
+// 提交Json
+service.postJson = function postJson(url, data, config) {
+	// 删除所有的null属性和未定义属性
+	for (const key in data) {
+		if (data[key] == null || typeof (data[key]) === 'undefined') {
+			delete data[key]
+		}
+	}
+	return service.post(url, data, config)
 }
 
 export default service
