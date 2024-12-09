@@ -167,6 +167,8 @@
 					})
 				}
 			}
+		}).finally(() => {
+			cardLoading.value = false
 		})
 	}
 	// 点击树查询
