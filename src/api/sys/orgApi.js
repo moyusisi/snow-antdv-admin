@@ -11,11 +11,7 @@ const request = (url, ...arg) => baseRequest(`/sys/org/` + url, ...arg)
 export default {
 	// 获取组织树
 	getOrgTree(data) {
-		return service.get({
-			url: '/api/system/org/tree',
-			method: 'get',
-			params: data
-		})
+		return service.get('/api/system/org/tree', { params: data })
 	},
 	// 获取组织分页
 	orgPage(data) {

@@ -30,10 +30,10 @@ export default defineConfig(({ command, mode }) => {
 			port: env.VITE_PORT,
 			proxy: {
 				'/api': {
-					target: env.VITE_API_BASEURL,
-					ws: false,
+					// target: env.VITE_API_BASEURL,
+					target: 'http://127.0.0.1:8080',
 					changeOrigin: true,
-					rewrite: (path) => path.replace(/^\/api/, '')
+					// rewrite: (path) => path.replace(/^\/api/, '')
 				}
 			}
 		},

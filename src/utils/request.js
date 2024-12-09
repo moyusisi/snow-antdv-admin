@@ -43,6 +43,7 @@ service.interceptors.request.use(
 			config.params = config.params || {}
 			config.params._ = new Date().getTime()
 		}
+		console.log('请求URL:', config.url)
 		// 携带配置中的固定header
 		Object.assign(config.headers, sysConfig.HEADERS)
 		return config
