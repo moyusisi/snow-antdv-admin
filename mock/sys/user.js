@@ -4,7 +4,7 @@ export default [
 		url: '/auth/b/doLogin',
 		method: 'post',
 		response: {
-			"code": 200,
+			"code": 0,
 			"msg": "登陆成功",
 			"data": "HTu68uF47pvzQR9ZfnekccntfXdm5oh3"
 		}
@@ -13,7 +13,7 @@ export default [
 		url: '/auth/b/getLoginUser',
 		method: 'get',
 		response: {
-			"code": 200,
+			"code": 0,
 			"msg": "操作成功",
 			"data": {
 				"id": "1543837863788879871",
@@ -160,7 +160,7 @@ export default [
 		url: '/sys/userCenter/loginMenu',
 		method: 'get',
 		response: {
-			"code": 200,
+			"code": 0,
 			"msg": "操作成功",
 			"data": [
 				{

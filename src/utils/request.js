@@ -86,9 +86,9 @@ service.interceptors.response.use(
 			}
 			return
 		}
-		if (code !== 200) {
-			const customErrorMessage = response.config.customErrorMessage
-			message.error(customErrorMessage || data.msg)
+		if (code !== 0) {
+			console.log("网络错误:" + response.config.url)
+			message.error(data.msg || "网络错误")
 			return Promise.reject(data)
 		} else {
 			// 统一成功提示
