@@ -20,17 +20,17 @@ const v3Token = convertLegacyToken.default(mapToken)
 export const r = (...args) => resolve(__dirname, '.', ...args)
 
 export default defineConfig(({ command, mode }) => {
-	const envConfig = loadEnv(mode, './')
+	const env = loadEnv(mode, './')
 	const alias = {
 		'~': `${resolve(__dirname, './')}`,
 		'@/': `${resolve(__dirname, 'src')}/`
 	}
 	return {
 		server: {
-			port: envConfig.VITE_PORT,
+			port: env.VITE_PORT,
 			proxy: {
 				'/api': {
-					target: envConfig.VITE_API_BASEURL,
+					target: env.VITE_API_BASEURL,
 					ws: false,
 					changeOrigin: true,
 					rewrite: (path) => path.replace(/^\/api/, '')
