@@ -96,7 +96,7 @@
 		},
 		{
 			title: '排序',
-			dataIndex: 'sortCode',
+			dataIndex: 'sortNum',
 			width: 100
 		},
 		{

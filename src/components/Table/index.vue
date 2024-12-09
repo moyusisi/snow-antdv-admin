@@ -341,10 +341,10 @@
 		// 获取请求数据
 		const parameter = Object.assign(
 			{
-				current:
+				pageNum:
 					(pagination && pagination.current) || (props.showPagination && data.localPagination.current) || props.pageNum,
-				// 此处后端使用size作为分页参数
-				size:
+				// 此处后端使用pageSize作为分页参数
+				pageSize:
 					(pagination && pagination.pageSize) ||
 					(props.showPagination && data.localPagination.pageSize) ||
 					props.pageSize ||
