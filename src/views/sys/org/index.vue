@@ -136,7 +136,7 @@
 	// 表格查询 返回 Promise 对象
 	const loadData = (parameter) => {
 		loadTreeData()
-		return orgApi.orgPage(Object.assign(parameter, searchFormState.value)).then((res) => {
+		return orgApi.getOrgPage(Object.assign(parameter, searchFormState.value)).then((res) => {
 			return res
 		})
 	}
@@ -158,11 +158,11 @@
 						if (item.parentId === '0') {
 							defaultExpandedKeys.value.push(item.id)
 							// 取到下级ID
-							if (item.children) {
-								item.children.forEach((items) => {
-									defaultExpandedKeys.value.push(items.id)
-								})
-							}
+							// if (item.children) {
+							// 	item.children.forEach((items) => {
+							// 		defaultExpandedKeys.value.push(items.id)
+							// 	})
+							// }
 						}
 					})
 				}

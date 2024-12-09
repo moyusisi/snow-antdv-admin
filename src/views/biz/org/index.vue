@@ -91,6 +91,7 @@
 	import { isEmpty } from 'lodash-es'
 	import bizOrgApi from '@/api/biz/bizOrgApi'
 	import Form from './form.vue'
+	import orgApi from "@/api/sys/orgApi";
 
 	const columns = [
 		{
@@ -157,8 +158,7 @@
 	}
 	// 加载左侧的树
 	const loadTreeData = () => {
-		bizOrgApi
-			.orgTree()
+		orgApi.getOrgTree()
 			.then((res) => {
 				cardLoading.value = false
 				if (res !== null) {
@@ -170,11 +170,11 @@
 							if (item.parentId === '0') {
 								defaultExpandedKeys.value.push(item.id)
 								// 取到下级ID
-								if (item.children) {
-									item.children.forEach((items) => {
-										defaultExpandedKeys.value.push(items.id)
-									})
-								}
+								// if (item.children) {
+								// 	item.children.forEach((items) => {
+								// 		defaultExpandedKeys.value.push(items.id)
+								// 	})
+								// }
 							}
 						})
 					}

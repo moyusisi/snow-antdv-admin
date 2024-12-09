@@ -13,6 +13,10 @@ export default {
 	getOrgTree(data) {
 		return service.get('/api/system/org/tree', { params: data })
 	},
+	// 分页获取组织列表
+	getOrgPage(data) {
+		return service.postJson('/api/system/org/list', data, 'get')
+	},
 	// 获取组织分页
 	orgPage(data) {
 		return request('page', data, 'get')
