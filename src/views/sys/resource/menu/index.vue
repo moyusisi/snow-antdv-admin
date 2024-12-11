@@ -58,30 +58,24 @@
 				</template>
 			</template>
 			<template #bodyCell="{ column, record }">
+				<template v-if="column.dataIndex === 'menuType'">
+					<a-tag v-if="record.menuType === 1" color="purple">模块</a-tag>
+					<a-tag v-if="record.menuType === 2" color="blue">目录</a-tag>
+					<a-tag v-if="record.menuType === 3" color="cyan">菜单</a-tag>
+					<a-tag v-if="record.menuType === 4" color="green">按钮</a-tag>
+					<a-tag v-if="record.menuType === 5" color="orange">链接</a-tag>
+				</template>
 				<template v-if="column.dataIndex === 'path'">
-					<span v-if="record.menuType === 'MENU'">{{ record.path }}</span>
-					<span v-else>-</span>
+					<a-tag v-if="record.path" :bordered="false">{{ record.path }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'component'">
-					<span v-if="record.menuType === 'MENU'">{{ record.component }}</span>
-					<span v-else>-</span>
+					<a-tag v-if="record.path" :bordered="false">{{ record.component }}</a-tag>
+				</template>
+				<template v-if="column.dataIndex === 'permission'">
+					<a-tag v-if="record.permission" :bordered="false">{{ record.permission }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'icon'">
-					<component :is="record.icon" />
-				</template>
-				<template v-if="column.dataIndex === 'menuType'">
-					<a-tag v-if="record.menuType === 'CATALOG'" color="cyan">
-						{{ $TOOL.dictTypeData('MENU_TYPE', record.menuType) }}
-					</a-tag>
-					<a-tag v-if="record.menuType === 'MENU'" color="blue">
-						{{ $TOOL.dictTypeData('MENU_TYPE', record.menuType) }}
-					</a-tag>
-					<a-tag v-if="record.menuType === 'IFRAME'" color="purple">
-						{{ $TOOL.dictTypeData('MENU_TYPE', record.menuType) }}
-					</a-tag>
-					<a-tag v-if="record.menuType === 'LINK'" color="orange">
-						{{ $TOOL.dictTypeData('MENU_TYPE', record.menuType) }}
-					</a-tag>
+					<component v-if="record.icon && record.icon !== '#'" :is="record.icon" />
 				</template>
 				<template v-if="column.dataIndex === 'visible'">
 					<a-tag v-if="record.visible === 'FALSE'">
@@ -152,14 +146,14 @@
 			dataIndex: 'name'
 		},
 		{
-			title: '图标',
-			dataIndex: 'icon',
-			width: 100
-		},
-		{
 			title: '类型',
 			dataIndex: 'menuType',
-			width: 100
+			width: 80
+		},
+		{
+			title: '图标',
+			dataIndex: 'icon',
+			width: 60
 		},
 		{
 			title: '路由地址',
@@ -182,13 +176,13 @@
 		{
 			title: '是否可见',
 			dataIndex: 'visible',
-			width: 120
+			width: 100
 		},
 		{
 			title: '排序',
-			dataIndex: 'sortNum',
+			dataIndex: 'weight',
 			sorter: true,
-			width: 100
+			width: 80
 		},
 		{
 			title: '操作',
