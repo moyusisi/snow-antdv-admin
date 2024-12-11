@@ -216,7 +216,7 @@
 		if (!moduleType.value) {
 			return menuApi2.menuList({ "menuType": 1 }).then((data) => {
 				moduleTypeList.value = data
-				moduleType.value = data.length > 0 ? data[0].id : ''
+				moduleType.value = data.length > 0 ? data[0].code : ''
 				searchFormState.value.module = moduleType.value
 				return menuApi2.menuTree(Object.assign(parameter, searchFormState.value)).then((data) => {
 					if (data) {
