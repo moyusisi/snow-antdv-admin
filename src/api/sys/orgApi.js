@@ -11,11 +11,11 @@ const request = (url, ...arg) => baseRequest(`/sys/org/` + url, ...arg)
 export default {
 	// 获取组织树
 	getOrgTree(data) {
-		return service.get('/api/system/org/tree', { params: data })
+		return service.get('/api/sys/org/tree', { params: data })
 	},
 	// 分页获取组织列表
 	getOrgPage(data) {
-		return service.postJson('/api/system/org/list', data, 'get')
+		return service.postJson('/api/sys/org/list', data)
 	},
 	// 获取组织分页
 	orgPage(data) {
