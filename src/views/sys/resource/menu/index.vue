@@ -75,7 +75,10 @@
 					<a-tag v-if="record.permission" :bordered="false">{{ record.permission }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'icon'">
-					<component v-if="record.icon && record.icon !== '#'" :is="record.icon" />
+					<span v-if="record.icon && record.icon !== '#'" >
+						<component :is="record.icon"/>
+					</span>
+					<span v-else />
 				</template>
 				<template v-if="column.dataIndex === 'visible'">
 					<a-tag v-if="record.visible === 'FALSE'">
