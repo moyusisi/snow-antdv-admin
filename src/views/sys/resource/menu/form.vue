@@ -6,126 +6,140 @@
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }",
 		@close="onClose"
 	>
-<!--	<xn-form-container-->
-<!--		:title="formData.id ? '编辑菜单' : '增加菜单'"-->
-<!--		:width="drawerWidth"-->
-<!--		:visible="visible"-->
-<!--		:destroy-on-close="true"-->
-<!--		@close="onClose"-->
-<!--	>-->
-		<a-alert class="mb-3" message="温馨提示：排序第一为首页！若有多个模块根据授权可见情况而变化。" type="warning" />
-		<a-form ref="formRef" :model="formData" :rules="formRules" layout="vertical">
-			<a-row :gutter="16">
-				<a-col :span="12">
-					<a-form-item label="显示名称：" name="title">
-						<a-input v-model:value="formData.title" placeholder="请输入显示名称" allow-clear />
-					</a-form-item>
-				</a-col>
-				<a-col :span="12">
-					<a-form-item label="菜单类型：" name="menuType">
-						<a-radio-group
-							v-model:value="formData.menuType"
-							button-style="solid"
-							:options="categoryOptions"
-							option-type="button"
-						/>
-					</a-form-item>
-				</a-col>
-				<a-col :span="12">
-					<a-form-item label="上级菜单：" name="parentId">
-						<a-tree-select
-							v-model:value="formData.parentId"
-							v-model:treeExpandedKeys="defaultExpandedKeys"
-							class="xn-wd"
-							:dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-							placeholder="请选择上级菜单"
-							allow-clear
-							tree-default-expand-all
-							:tree-data="treeData"
-							:field-names="{
-								children: 'children',
-								label: 'title',
-								value: 'id'
-							}"
-							selectable="false"
-							tree-line
-							@change="parentChange(formData.parentId)"
-						/>
-					</a-form-item>
-				</a-col>
-				<a-col :span="12" v-if="formData.menuType !== 'CATALOG'">
-					<a-form-item name="path">
-						<template #label>
-							<a-tooltip>
-								<template #title>
-									类型为内外链时，输入https开头的链接即可（例：https://xiaonuo.vip）,正常路由前面必须有反斜杠！
-								</template>
-								<question-circle-outlined />
-							</a-tooltip>
-							&nbsp
-							{{ formData.menuType === 'MENU' || formData.menuType === 'CATALOG' ? '路由地址' : 'https链接地址' }}：
-						</template>
-						<a-input v-model:value="formData.path" placeholder="请输入路由地址" allow-clear />
-					</a-form-item>
-				</a-col>
-				<a-col :span="12" v-if="formData.menuType === 'MENU'">
-					<a-form-item name="component">
-						<template #label>
-							<a-tooltip>
-								<template #title> 按规范可设置为代码组件文件夹名称,注：首字母无反斜杠哦！ </template>
-								<question-circle-outlined />
-							</a-tooltip>
-							&nbsp 组件地址：
-						</template>
-						<a-input
-							v-model:value="formData.component"
-							addon-before="src/views/"
-							placeholder="请输入组件地址"
-							allow-clear
-						/>
-					</a-form-item>
-				</a-col>
-				<a-col :span="12" v-if="formData.menuType === 'MENU'">
-					<a-form-item name="name">
-						<template #label>
-							<a-tooltip>
-								<template #title> 按规范可设置为代码组件文件夹名称,注：首字母无反斜杠哦！ </template>
-								<question-circle-outlined />
-							</a-tooltip>
-							&nbsp 别名：
-						</template>
-						<a-input
-							v-model:value="formData.name"
-							addon-before="setup name="
-							placeholder="请输入组件组件中name属性"
-							allow-clear
-						/>
-					</a-form-item>
-				</a-col>
-				<a-col :span="12">
-					<a-form-item label="图标：" name="icon">
-						<a-input v-model:value="formData.icon" class="xn-wdcalc-70" placeholder="请选择图标" allow-clear disabled />
-						<a-button type="primary" @click="iconSelector.showIconModal(formData.icon)">选择</a-button>
-					</a-form-item>
-				</a-col>
-				<a-col :span="12">
-					<a-form-item label="是否可见:" name="visible">
-						<a-radio-group v-model:value="formData.visible" button-style="solid" :options="visibleOptions" />
-					</a-form-item>
-				</a-col>
-				<a-col :span="12">
-					<a-form-item label="排序:" name="sortCode">
-						<a-input-number class="xn-wd" v-model:value="formData.sortCode" :max="100" />
-					</a-form-item>
-				</a-col>
-			</a-row>
+		<a-form ref="formRef" :model="formData" :rules="formRules">
+			<a-card title="基本信息">
+				<a-row :gutter="24">
+					<a-col :span="12">
+						<a-form-item label="显示名称：" name="title" :rules="[required('请输入菜单名称')]">
+							<a-input v-model:value="formData.title" placeholder="请输入显示名称" allow-clear />
+						</a-form-item>
+					</a-col>
+					<a-col :span="12">
+						<a-form-item label="菜单代码：" name="code" :rules="[required('请输入菜单代码')]">
+							<a-input v-model:value="formData.code" placeholder="请输入菜单代码" allow-clear />
+						</a-form-item>
+					</a-col>
+					<a-col :span="12">
+						<a-form-item label="上级菜单：" name="parentId" :rules="[required('请选择上级菜单')]">
+							<a-tree-select
+								v-model:value="formData.parentCode"
+								v-model:treeExpandedKeys="defaultExpandedKeys"
+								class="xn-wd"
+								:dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+								placeholder="请选择上级菜单"
+								allow-clear
+								tree-default-expand-all
+								:tree-data="treeData"
+								:field-names="{ children: 'children', label: 'name', value: 'code' }"
+								selectable="false"
+								tree-line
+								@change="parentChange(formData.parentCode)"
+							/>
+						</a-form-item>
+					</a-col>
+					<a-col :span="12">
+						<a-form-item label="菜单类型：" name="menuType" :rules="[required('请选择菜单类型')]">
+							<a-radio-group v-model:value="formData.menuType" button-style="solid">
+								<!-- 1模块 2目录 3菜单 4按钮 5外链 -->
+								<a-radio-button :value="2">目录</a-radio-button>
+								<a-radio-button :value="3">菜单</a-radio-button>
+								<a-radio-button :value="4">按钮</a-radio-button>
+								<a-radio-button :value="5">外链</a-radio-button>
+							</a-radio-group>
+						</a-form-item>
+					</a-col>
+				</a-row>
+			</a-card>
+			<a-card title="资源信息">
+				<!-- 路由、组件、权限、图标、可见、排序 -->
+				<a-row :gutter="24">
+					<!-- 目录、菜单:路由地址 -->
+					<a-col :span="12" v-if="formData.menuType === 2 || formData.menuType === 3">
+						<a-form-item name="path" :rules="[required('请输入路由地址')]">
+							<template #label>
+								<a-tooltip>
+									<template #title>
+										路由前面必须有反斜杠！
+									</template>
+									<question-circle-outlined />
+								</a-tooltip>
+								&nbsp 路由地址
+							</template>
+							<a-input v-model:value="formData.path" placeholder="请输入路由地址" allow-clear />
+						</a-form-item>
+					</a-col>
+					<!-- 外链:链接地址 -->
+					<a-col :span="12" v-else-if="formData.menuType === 5">
+						<a-form-item name="path" :rules="[required('请输入连接地址')]">
+							<template #label>
+								<a-tooltip>
+									<template #title>
+										链接必须以http(s)开头
+									</template>
+									<question-circle-outlined />
+								</a-tooltip>
+								&nbsp 链接地址
+							</template>
+							<a-input v-model:value="formData.path" placeholder="请输入链接地址" allow-clear />
+						</a-form-item>
+					</a-col>
+					<!-- 菜单:组件地址 -->
+					<a-col :span="12" v-if="formData.menuType === 3">
+						<a-form-item name="component" :rules="[required('请输入组件地址')]">
+							<template #label>
+								<a-tooltip>
+									<template #title> 组件可设置为代码文件夹名称 </template>
+									<question-circle-outlined />
+								</a-tooltip>
+								&nbsp 组件地址：
+							</template>
+							<a-input v-model:value="formData.component" addon-before="src/views/" placeholder="请输入组件地址" allow-clear/>
+						</a-form-item>
+					</a-col>
+					<!-- 按钮:权限标识 -->
+					<a-col :span="12" v-if="formData.menuType === 4">
+						<a-form-item name="permission" :rules="[required('请输入权限标识')]">
+							<template #label>
+								<a-tooltip>
+									<template #title> 权限标识应与后端接口保持一致且用':'分割 </template>
+									<question-circle-outlined />
+								</a-tooltip>
+								&nbsp 权限标识：
+							</template>
+							<a-input v-model:value="formData.permission" placeholder="请输入权限标识" allow-clear/>
+						</a-form-item>
+					</a-col>
+				</a-row>
+				<a-row :gutter="24">
+					<!-- 目录、菜单、外链:图标 -->
+					<a-col :span="12" v-if="formData.menuType === 2 || formData.menuType === 3 || formData.menuType === 5">
+						<a-form-item label="图标：" name="icon">
+							<a-input v-model:value="formData.icon" class="xn-wdcalc-70" placeholder="请选择图标" allow-clear disabled />
+							<a-button type="primary" @click="iconSelector.showIconModal(formData.icon)">选择</a-button>
+						</a-form-item>
+					</a-col>
+					<!-- 目录、菜单、外链:是否可见 -->
+					<a-col :span="12" v-if="formData.menuType === 2 || formData.menuType === 3 || formData.menuType === 5">
+						<a-form-item label="是否可见:" name="visible">
+							<a-radio-group v-model:value="formData.visible" button-style="solid" :options="visibleOptions" />
+						</a-form-item>
+					</a-col>
+				</a-row>
+				<a-row :gutter="24">
+					<!-- 目录、菜单、按钮、外链:排序 -->
+					<a-col :span="12">
+						<a-form-item label="排序:" name="sortCode">
+							<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
+						</a-form-item>
+					</a-col>
+				</a-row>
+			</a-card>
 		</a-form>
 		<template #footer footerStyle="{ float: right }">
 			<a-button class="xn-mr8" @click="onClose">关闭</a-button>
 			<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
 		</template>
 		<Icon-selector ref="iconSelector" @iconCallBack="iconCallBack" />
-<!--	</xn-form-container>-->
 	</a-drawer>
 </template>
 
@@ -171,9 +185,9 @@
 			}
 		} else {
 			formData.value = {
-				menuType: 'MENU',
-				visible: 'TRUE',
-				sortCode: 99
+				menuType: 3,
+				visible: 1,
+				sortNum: 99
 			}
 			formData.value = Object.assign(formData.value, record)
 		}
@@ -231,8 +245,10 @@
 		visible: [required('请选择是否可见')]
 	}
 
-	const categoryOptions = tool.dictList('MENU_TYPE')
-	const visibleOptions = tool.dictList('MENU_VISIBLE')
+	const visibleOptions = [
+		{ label: "可见", value: 1 },
+		{ label: "不可见", value: 0 }
+	]
 	// 验证并提交数据
 	const onSubmit = () => {
 		formRef.value
