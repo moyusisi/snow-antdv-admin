@@ -64,7 +64,10 @@
 <script setup name="sysModule">
 	import Form from './form.vue'
 	import moduleApi from '@/api/sys/resource/moduleApi'
-	const searchFormState = ref({})
+	import menuApi from '@/api/sys/menuApi'
+
+	// menuType=1标识模块
+	const searchFormState = ref({ 'menuType': 1 })
 	const formRef = ref()
 	const searchFormRef = ref()
 	const tableRef = ref()
@@ -72,7 +75,7 @@
 	const columns = [
 		{
 			title: '显示名称',
-			dataIndex: 'title'
+			dataIndex: 'name'
 		},
 		{
 			title: '图标',
@@ -80,7 +83,7 @@
 		},
 		{
 			title: '排序',
-			dataIndex: 'sortCode',
+			dataIndex: 'sortNum',
 			sorter: true
 		},
 		{
@@ -111,9 +114,12 @@
 		}
 	}
 	const loadData = (parameter) => {
-		return moduleApi.modulePage(Object.assign(parameter, searchFormState.value)).then((res) => {
+		return menuApi.menuPage(Object.assign(parameter, searchFormState.value)).then((res) => {
 			return res
 		})
+		// return moduleApi.modulePage(Object.assign(parameter, searchFormState.value)).then((res) => {
+		// 	return res
+		// })
 	}
 	// 重置
 	const reset = () => {

@@ -4,12 +4,12 @@
 			<a-radio-group v-model:value="moduleType" button-style="solid">
 				<a-radio-button
 					v-for="module in moduleTypeList"
-					:key="module.id"
-					:value="module.id"
-					@click="moduleClock(module.id)"
+					:key="module.code"
+					:value="module.code"
+					@click="moduleClick(module.code)"
 				>
 					<component :is="module.icon" />
-					{{ module.title }}</a-radio-button
+					{{ module.name }}</a-radio-button
 				>
 			</a-radio-group>
 			<a-input-search
@@ -132,10 +132,12 @@
 
 <script setup name="sysMenu">
 	import menuApi from '@/api/sys/resource/menuApi'
+	import menuApi2 from '@/api/sys/menuApi'
 	import Form from './form.vue'
 	import ChangeModuleForm from './changeModuleForm.vue'
 	import Button from '../button/index.vue'
 	import { useMenuStore } from '@/store/menu'
+
 	const searchFormState = ref({})
 	const tableRef = ref(null)
 	const formRef = ref()
@@ -147,7 +149,7 @@
 	const columns = [
 		{
 			title: '显示名称',
-			dataIndex: 'title'
+			dataIndex: 'name'
 		},
 		{
 			title: '图标',
@@ -172,13 +174,19 @@
 			width: 150
 		},
 		{
+			title: '权限',
+			dataIndex: 'permission',
+			ellipsis: true,
+			width: 150
+		},
+		{
 			title: '是否可见',
 			dataIndex: 'visible',
 			width: 120
 		},
 		{
 			title: '排序',
-			dataIndex: 'sortCode',
+			dataIndex: 'sortNum',
 			sorter: true,
 			width: 100
 		},
@@ -206,11 +214,11 @@
 	}
 	const loadData = (parameter) => {
 		if (!moduleType.value) {
-			return menuApi.menuModuleSelector().then((data) => {
+			return menuApi2.menuList({ "menuType": 1 }).then((data) => {
 				moduleTypeList.value = data
 				moduleType.value = data.length > 0 ? data[0].id : ''
 				searchFormState.value.module = moduleType.value
-				return menuApi.menuTree(Object.assign(parameter, searchFormState.value)).then((data) => {
+				return menuApi2.menuTree(Object.assign(parameter, searchFormState.value)).then((data) => {
 					if (data) {
 						return data
 					} else {
@@ -219,7 +227,7 @@
 				})
 			})
 		} else {
-			return menuApi.menuTree(Object.assign(parameter, searchFormState.value)).then((data) => {
+			return menuApi2.menuTree(Object.assign(parameter, searchFormState.value)).then((data) => {
 				if (data) {
 					return data
 				} else {
@@ -229,7 +237,7 @@
 		}
 	}
 	// 切换应用标签查询菜单列表
-	const moduleClock = (value) => {
+	const moduleClick = (value) => {
 		searchFormState.value.module = value
 		tableRef.value.refresh(true)
 	}

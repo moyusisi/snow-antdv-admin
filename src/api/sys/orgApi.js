@@ -15,7 +15,7 @@ export default {
 	},
 	// 分页获取组织列表
 	getOrgPage(data) {
-		return service.postJson('/api/sys/org/list', data)
+		return service.postJson('/api/sys/org/page', data)
 	},
 	// 获取组织分页
 	orgPage(data) {
