@@ -1,26 +1,15 @@
 <template>
+	<!-- 上方模块选择 -->
 	<a-card :bordered="false">
 		<a-space>
-			<a-radio-group v-model:value="moduleType" button-style="solid">
-				<a-radio-button
-					v-for="module in moduleTypeList"
-					:key="module.code"
-					:value="module.code"
-					@click="moduleClick(module.code)"
-				>
-					<component :is="module.icon" />
-					{{ module.name }}</a-radio-button
-				>
+			<a-radio-group v-model:value="module" button-style="solid">
+				<a-radio-button v-for="module in moduleList" :key="module.code" :value="module.code" @click="moduleClick(module.code)">
+					<component :is="module.icon" /> {{ module.name }}
+				</a-radio-button>
 			</a-radio-group>
-			<a-input-search
-				v-model:value="searchFormState.searchKey"
-				placeholder="请输入菜单名称关键词"
-				enter-button
-				allowClear
-				@search="onSearch"
-			/>
 		</a-space>
 	</a-card>
+	<!-- 内容区域 -->
 	<a-card :bordered="false" class="mt-2">
 		<s-table
 			ref="tableRef"
@@ -36,9 +25,8 @@
 		>
 			<template #operator class="table-operator">
 				<a-space>
-					<a-button type="primary" @click="formRef.onOpen(undefined, moduleType)">
-						<template #icon><plus-outlined /></template>
-						新增菜单
+					<a-button type="primary" @click="formRef.onOpen(undefined, module)">
+						<template #icon><plus-outlined /></template>新增菜单
 					</a-button>
 					<xn-batch-button
 						buttonName="批量删除"
@@ -49,21 +37,13 @@
 					/>
 				</a-space>
 			</template>
-			<template #headerCell="{ title, column }">
-				<template v-if="column.dataIndex === 'visible'">
-					<a-tooltip>
-						<template #title> 如果将上级目录设置为隐藏，那么上级目录下的菜单都会被隐藏！ </template>
-						<question-circle-outlined />&nbsp {{ title }}
-					</a-tooltip>
-				</template>
-			</template>
 			<template #bodyCell="{ column, record }">
 				<template v-if="column.dataIndex === 'menuType'">
-					<a-tag v-if="record.menuType === 1" color="purple">模块</a-tag>
-					<a-tag v-if="record.menuType === 2" color="blue">目录</a-tag>
-					<a-tag v-if="record.menuType === 3" color="cyan">菜单</a-tag>
-					<a-tag v-if="record.menuType === 4" color="green">按钮</a-tag>
-					<a-tag v-if="record.menuType === 5" color="orange">链接</a-tag>
+					<a-tag v-if="record.menuType === 1" color="orange">模块</a-tag>
+					<a-tag v-if="record.menuType === 2" color="cyan">目录</a-tag>
+					<a-tag v-if="record.menuType === 3" color="blue">菜单</a-tag>
+					<a-tag v-if="record.menuType === 4" color="purple">按钮</a-tag>
+					<a-tag v-if="record.menuType === 5" color="green">链接</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'path'">
 					<a-tag v-if="record.path" :bordered="false">{{ record.path }}</a-tag>
@@ -81,20 +61,13 @@
 					<span v-else />
 				</template>
 				<template v-if="column.dataIndex === 'visible'">
-					<a-tag v-if="record.visible === 'FALSE'">
-						{{ $TOOL.dictTypeData('MENU_VISIBLE', record.visible) }}
-					</a-tag>
-					<a-tag v-else color="green">
-						<span v-if="record.visible === 'TRUE'">
-							{{ $TOOL.dictTypeData('MENU_VISIBLE', record.visible) }}
-						</span>
-						<span v-else> 显示 </span>
-					</a-tag>
+					<a-tag v-if="record.visible === 1" color="green">可见</a-tag>
+					<a-tag v-else>不可见</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
 						<a-tooltip title="编辑">
-							<a-button type="link" size="small" @click="formRef.onOpen(record, moduleType)">
+							<a-button type="link" size="small" @click="formRef.onOpen(record, module)">
 								<template #icon>
 									<FormOutlined/>
 								</template>
@@ -144,13 +117,13 @@
 	import Button from '../button/index.vue'
 	import { useMenuStore } from '@/store/menu'
 
-	const searchFormState = ref({})
-	const tableRef = ref(null)
+	const queryForm = ref({})
+	const tableRef = ref()
 	const formRef = ref()
 	const changeModuleFormRef = ref()
 	const buttonRef = ref()
-	const moduleType = ref()
-	const moduleTypeList = ref([])
+	const module = ref()
+	const moduleList = ref([])
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
 	const columns = [
 		{
@@ -219,12 +192,12 @@
 		}
 	}
 	const loadData = (parameter) => {
-		if (!moduleType.value) {
+		if (!module.value) {
 			return menuApi2.menuList({ "menuType": 1 }).then((data) => {
-				moduleTypeList.value = data
-				moduleType.value = data.length > 0 ? data[0].code : ''
-				searchFormState.value.module = moduleType.value
-				return menuApi2.menuTree(Object.assign(parameter, searchFormState.value)).then((data) => {
+				moduleList.value = data
+				module.value = data.length > 0 ? data[0].code : ''
+				queryForm.value.module = module.value
+				return menuApi2.menuTree(Object.assign(parameter, queryForm.value)).then((data) => {
 					if (data) {
 						return data
 					} else {
@@ -233,7 +206,7 @@
 				})
 			})
 		} else {
-			return menuApi2.menuTree(Object.assign(parameter, searchFormState.value)).then((data) => {
+			return menuApi2.menuTree(Object.assign(parameter, queryForm.value)).then((data) => {
 				if (data) {
 					return data
 				} else {
@@ -244,25 +217,13 @@
 	}
 	// 切换应用标签查询菜单列表
 	const moduleClick = (value) => {
-		searchFormState.value.module = value
+		queryForm.value.module = value
 		tableRef.value.refresh(true)
 	}
 	// 查询
 	const onSearch = () => {
 		tableRef.value.refresh(true)
 	}
-	/* const removeEmptyChildren = (data) => {
-		if (data == null || data.length === 0) return;
-		for (let i = 0; i < data.length; i++) {
-			const item = data[i];
-			if (item.children != null && item.children.length === 0) {
-				item.children = null;
-			} else {
-				removeEmptyChildren(item.children);
-			}
-		}
-		return data;
-	};*/
 	// 删除
 	const deleteMenu = (record) => {
 		let params = [
