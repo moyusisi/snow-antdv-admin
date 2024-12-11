@@ -93,11 +93,18 @@
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
-						<a @click="formRef.onOpen(record, moduleType)">编辑</a>
-						<a-divider type="vertical" />
-						<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(record)">
-							<a-button type="link" danger size="small">删除</a-button>
-						</a-popconfirm>
+						<a-tooltip title="编辑">
+							<a-button type="link" size="small" @click="formRef.onOpen(record, moduleType)">
+								<template #icon>
+									<FormOutlined/>
+								</template>
+							</a-button>
+						</a-tooltip>
+						<a-tooltip title="删除">
+							<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(record)">
+								<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
+							</a-popconfirm>
+						</a-tooltip>
 						<div v-if="record.parentId === '0' || record.menuType === 'MENU'">
 							<a-divider type="vertical" />
 							<a-dropdown>
@@ -128,6 +135,8 @@
 </template>
 
 <script setup name="sysMenu">
+	import { h } from 'vue'
+	import { DeleteOutlined } from '@ant-design/icons-vue'
 	import menuApi from '@/api/sys/resource/menuApi'
 	import menuApi2 from '@/api/sys/menuApi'
 	import Form from './form.vue'
