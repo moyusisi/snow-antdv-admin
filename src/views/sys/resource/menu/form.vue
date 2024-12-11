@@ -1,11 +1,18 @@
 <template>
-	<xn-form-container
+	<a-drawer
+		:open="visible"
 		:title="formData.id ? '编辑菜单' : '增加菜单'"
-		:width="700"
-		:visible="visible"
-		:destroy-on-close="true"
+		:width="drawerWidth"
+		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }",
 		@close="onClose"
 	>
+<!--	<xn-form-container-->
+<!--		:title="formData.id ? '编辑菜单' : '增加菜单'"-->
+<!--		:width="drawerWidth"-->
+<!--		:visible="visible"-->
+<!--		:destroy-on-close="true"-->
+<!--		@close="onClose"-->
+<!--	>-->
 		<a-alert class="mb-3" message="温馨提示：排序第一为首页！若有多个模块根据授权可见情况而变化。" type="warning" />
 		<a-form ref="formRef" :model="formData" :rules="formRules" layout="vertical">
 			<a-row :gutter="16">
@@ -113,12 +120,13 @@
 				</a-col>
 			</a-row>
 		</a-form>
-		<template #footer>
+		<template #footer footerStyle="{ float: right }">
 			<a-button class="xn-mr8" @click="onClose">关闭</a-button>
 			<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
 		</template>
 		<Icon-selector ref="iconSelector" @iconCallBack="iconCallBack" />
-	</xn-form-container>
+<!--	</xn-form-container>-->
+	</a-drawer>
 </template>
 
 <script setup name="sysResourceMenuForm">
@@ -128,6 +136,10 @@
 	import tool from '@/utils/tool'
 	import menuApi from '@/api/sys/resource/menuApi'
 	import IconSelector from '@/components/Selector/iconSelector.vue'
+	import { globalStore } from "@/store";
+
+	const store = globalStore()
+
 	// 默认是关闭状态
 	const visible = ref(false)
 	const emit = defineEmits({ successful: null })
@@ -141,6 +153,11 @@
 	const submitLoading = ref(false)
 	// 模块ID
 	const moduleId = ref('')
+
+	const drawerWidth = computed(() => {
+		return store.menuIsCollapse ? `calc(100% - 80px)` : `calc(100% - 210px)`
+	})
+
 	// 打开抽屉
 	const onOpen = (data, module) => {
 		const record = cloneDeep(data)
