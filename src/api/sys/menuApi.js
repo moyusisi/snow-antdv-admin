@@ -20,6 +20,10 @@ export default {
 	submitAddForm(data) {
 		return service.postJson('/api/sys/menu/add', data)
 	},
+	// 新增菜单
+	submitEditForm(data) {
+		return service.postJson('/api/sys/menu/edit', data)
+	},
 	// 获取菜单详情
 	menuDetail(data) {
 		return service.postJson('/api/sys/menu/detail', data)

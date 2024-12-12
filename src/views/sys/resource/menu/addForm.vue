@@ -10,7 +10,7 @@
 			<a-card title="基本信息">
 				<a-row :gutter="24">
 					<a-col :span="12">
-						<a-form-item label="显示名称：" name="title" :rules="[required('请输入菜单名称')]">
+						<a-form-item label="显示名称：" name="name" :rules="[required('请输入菜单名称')]">
 							<a-input v-model:value="formData.name" placeholder="请输入显示名称" allow-clear />
 						</a-form-item>
 					</a-col>
@@ -40,7 +40,7 @@
 						</a-form-item>
 					</a-col>
 					<a-col :span="12">
-						<a-form-item label="排序:" name="sortCode">
+						<a-form-item label="排序:" name="sortNum">
 							<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
 						</a-form-item>
 					</a-col>
