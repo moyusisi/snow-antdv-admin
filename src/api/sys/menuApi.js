@@ -16,4 +16,16 @@ export default {
 	menuTree(data) {
 		return service.postJson('/api/sys/menu/tree', data)
 	},
+	// 新增菜单
+	submitAddForm(data) {
+		return service.postJson('/api/sys/menu/add', data)
+	},
+	// 获取菜单详情
+	menuDetail(data) {
+		return service.postJson('/api/sys/menu/detail', data)
+	},
+	// 获取菜单树选择器
+	menuTreeSelector(data) {
+		return service.postJson('/api/sys/menu/treeSelector', data)
+	},
 }
