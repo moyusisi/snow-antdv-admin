@@ -11,7 +11,7 @@
 				<a-row :gutter="24">
 					<a-col :span="12">
 						<a-form-item label="显示名称：" name="title" :rules="[required('请输入菜单名称')]">
-							<a-input v-model:value="formData.title" placeholder="请输入显示名称" allow-clear />
+							<a-input v-model:value="formData.name" placeholder="请输入显示名称" allow-clear />
 						</a-form-item>
 					</a-col>
 					<a-form-item label="菜单类型：" name="menuType" :rules="[required('请选择菜单类型')]">
@@ -156,11 +156,10 @@
 	})
 
 	// 打开抽屉
-	const onOpen = (record, moduleCode) => {
+	const onOpen = (node, moduleCode) => {
 		visible.value = true
-		console.log(record)
-		// 获取菜单信息
-		menuApi.menuDetail({ id: record.id }).then((res) => {
+		// 获取菜单信息, node为tree的node，其中的id和parent均为code
+		menuApi.menuDetail({ code: node.id }).then((res) => {
 			formData.value = res
 		})
 		// 获取菜单树并加入顶级节点

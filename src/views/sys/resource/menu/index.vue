@@ -17,7 +17,7 @@
 			:data="loadData"
 			:alert="options.alert.show"
 			bordered
-			:row-key="(record) => record.id"
+			:row-key="(node) => node.id"
 			:show-pagination="false"
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
@@ -37,48 +37,48 @@
 					/>
 				</a-space>
 			</template>
-			<template #bodyCell="{ column, record }">
+			<template #bodyCell="{ column, record : node }">
 				<template v-if="column.dataIndex === 'menuType'">
-					<a-tag v-if="record.menuType === 1" color="orange">模块</a-tag>
-					<a-tag v-if="record.menuType === 2" color="cyan">目录</a-tag>
-					<a-tag v-if="record.menuType === 3" color="blue">菜单</a-tag>
-					<a-tag v-if="record.menuType === 4" color="purple">按钮</a-tag>
-					<a-tag v-if="record.menuType === 5" color="green">链接</a-tag>
+					<a-tag v-if="node.menuType === 1" color="orange">模块</a-tag>
+					<a-tag v-if="node.menuType === 2" color="cyan">目录</a-tag>
+					<a-tag v-if="node.menuType === 3" color="blue">菜单</a-tag>
+					<a-tag v-if="node.menuType === 4" color="purple">按钮</a-tag>
+					<a-tag v-if="node.menuType === 5" color="green">链接</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'path'">
-					<a-tag v-if="record.path" :bordered="false">{{ record.path }}</a-tag>
+					<a-tag v-if="node.path" :bordered="false">{{ node.path }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'component'">
-					<a-tag v-if="record.path" :bordered="false">{{ record.component }}</a-tag>
+					<a-tag v-if="node.path" :bordered="false">{{ node.component }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'permission'">
-					<a-tag v-if="record.permission" :bordered="false">{{ record.permission }}</a-tag>
+					<a-tag v-if="node.permission" :bordered="false">{{ node.permission }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'icon'">
-					<span v-if="record.icon && record.icon !== '#'" >
-						<component :is="record.icon"/>
+					<span v-if="node.icon && node.icon !== '#'" >
+						<component :is="node.icon"/>
 					</span>
 					<span v-else />
 				</template>
 				<template v-if="column.dataIndex === 'visible'">
-					<a-tag v-if="record.visible === 1" color="green">可见</a-tag>
+					<a-tag v-if="node.visible === 1" color="green">可见</a-tag>
 					<a-tag v-else>不可见</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
 						<a-tooltip title="编辑">
-							<a-button type="link" size="small" @click="editFormRef.onOpen(record, module)">
+							<a-button type="link" size="small" @click="editFormRef.onOpen(node, module)">
 								<template #icon>
 									<FormOutlined/>
 								</template>
 							</a-button>
 						</a-tooltip>
 						<a-tooltip title="删除">
-							<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(record)">
+							<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(node)">
 								<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
 							</a-popconfirm>
 						</a-tooltip>
-						<div v-if="record.parentId === '0' || record.menuType === 'MENU'">
+						<div v-if="node.parentId === '0' || node.menuType === 'MENU'">
 							<a-divider type="vertical" />
 							<a-dropdown>
 								<a class="ant-dropdown-link">
@@ -87,11 +87,11 @@
 								</a>
 								<template #overlay>
 									<a-menu>
-										<a-menu-item v-if="record.parentId === '0'">
-											<a @click="changeModuleFormRef.onOpen(record)">更改模块</a>
+										<a-menu-item v-if="node.parentId === '0'">
+											<a @click="changeModuleFormRef.onOpen(node)">更改模块</a>
 										</a-menu-item>
-										<a-menu-item v-if="record.menuType === 'MENU'">
-											<a @click="buttonRef.onOpen(record)">按钮权限</a>
+										<a-menu-item v-if="node.menuType === 'MENU'">
+											<a @click="buttonRef.onOpen(node)">按钮权限</a>
 										</a-menu-item>
 									</a-menu>
 								</template>
@@ -199,6 +199,7 @@
 	}
 	const loadData = (parameter) => {
 		if (!module.value) {
+			// 若无module, 则查询module列表第一个module作为默认module
 			return menuApi2.menuList({ "menuType": 1 }).then((data) => {
 				moduleList.value = data
 				module.value = data.length > 0 ? data[0].code : ''
@@ -212,6 +213,7 @@
 				})
 			})
 		} else {
+			// menuTree获取到的data中的id和parentId均为code
 			return menuApi2.menuTree(Object.assign(parameter, queryForm.value)).then((data) => {
 				if (data) {
 					return data
