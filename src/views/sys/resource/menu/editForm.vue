@@ -14,15 +14,11 @@
 							<a-input v-model:value="formData.name" placeholder="请输入显示名称" allow-clear />
 						</a-form-item>
 					</a-col>
-					<a-form-item label="菜单类型：" name="menuType" :rules="[required('请选择菜单类型')]">
-						<a-radio-group v-model:value="formData.menuType" button-style="solid">
-							<!-- 1模块 2目录 3菜单 4按钮 5外链 -->
-							<a-radio-button :value="2">目录</a-radio-button>
-							<a-radio-button :value="3">菜单</a-radio-button>
-							<a-radio-button :value="4">按钮</a-radio-button>
-							<a-radio-button :value="5">外链</a-radio-button>
-						</a-radio-group>
-					</a-form-item>
+					<a-col :span="12">
+						<a-form-item label="菜单编码：" name="code">
+							<a-input v-model:value="formData.code" disabled/>
+						</a-form-item>
+					</a-col>
 					<a-col :span="12">
 						<a-form-item label="上级菜单：" name="parentCode" :rules="[required('请选择上级菜单')]">
 							<a-tree-select
@@ -39,6 +35,15 @@
 							/>
 						</a-form-item>
 					</a-col>
+					<a-form-item label="菜单类型：" name="menuType" :rules="[required('请选择菜单类型')]">
+						<a-radio-group v-model:value="formData.menuType" button-style="solid">
+							<!-- 1模块 2目录 3菜单 4按钮 5外链 -->
+							<a-radio-button :value="2">目录</a-radio-button>
+							<a-radio-button :value="3">菜单</a-radio-button>
+							<a-radio-button :value="4">按钮</a-radio-button>
+							<a-radio-button :value="5">外链</a-radio-button>
+						</a-radio-group>
+					</a-form-item>
 					<a-col :span="12">
 						<a-form-item label="排序:" name="sortNum">
 							<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
