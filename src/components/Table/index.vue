@@ -7,6 +7,7 @@
 			</div>
 			<!--  斑马纹 -->
 			<div className="layout-items-center s-table-tool-right">
+				<a-space>
 				<div className="layout-items-center ml-4" v-show="props.toolConfig.striped">
 					<a-checkbox :checked="data.localSettings.rowClassNameSwitch" @change="changeRowClass"> 斑马纹 </a-checkbox>
 				</div>
@@ -20,7 +21,6 @@
 					>
 						<component class="icons" :is="item.icon"></component>
 					</a-tooltip>
-
 					<!-- 列展示 -->
 					<a-popover
 						v-if="item.isPopover && item.name === 'columnSetting' && props.toolConfig.columnSetting"
@@ -50,6 +50,7 @@
 						</a-tooltip>
 					</a-dropdown>
 				</span>
+				</a-space>
 			</div>
 		</div>
 
