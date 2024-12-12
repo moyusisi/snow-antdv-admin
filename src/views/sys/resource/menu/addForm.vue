@@ -131,8 +131,8 @@
 	</a-drawer>
 </template>
 
-<script setup name="sysResourceMenuForm">
-	import { required, rules } from '@/utils/formRules'
+<script setup>
+	import { required } from '@/utils/formRules'
 	import SnowflakeId from 'snowflake-id'
 	import menuApi from '@/api/sys/menuApi'
 	import IconSelector from '@/components/Selector/iconSelector.vue'
