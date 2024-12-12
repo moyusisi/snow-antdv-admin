@@ -16,17 +16,21 @@ export default {
 	menuTree(data) {
 		return service.postJson('/api/sys/menu/tree', data)
 	},
-	// 新增菜单
-	submitAddForm(data) {
-		return service.postJson('/api/sys/menu/add', data)
-	},
-	// 新增菜单
-	submitEditForm(data) {
-		return service.postJson('/api/sys/menu/edit', data)
-	},
 	// 获取菜单详情
 	menuDetail(data) {
 		return service.postJson('/api/sys/menu/detail', data)
+	},
+	// 新增菜单
+	addMenu(data) {
+		return service.postJson('/api/sys/menu/add', data)
+	},
+	// 删除菜单
+	deleteMenu(data) {
+		return service.postJson('/api/sys/menu/delete', data)
+	},
+	// 编辑菜单
+	editMenu(data) {
+		return service.postJson('/api/sys/menu/edit', data)
 	},
 	// 获取菜单树选择器
 	menuTreeSelector(data) {

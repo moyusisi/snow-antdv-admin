@@ -208,7 +208,7 @@
 		formRef.value.validate().then(() => {
 			const param = buildParam(formData.value)
 			submitLoading.value = true
-			menuApi.submitAddForm(param).then(() => {
+			menuApi.addMenu(param).then(() => {
 				onClose()
 				emit('successful')
 			}).finally(() => {

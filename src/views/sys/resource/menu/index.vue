@@ -33,7 +33,7 @@
 						icon="DeleteOutlined"
 						buttonDanger
 						:selectedRowKeys="selectedRowKeys"
-						@batchCallBack="deleteBatchMenu"
+						@batchCallBack="batchDeleteMenu"
 					/>
 				</a-space>
 			</template>
@@ -91,11 +91,10 @@
 	<Button ref="buttonRef" />
 </template>
 
-<script setup name="sysMenu">
+<script setup>
 	import { h } from 'vue'
 	import { DeleteOutlined } from '@ant-design/icons-vue'
-	import menuApi from '@/api/sys/resource/menuApi'
-	import menuApi2 from '@/api/sys/menuApi'
+	import menuApi from '@/api/sys/menuApi'
 	import Form from './form.vue'
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
@@ -187,11 +186,11 @@
 	const loadData = (parameter) => {
 		if (!module.value) {
 			// 若无module, 则查询module列表第一个module作为默认module
-			return menuApi2.menuList({ "menuType": 1 }).then((data) => {
+			return menuApi.menuList({ "menuType": 1 }).then((data) => {
 				moduleList.value = data
 				module.value = data.length > 0 ? data[0].code : ''
 				queryForm.value.module = module.value
-				return menuApi2.menuTree(Object.assign(parameter, queryForm.value)).then((data) => {
+				return menuApi.menuTree(Object.assign(parameter, queryForm.value)).then((data) => {
 					if (data) {
 						return data
 					} else {
@@ -201,7 +200,7 @@
 			})
 		} else {
 			// menuTree获取到的data中的id和parentId均为code
-			return menuApi2.menuTree(Object.assign(parameter, queryForm.value)).then((data) => {
+			return menuApi.menuTree(Object.assign(parameter, queryForm.value)).then((data) => {
 				if (data) {
 					return data
 				} else {
@@ -215,25 +214,17 @@
 		queryForm.value.module = value
 		tableRef.value.refresh(true)
 	}
-	// 查询
-	const onSearch = () => {
-		tableRef.value.refresh(true)
-	}
 	// 删除
 	const deleteMenu = (record) => {
-		let params = [
-			{
-				id: record.id
-			}
-		]
-		menuApi.menuDelete(params).then(() => {
+		let params = [{ id: record.id }]
+		menuApi.deleteMenu(params).then(() => {
 			tableRef.value.refresh(true)
 			refreshCacheMenu()
 		})
 	}
 	// 批量删除
-	const deleteBatchMenu = (params) => {
-		menuApi.menuDelete(params).then(() => {
+	const batchDeleteMenu = (params) => {
+		menuApi.deleteMenu(params).then(() => {
 			tableRef.value.clearRefreshSelected()
 			refreshCacheMenu()
 		})
