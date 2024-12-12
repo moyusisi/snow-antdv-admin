@@ -197,11 +197,9 @@
 	]
 	// 验证并提交数据
 	const onSubmit = () => {
-		console.log(formData.value)
 		formRef.value.validate().then(() => {
 			const param = buildParam(formData.value)
 			submitLoading.value = true
-			console.log(param)
 			menuApi.submitEditForm(param).then(() => {
 				emit('successful')
 				onClose()
