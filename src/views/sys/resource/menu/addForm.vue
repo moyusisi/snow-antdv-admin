@@ -1,12 +1,12 @@
 <template>
 	<a-drawer
 		:open="visible"
-		:title="formData.id ? '编辑菜单' : '增加菜单'"
+		title="增加菜单"
 		:width="drawerWidth"
-		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }",
+		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
 		@close="onClose"
 	>
-		<a-form ref="formRef" :model="formData" :rules="formRules">
+		<a-form ref="formRef" :model="formData">
 			<a-card title="基本信息">
 				<a-row :gutter="24">
 					<a-col :span="12">
@@ -14,38 +14,34 @@
 							<a-input v-model:value="formData.title" placeholder="请输入显示名称" allow-clear />
 						</a-form-item>
 					</a-col>
+					<a-form-item label="菜单类型：" name="menuType" :rules="[required('请选择菜单类型')]">
+						<a-radio-group v-model:value="formData.menuType" button-style="solid">
+							<!-- 1模块 2目录 3菜单 4按钮 5外链 -->
+							<a-radio-button :value="2">目录</a-radio-button>
+							<a-radio-button :value="3">菜单</a-radio-button>
+							<a-radio-button :value="4">按钮</a-radio-button>
+							<a-radio-button :value="5">外链</a-radio-button>
+						</a-radio-group>
+					</a-form-item>
 					<a-col :span="12">
-						<a-form-item label="菜单代码：" name="code" :rules="[required('请输入菜单代码')]">
-							<a-input v-model:value="formData.code" placeholder="请输入菜单代码" allow-clear />
-						</a-form-item>
-					</a-col>
-					<a-col :span="12">
-						<a-form-item label="上级菜单：" name="parentId" :rules="[required('请选择上级菜单')]">
+						<a-form-item label="上级菜单：" name="parentCode" :rules="[required('请选择上级菜单')]">
 							<a-tree-select
 								v-model:value="formData.parentCode"
 								v-model:treeExpandedKeys="defaultExpandedKeys"
-								class="xn-wd"
 								:dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
 								placeholder="请选择上级菜单"
 								allow-clear
-								tree-default-expand-all
 								:tree-data="treeData"
 								:field-names="{ children: 'children', label: 'name', value: 'id' }"
 								selectable="false"
 								tree-line
-								@change="parentChange(formData.id)"
+								@change="parentChange"
 							/>
 						</a-form-item>
 					</a-col>
 					<a-col :span="12">
-						<a-form-item label="菜单类型：" name="menuType" :rules="[required('请选择菜单类型')]">
-							<a-radio-group v-model:value="formData.menuType" button-style="solid">
-								<!-- 1模块 2目录 3菜单 4按钮 5外链 -->
-								<a-radio-button :value="2">目录</a-radio-button>
-								<a-radio-button :value="3">菜单</a-radio-button>
-								<a-radio-button :value="4">按钮</a-radio-button>
-								<a-radio-button :value="5">外链</a-radio-button>
-							</a-radio-group>
+						<a-form-item label="排序:" name="sortCode">
+							<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
 						</a-form-item>
 					</a-col>
 				</a-row>
@@ -91,7 +87,7 @@
 									<template #title> 组件可设置为代码文件夹名称 </template>
 									<question-circle-outlined />
 								</a-tooltip>
-								&nbsp 组件地址：
+								&nbsp 组件地址
 							</template>
 							<a-input v-model:value="formData.component" addon-before="src/views/" placeholder="请输入组件地址" allow-clear/>
 						</a-form-item>
@@ -104,13 +100,19 @@
 									<template #title> 权限标识应与后端接口保持一致且用':'分割 </template>
 									<question-circle-outlined />
 								</a-tooltip>
-								&nbsp 权限标识：
+								&nbsp 权限标识
 							</template>
 							<a-input v-model:value="formData.permission" placeholder="请输入权限标识" allow-clear/>
 						</a-form-item>
 					</a-col>
 				</a-row>
 				<a-row :gutter="24">
+					<!-- 目录、菜单、外链:是否可见 -->
+					<a-col :span="12" v-if="formData.menuType === 2 || formData.menuType === 3 || formData.menuType === 5">
+						<a-form-item label="是否可见:" name="visible" :rules="[required('请选择是否可见')]">
+							<a-radio-group v-model:value="formData.visible" button-style="solid" :options="visibleOptions" />
+						</a-form-item>
+					</a-col>
 					<!-- 目录、菜单、外链:图标 -->
 					<a-col :span="12" v-if="formData.menuType === 2 || formData.menuType === 3 || formData.menuType === 5">
 						<a-form-item label="图标：" name="icon">
@@ -118,24 +120,10 @@
 							<a-button type="primary" @click="iconSelector.showIconModal(formData.icon)">选择</a-button>
 						</a-form-item>
 					</a-col>
-					<!-- 目录、菜单、外链:是否可见 -->
-					<a-col :span="12" v-if="formData.menuType === 2 || formData.menuType === 3 || formData.menuType === 5">
-						<a-form-item label="是否可见:" name="visible">
-							<a-radio-group v-model:value="formData.visible" button-style="solid" :options="visibleOptions" />
-						</a-form-item>
-					</a-col>
-				</a-row>
-				<a-row :gutter="24">
-					<!-- 目录、菜单、按钮、外链:排序 -->
-					<a-col :span="12">
-						<a-form-item label="排序:" name="sortCode">
-							<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
-						</a-form-item>
-					</a-col>
 				</a-row>
 			</a-card>
 		</a-form>
-		<template #footer footerStyle="{ float: right }">
+		<template #footer :footerStyle="{ float: right }">
 			<a-button class="xn-mr8" @click="onClose">关闭</a-button>
 			<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
 		</template>
@@ -145,9 +133,7 @@
 
 <script setup name="sysResourceMenuForm">
 	import { required, rules } from '@/utils/formRules'
-	import { cloneDeep } from 'lodash-es'
 	import SnowflakeId from 'snowflake-id'
-	import menuApi2 from '@/api/sys/resource/menuApi'
 	import menuApi from '@/api/sys/menuApi'
 	import IconSelector from '@/components/Selector/iconSelector.vue'
 	import { globalStore } from "@/store";
@@ -160,8 +146,13 @@
 	const formRef = ref()
 	const treeData = ref([])
 	const iconSelector = ref()
-	// 表单数据，也就是默认给一些数据
-	const formData = ref({})
+	// 表单数据，这里有默认值
+	const formData = ref({
+		menuType: 3,
+		visible: 1,
+		sortNum: 99,
+		status: 0
+	})
 	// 默认展开的节点(顶级)
 	const defaultExpandedKeys = ref([0])
 	const submitLoading = ref(false)
@@ -172,34 +163,17 @@
 		return store.menuIsCollapse ? `calc(100% - 80px)` : `calc(100% - 210px)`
 	})
 
-	// 打开抽屉
-	const onOpen = (data, module) => {
-		const record = menuApi.menuDetail({ code: value }).then((res) => {
-			formData.value.module = res.module
-		})
-		// const record = cloneDeep(data)
-		moduleId.value = module
+	// 打开抽屉(新增时无data)
+	const onOpen = (moduleCode) => {
 		visible.value = true
-		// 有record说明是edit
-		if (record) {
-			formData.value = record
-			// 因为版本升级后该字段无参数，所以默认为可见
-			if (!record.visible) {
-				formData.value.visible = 'TRUE'
-			}
-		} else {
-			formData.value = {
-				menuType: 3,
-				visible: 1,
-				sortNum: 99
-			}
-			formData.value = Object.assign(formData.value, record)
-		}
+		// 模块赋值
+		moduleId.value = moduleCode
 		// 获取菜单树并加入顶级节点
-		menuApi.menuTreeSelector({ module: module }).then((res) => {
+		menuApi.menuTreeSelector({ module: moduleCode }).then((res) => {
+			defaultExpandedKeys.value = [moduleCode]
 			treeData.value = [
 				{
-					id: module,
+					id: moduleCode,
 					parentId: '0',
 					name: '顶级',
 					children: res
@@ -214,14 +188,8 @@
 	}
 	// 选择上级加载模块的选择框
 	const parentChange = (value) => {
-		if (value > 0) {
-			// 执行接口去查询选择的上级是哪个模块，吧对应的也置为一样的
-			menuApi.menuDetail({ code: value }).then((res) => {
-				formData.value.module = res.module
-			})
-		} else {
-			formData.value.module = null
-		}
+		console.log(value)
+		// formData.value.parentCode = value
 	}
 	// 图标选择器回调
 	const iconCallBack = (value) => {
@@ -231,60 +199,29 @@
 		formData.value.icon = value
 	}
 
-	// 默认要校验的
-	const formRules = {
-		title: [required('请输入菜单名称'), rules.horizontalChart],
-		parentId: [required('请选择上级菜单')],
-		menuType: [required('请选择菜单类型')],
-		path: [required('请输入路由地址')],
-		name: [required('请输入组件中name属性')],
-		module: [required('请选择模块')],
-		component: [required('请输入组件地址'), rules.initialNotBackslashChart],
-		visible: [required('请选择是否可见')]
-	}
-
 	const visibleOptions = [
 		{ label: "可见", value: 1 },
 		{ label: "不可见", value: 0 }
 	]
 	// 验证并提交数据
 	const onSubmit = () => {
-		formRef.value
-			.validate()
-			.then(() => {
-				const param = parameterChanges(formData.value)
-				submitLoading.value = true
-				menuApi
-					.submitForm(param, param.id)
-					.then(() => {
-						onClose()
-						emit('successful')
-					})
-					.finally(() => {
-						submitLoading.value = false
-					})
+		formRef.value.validate().then(() => {
+			const param = buildParam(formData.value)
+			submitLoading.value = true
+			menuApi.submitAddForm(param).then(() => {
+				onClose()
+				emit('successful')
+			}).finally(() => {
+				submitLoading.value = false
 			})
-			.catch(() => {})
+		}).catch(() => {
+		})
 	}
-	const parameterChanges = (data) => {
-		// 每个都先增加一个模块ID
+	const buildParam = (data) => {
+		// 统一增加模块标识
 		data.module = moduleId.value
-		// 如果是目录级菜单，他的path跟name我们在前端生成，无需使用着填写
-		if (data.menuType !== 'MENU') {
-			const snowflake = new SnowflakeId()
-			const uuid = snowflake.generate()
-			if (!data.path) {
-				data.path = '/' + uuid
-			}
-			if (!data.name) {
-				data.name = uuid
-			}
-		}
-		if (!data.component) {
-			return data
-		}
-		// 如果用户输入的组件path路径
-		if (data.component.slice(0, 1) === '/') {
+		// 如果用户输入的组件带反斜线，则去掉
+		if (data.component && data.component.slice(0, 1) === '/') {
 			data.component = data.component.slice(1)
 		}
 		return data

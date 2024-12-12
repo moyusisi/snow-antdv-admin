@@ -25,7 +25,7 @@
 		>
 			<template #operator class="table-operator">
 				<a-space>
-					<a-button type="primary" @click="formRef.onOpen(undefined, module)">
+					<a-button type="primary" @click="addFormRef.onOpen(module)">
 						<template #icon><plus-outlined /></template>新增菜单
 					</a-button>
 					<xn-batch-button
@@ -102,6 +102,7 @@
 			</template>
 		</s-table>
 	</a-card>
+	<AddForm ref="addFormRef" @successful="handleSuccess" />
 	<Form ref="formRef" @successful="handleSuccess" />
 	<changeModuleForm ref="changeModuleFormRef" @successful="handleSuccess" />
 	<Button ref="buttonRef" />
@@ -113,12 +114,14 @@
 	import menuApi from '@/api/sys/resource/menuApi'
 	import menuApi2 from '@/api/sys/menuApi'
 	import Form from './form.vue'
+	import AddForm from './addForm.vue'
 	import ChangeModuleForm from './changeModuleForm.vue'
 	import Button from '../button/index.vue'
 	import { useMenuStore } from '@/store/menu'
 
 	const queryForm = ref({})
 	const tableRef = ref()
+	const addFormRef = ref()
 	const formRef = ref()
 	const changeModuleFormRef = ref()
 	const buttonRef = ref()
