@@ -86,29 +86,21 @@
 	</a-card>
 	<AddForm ref="addFormRef" @successful="handleSuccess" />
 	<EditForm ref="editFormRef" @successful="handleSuccess" />
-	<Form ref="formRef" @successful="handleSuccess" />
-	<changeModuleForm ref="changeModuleFormRef" @successful="handleSuccess" />
-	<Button ref="buttonRef" />
 </template>
 
 <script setup>
-	import { h } from 'vue'
-	import { DeleteOutlined } from '@ant-design/icons-vue'
 	import menuApi from '@/api/sys/menuApi'
-	import Form from './form.vue'
+
+	import { h } from 'vue'
+	import { DeleteOutlined, FormOutlined } from '@ant-design/icons-vue'
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
-	import ChangeModuleForm from './changeModuleForm.vue'
-	import Button from '../button/index.vue'
 	import { useMenuStore } from '@/store/menu'
 
 	const queryForm = ref({})
 	const tableRef = ref()
 	const addFormRef = ref()
 	const editFormRef = ref()
-	const formRef = ref()
-	const changeModuleFormRef = ref()
-	const buttonRef = ref()
 	const module = ref()
 	const moduleList = ref([])
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
