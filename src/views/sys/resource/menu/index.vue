@@ -73,30 +73,12 @@
 								</template>
 							</a-button>
 						</a-tooltip>
+						<a-divider type="vertical" />
 						<a-tooltip title="删除">
 							<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(node)">
 								<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
 							</a-popconfirm>
 						</a-tooltip>
-						<div v-if="node.parentId === '0' || node.menuType === 'MENU'">
-							<a-divider type="vertical" />
-							<a-dropdown>
-								<a class="ant-dropdown-link">
-									更多
-									<DownOutlined />
-								</a>
-								<template #overlay>
-									<a-menu>
-										<a-menu-item v-if="node.parentId === '0'">
-											<a @click="changeModuleFormRef.onOpen(node)">更改模块</a>
-										</a-menu-item>
-										<a-menu-item v-if="node.menuType === 'MENU'">
-											<a @click="buttonRef.onOpen(node)">按钮权限</a>
-										</a-menu-item>
-									</a-menu>
-								</template>
-							</a-dropdown>
-						</div>
 					</a-space>
 				</template>
 			</template>
@@ -139,12 +121,14 @@
 		{
 			title: '类型',
 			dataIndex: 'menuType',
+			align: 'center',
 			width: 80
 		},
 		{
 			title: '图标',
 			dataIndex: 'icon',
-			width: 60
+			align: 'center',
+			width: 80
 		},
 		{
 			title: '路由地址',
@@ -167,18 +151,21 @@
 		{
 			title: '是否可见',
 			dataIndex: 'visible',
+			align: 'center',
 			width: 100
 		},
 		{
 			title: '排序',
 			dataIndex: 'weight',
 			sorter: true,
+			align: 'center',
 			width: 80
 		},
 		{
 			title: '操作',
 			dataIndex: 'action',
-			width: '200px',
+			align: 'center',
+			width: 100,
 			scopedSlots: { customRender: 'action' }
 		}
 	]
