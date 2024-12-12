@@ -64,7 +64,6 @@
 		"@vue/compiler-sfc": "3.5.13",
 		"@vue/eslint-config-standard": "8.0.1",
 		"antd-less-to-css-variable": "1.0.5",
-		"autoprefixer": "10.4.20",
 		"eslint": "8.57.0",
 		"eslint-config-prettier": "9.1.0",
 		"eslint-plugin-prettier": "5.0.1",
