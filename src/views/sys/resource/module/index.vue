@@ -45,9 +45,10 @@
 					<a-tag v-if="record.code" :bordered="false">{{ record.code }}</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'icon'">
-					<a-tag :color="record.color">
-						<component :is="record.icon" />
-					</a-tag>
+					<span v-if="record.icon && record.icon !== '#'" >
+						<component :is="record.icon"/>
+					</span>
+					<span v-else />
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
@@ -60,18 +61,10 @@
 						</a-tooltip>
 						<a-divider type="vertical" />
 						<a-tooltip title="删除">
-							<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(node)">
+							<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteModule(record)">
 								<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
 							</a-popconfirm>
 						</a-tooltip>
-					</a-space>
-
-					<a-space>
-						<a @click="formRef.onOpen(record)">编辑</a>
-						<a-divider type="vertical" />
-						<a-popconfirm title="确定要删除此模块吗？" @confirm="deleteModule(record)">
-							<a-button type="link" danger size="small">删除</a-button>
-						</a-popconfirm>
 					</a-space>
 				</template>
 			</template>
@@ -82,7 +75,6 @@
 </template>
 
 <script setup>
-	import moduleApi from '@/api/sys/resource/moduleApi'
 	import menuApi from '@/api/sys/menuApi'
 	import { h } from "vue";
 	import { DeleteOutlined, FormOutlined } from "@ant-design/icons-vue";
@@ -162,7 +154,8 @@
 	}
 	// 删除
 	const deleteModule = (record) => {
-		let data = [record.id]
+		console.log(record)
+		let data = { ids: [record.id] }
 		menuApi.deleteMenu(data).then(() => {
 			tableRef.value.refresh(true)
 		})
