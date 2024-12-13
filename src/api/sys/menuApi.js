@@ -24,15 +24,11 @@ export default {
 	addMenu(data) {
 		return service.postJson('/api/sys/menu/add', data)
 	},
-	// 新增模块(与菜单不一样)
-	addModule(data) {
-		return service.postJson('/api/sys/menu/addModule', data)
-	},
 	// 删除菜单
 	deleteMenu(data) {
 		return service.postJson('/api/sys/menu/delete', data)
 	},
-	// 删除模块(与菜单不一样)
+	// 删除模块(与菜单不一样,不会集联删除)
 	deleteModule(data) {
 		return service.postJson('/api/sys/menu/deleteModule', data)
 	},

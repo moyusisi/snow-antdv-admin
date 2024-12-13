@@ -66,7 +66,7 @@
 	// 验证并提交数据
 	const onSubmit = () => {
 		formRef.value.validate().then(() => {
-			menuApi.editMenu(formData.value, formData.value.id).then(() => {
+			menuApi.editMenu(formData.value).then(() => {
 				emit('successful')
 				onClose()
 			})

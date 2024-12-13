@@ -11,9 +11,6 @@
 			<a-form-item label="模块名称：" name="name" :rules="[required('请输入模块名称')]">
 				<a-input v-model:value="formData.name" placeholder="请输入显示名称" allow-clear />
 			</a-form-item>
-			<a-form-item label="唯一编码：" name="code" :rules="[required('请输入模块编码')]">
-				<a-input v-model:value="formData.code" placeholder="请输入模块编码" allow-clear />
-			</a-form-item>
 			<a-form-item label="图标：" name="icon">
 				<a-input v-model:value="formData.icon" placeholder="请选择图标" style="width: calc(100% - 70px)" allow-clear disabled />
 				<a-button type="primary" @click="iconSelectorRef.showIconModal(formData.icon)">选择</a-button>
@@ -39,8 +36,13 @@
 	const emit = defineEmits({ successful: null })
 	const formRef = ref()
 	const iconSelectorRef = ref()
-	// 表单数据
-	const formData = ref({ sortNum: 99 })
+	// 表单数据，这里有默认值
+	const formData = ref({
+		menuType: 1,
+		visible: 1,
+		sortNum: 9,
+		status: 0
+	})
 
 	// 打开抽屉
 	const onOpen = (record) => {
@@ -62,7 +64,7 @@
 	// 验证并提交数据
 	const onSubmit = () => {
 		formRef.value.validate().then(() => {
-			menuApi.addModule(formData.value).then(() => {
+			menuApi.addMenu(formData.value).then(() => {
 				emit('successful')
 				onClose()
 			})
