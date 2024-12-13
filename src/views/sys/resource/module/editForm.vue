@@ -1,7 +1,7 @@
 <template>
 	<a-drawer
 		:open="visible"
-		title="新增模块"
+		title="编辑模块"
 		:width="550"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
 		:destroy-on-close="true"
@@ -11,8 +11,8 @@
 			<a-form-item label="模块名称：" name="name" :rules="[required('请输入模块名称')]">
 				<a-input v-model:value="formData.name" placeholder="请输入显示名称" allow-clear />
 			</a-form-item>
-			<a-form-item label="唯一编码：" name="code" :rules="[required('请输入模块编码')]">
-				<a-input v-model:value="formData.code" placeholder="请输入模块编码" allow-clear />
+			<a-form-item label="唯一编码：" name="code">
+				<a-input v-model:value="formData.code" disabled />
 			</a-form-item>
 			<a-form-item label="图标：" name="icon">
 				<a-input v-model:value="formData.icon" placeholder="请选择图标" style="width: calc(100% - 70px)" allow-clear disabled />
@@ -45,6 +45,10 @@
 	// 打开抽屉
 	const onOpen = (record) => {
 		visible.value = true
+		// 获取模块信息
+		menuApi.menuDetail({ id: record.id }).then((res) => {
+			formData.value = res
+		})
 	}
 	// 关闭抽屉
 	const onClose = () => {
@@ -62,7 +66,7 @@
 	// 验证并提交数据
 	const onSubmit = () => {
 		formRef.value.validate().then(() => {
-			menuApi.addModule(formData.value).then(() => {
+			menuApi.editMenu(formData.value, formData.value.id).then(() => {
 				emit('successful')
 				onClose()
 			})

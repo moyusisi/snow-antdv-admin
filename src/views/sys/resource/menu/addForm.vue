@@ -123,7 +123,7 @@
 				</a-row>
 			</a-card>
 		</a-form>
-		<template #footer :footerStyle="{ float: right }">
+		<template #footer>
 			<a-button class="xn-mr8" @click="onClose">关闭</a-button>
 			<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
 		</template>

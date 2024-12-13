@@ -27,7 +27,7 @@
 		>
 			<template #operator class="table-operator">
 				<a-space>
-					<a-button type="primary" @click="formRef.onOpen()">
+					<a-button type="primary" @click="addFormRef.onOpen()">
 						<template #icon><plus-outlined /></template>
 						新增模块
 					</a-button>
@@ -52,7 +52,7 @@
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
 						<a-tooltip title="编辑">
-							<a-button type="link" size="small" @click="editFormRef.onOpen(node, module)">
+							<a-button type="link" size="small" @click="editFormRef.onOpen(record)">
 								<template #icon>
 									<FormOutlined/>
 								</template>
@@ -77,19 +77,23 @@
 			</template>
 		</s-table>
 	</a-card>
-	<Form ref="formRef" @successful="tableRef.refresh(true)" />
+	<AddForm ref="addFormRef" @successful="tableRef.refresh(true)" />
+	<EditForm ref="editFormRef" @successful="tableRef.refresh(true)" />
 </template>
 
-<script setup name="sysModule">
-	import Form from './form.vue'
+<script setup>
 	import moduleApi from '@/api/sys/resource/moduleApi'
 	import menuApi from '@/api/sys/menuApi'
 	import { h } from "vue";
 	import { DeleteOutlined, FormOutlined } from "@ant-design/icons-vue";
+	import AddForm from "@/views/sys/resource/module/addForm.vue";
+	import EditForm from "@/views/sys/resource/module/editForm.vue";
 
 	// menuType=1标识模块
 	const searchFormState = ref({ 'menuType': 1 })
 	const formRef = ref()
+	const addFormRef = ref()
+	const editFormRef = ref()
 	const searchFormRef = ref()
 	const tableRef = ref()
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
@@ -158,18 +162,15 @@
 	}
 	// 删除
 	const deleteModule = (record) => {
-		let params = [
-			{
-				id: record.id
-			}
-		]
-		moduleApi.moduleDelete(params).then(() => {
+		let data = [record.id]
+		menuApi.deleteModule(data).then(() => {
 			tableRef.value.refresh(true)
 		})
 	}
 	// 批量删除
 	const deleteBatchModule = (params) => {
-		moduleApi.moduleDelete(params).then(() => {
+		let data = { ids: selectedRowKeys.value }
+		menuApi.deleteModule(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
 	}
