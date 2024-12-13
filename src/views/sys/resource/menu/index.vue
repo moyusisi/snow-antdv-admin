@@ -61,8 +61,11 @@
 					<span v-else />
 				</template>
 				<template v-if="column.dataIndex === 'visible'">
-					<a-tag v-if="node.visible === 1" color="green">可见</a-tag>
-					<a-tag v-else>不可见</a-tag>
+					<span v-if="node.menuType !== 4" >
+						<a-tag v-if="node.visible === 1" color="green">可见</a-tag>
+						<a-tag v-else>不可见</a-tag>
+					</span>
+					<span v-else ></span>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
