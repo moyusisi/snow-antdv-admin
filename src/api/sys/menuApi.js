@@ -24,13 +24,13 @@ export default {
 	addMenu(data) {
 		return service.postJson('/api/sys/menu/add', data)
 	},
-	// 删除菜单
+	// 删除菜单，通过ids删除，不会集联删除
 	deleteMenu(data) {
 		return service.postJson('/api/sys/menu/delete', data)
 	},
-	// 删除模块(与菜单不一样,不会集联删除)
-	deleteModule(data) {
-		return service.postJson('/api/sys/menu/deleteModule', data)
+	// 删除菜单，通过codes删除，会集联删除整个树
+	deleteMenuTree(data) {
+		return service.postJson('/api/sys/menu/deleteTree', data)
 	},
 	// 编辑菜单
 	editMenu(data) {

@@ -211,16 +211,16 @@
 	}
 	// 单个删除
 	const deleteMenu = (node) => {
-		let data = { codeSet: [node.id] }
-		menuApi.deleteMenu(data).then(() => {
+		let data = { codes: [node.id] }
+		menuApi.deleteMenuTree(data).then(() => {
 			tableRef.value.refresh(true)
 			refreshCacheMenu()
 		})
 	}
 	// 批量删除
 	const batchDeleteMenu = (params) => {
-		let data = { codeSet: selectedRowKeys.value }
-		menuApi.deleteMenu(data).then(() => {
+		let data = { codes: selectedRowKeys.value }
+		menuApi.deleteMenuTree(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 			refreshCacheMenu()
 		})

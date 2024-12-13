@@ -163,14 +163,14 @@
 	// 删除
 	const deleteModule = (record) => {
 		let data = [record.id]
-		menuApi.deleteModule(data).then(() => {
+		menuApi.deleteMenu(data).then(() => {
 			tableRef.value.refresh(true)
 		})
 	}
 	// 批量删除
 	const deleteBatchModule = (params) => {
 		let data = { ids: selectedRowKeys.value }
-		menuApi.deleteModule(data).then(() => {
+		menuApi.deleteMenu(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
 	}
