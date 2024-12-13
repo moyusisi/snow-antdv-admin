@@ -1,14 +1,14 @@
 import service from '@/utils/request'
 
 /**
- * 菜单相关接口
+ * 菜单相关接口(菜单树中的id均使用的code)
  */
 export default {
 	// 查询菜单列表
 	menuList(data) {
 		return service.postJson('/api/sys/menu/list', data)
 	},
-	// 分页查询菜单列表
+	// 分页查询菜单列表(模块列表)
 	menuPage(data) {
 		return service.postJson('/api/sys/menu/page', data)
 	},

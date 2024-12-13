@@ -206,17 +206,18 @@
 		queryForm.value.module = value
 		tableRef.value.refresh(true)
 	}
-	// 删除
-	const deleteMenu = (record) => {
-		let params = [{ id: record.id }]
-		menuApi.deleteMenu(params).then(() => {
+	// 单个删除
+	const deleteMenu = (node) => {
+		let data = { codeSet: [node.id] }
+		menuApi.deleteMenu(data).then(() => {
 			tableRef.value.refresh(true)
 			refreshCacheMenu()
 		})
 	}
 	// 批量删除
 	const batchDeleteMenu = (params) => {
-		menuApi.deleteMenu(params).then(() => {
+		let data = { codeSet: selectedRowKeys.value }
+		menuApi.deleteMenu(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 			refreshCacheMenu()
 		})

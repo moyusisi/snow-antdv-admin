@@ -117,9 +117,6 @@
 		return menuApi.menuPage(Object.assign(parameter, searchFormState.value)).then((res) => {
 			return res
 		})
-		// return moduleApi.modulePage(Object.assign(parameter, searchFormState.value)).then((res) => {
-		// 	return res
-		// })
 	}
 	// 重置
 	const reset = () => {
