@@ -41,12 +41,31 @@
 				</a-space>
 			</template>
 			<template #bodyCell="{ column, record }">
+				<template v-if="column.dataIndex === 'code'">
+					<a-tag v-if="record.code" :bordered="false">{{ record.code }}</a-tag>
+				</template>
 				<template v-if="column.dataIndex === 'icon'">
 					<a-tag :color="record.color">
 						<component :is="record.icon" />
 					</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
+					<a-space>
+						<a-tooltip title="编辑">
+							<a-button type="link" size="small" @click="editFormRef.onOpen(node, module)">
+								<template #icon>
+									<FormOutlined/>
+								</template>
+							</a-button>
+						</a-tooltip>
+						<a-divider type="vertical" />
+						<a-tooltip title="删除">
+							<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(node)">
+								<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
+							</a-popconfirm>
+						</a-tooltip>
+					</a-space>
+
 					<a-space>
 						<a @click="formRef.onOpen(record)">编辑</a>
 						<a-divider type="vertical" />
@@ -65,6 +84,8 @@
 	import Form from './form.vue'
 	import moduleApi from '@/api/sys/resource/moduleApi'
 	import menuApi from '@/api/sys/menuApi'
+	import { h } from "vue";
+	import { DeleteOutlined, FormOutlined } from "@ant-design/icons-vue";
 
 	// menuType=1标识模块
 	const searchFormState = ref({ 'menuType': 1 })
@@ -75,27 +96,39 @@
 	const columns = [
 		{
 			title: '显示名称',
-			dataIndex: 'name'
+			dataIndex: 'name',
+			width: 200
+		},
+		{
+			title: '唯一编码',
+			dataIndex: 'code',
+			width: 200
 		},
 		{
 			title: '图标',
-			dataIndex: 'icon'
+			dataIndex: 'icon',
+			align: 'center',
+			width: 100
 		},
 		{
 			title: '排序',
 			dataIndex: 'sortNum',
-			sorter: true
+			sorter: true,
+			align: 'center',
+			width: 100
 		},
 		{
 			title: '创建时间',
 			dataIndex: 'createTime',
-			sorter: true
+			sorter: true,
+			align: 'center',
+			width: 200
 		},
 		{
 			title: '操作',
 			dataIndex: 'action',
 			align: 'center',
-			width: '200px'
+			width: 200
 		}
 	]
 	let selectedRowKeys = ref([])
