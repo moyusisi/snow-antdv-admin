@@ -163,8 +163,8 @@
 	// 打开抽屉
 	const onOpen = (node, moduleCode) => {
 		visible.value = true
-		// 获取菜单信息, node为tree的node，其中的id和parent均为code
-		menuApi.menuDetail({ code: node.id }).then((res) => {
+		// 获取菜单信息
+		menuApi.menuDetail({ code: node.code }).then((res) => {
 			formData.value = res
 		})
 		// 获取菜单树并加入顶级节点
