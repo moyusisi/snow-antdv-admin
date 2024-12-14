@@ -83,7 +83,6 @@
 
 	// menuType=1标识模块
 	const searchFormState = ref({ 'menuType': 1 })
-	const formRef = ref()
 	const addFormRef = ref()
 	const editFormRef = ref()
 	const searchFormRef = ref()
