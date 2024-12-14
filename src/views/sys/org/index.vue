@@ -64,7 +64,7 @@
 								icon="DeleteOutlined"
 								buttonDanger
 								:selectedRowKeys="selectedRowKeys"
-								@batchCallBack="deleteBatchOrg"
+								@batchCallBack="batchDeleteOrg"
 							/>
 						</a-space>
 					</template>
@@ -87,7 +87,7 @@
 						<template v-if="column.dataIndex === 'action'">
 							<a @click="formRef.onOpen(record)">编辑</a>
 							<a-divider type="vertical" />
-							<a-popconfirm title="删除此组织与下级组织吗？" @confirm="removeOrg(record)">
+							<a-popconfirm title="删除此组织与下级组织吗？" @confirm="deleteOrg(record)">
 								<a-button type="link" danger size="small">删除</a-button>
 							</a-popconfirm>
 						</template>
@@ -228,20 +228,17 @@
 		}
 		tableRef.value.refresh(true)
 	}
-	// 删除
-	const removeOrg = (record) => {
-		let params = [
-			{
-				id: record.id
-			}
-		]
-		orgApi.orgDelete(params).then(() => {
+	// 单个删除
+	const deleteOrg = (record) => {
+		let data = { codes: [record.code] }
+		orgApi.deleteOrgTree(data).then(() => {
 			tableRef.value.refresh(true)
 		})
 	}
 	// 批量删除
-	const deleteBatchOrg = (params) => {
-		orgApi.orgDelete(params).then(() => {
+	const batchDeleteOrg = (params) => {
+		let data = { codes: selectedRowKeys.value }
+		orgApi.orgDelete(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
 	}
