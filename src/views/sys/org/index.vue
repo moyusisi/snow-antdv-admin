@@ -109,7 +109,7 @@
 		</a-col>
 	</a-row>
 	<Form ref="formRef" @successful="tableRef.refresh()" />
-<!--	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />-->
+	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />
 </template>
 
 <script setup>
@@ -118,7 +118,7 @@
 	import { Empty } from 'ant-design-vue'
 	import { DeleteOutlined, FormOutlined } from "@ant-design/icons-vue";
 	import Form from './form.vue'
-	// import EditForm from './editForm.vue'
+	import EditForm from './editForm.vue'
 
 	const columns = [
 		{
