@@ -9,26 +9,37 @@ const request = (url, ...arg) => baseRequest(`/sys/org/` + url, ...arg)
  * @date 2022-09-22 22:33:20
  */
 export default {
-	// 获取组织树
-	getOrgTree(data) {
-		return service.get('/api/sys/org/tree', { params: data })
+	// 查询组织机构列表
+	orgList(data) {
+		return service.postJson('/api/sys/menu/list', data)
 	},
-	// 分页获取组织列表
-	getOrgPage(data) {
+	// 分页查询组织机构列表
+	orgPage(data) {
 		return service.postJson('/api/sys/org/page', data)
 	},
-	// 获取组织分页
-	orgPage(data) {
-		return request('page', data, 'get')
-	},
-	// 获取组织列表
-	orgList(data) {
-		return request('list', data, 'get')
-	},
-	// 获取组织树
+	// 获取组织机构树
 	orgTree(data) {
-		return request('tree', data, 'get')
+		return service.postJson('/api/sys/org/tree', data)
 	},
+	// 获取组织机构详情
+	orgDetail(data) {
+		return service.postJson('/api/sys/org/detail', data)
+	},
+	// 新增组织机构
+	addOrg(data) {
+		return service.postJson('/api/sys/org/add', data)
+	},
+	// 删除组织机构，通过codes删除，会集联删除整个树
+	deleteOrgTree(data) {
+		return service.postJson('/api/sys/org/deleteTree', data)
+	},
+	// 编辑组织机构
+	editOrg(data) {
+		return service.postJson('/api/sys/org/edit', data)
+	},
+
+
+
 	// 提交表单 edit为true时为编辑，默认为新增
 	submitForm(data, edit = false) {
 		return request(edit ? 'edit' : 'add', data)
@@ -37,10 +48,7 @@ export default {
 	orgDelete(data) {
 		return request('delete', data)
 	},
-	// 获取组织详情
-	orgDetail(data) {
-		return request('detail', data, 'get')
-	},
+
 	// 获取组织树选择器
 	orgOrgTreeSelector(data) {
 		return request('orgTreeSelector', data, 'get')

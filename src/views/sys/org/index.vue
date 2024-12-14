@@ -184,7 +184,7 @@
 	// 表格查询 返回 Promise 对象
 	const loadData = (parameter) => {
 		loadTreeData()
-		return orgApi.getOrgPage(Object.assign(parameter, searchFormState.value)).then((res) => {
+		return orgApi.orgPage(Object.assign(parameter, searchFormState.value)).then((res) => {
 			return res
 		})
 	}
@@ -195,7 +195,7 @@
 	}
 	// 加载左侧的树
 	const loadTreeData = () => {
-		orgApi.getOrgTree().then((res) => {
+		orgApi.orgTree().then((res) => {
 			cardLoading.value = false
 			if (res !== null) {
 				treeData.value = res

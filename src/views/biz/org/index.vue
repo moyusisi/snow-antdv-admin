@@ -158,7 +158,7 @@
 	}
 	// 加载左侧的树
 	const loadTreeData = () => {
-		orgApi.getOrgTree()
+		orgApi.orgTree()
 			.then((res) => {
 				cardLoading.value = false
 				if (res !== null) {
