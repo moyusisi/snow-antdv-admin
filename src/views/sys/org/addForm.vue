@@ -15,8 +15,13 @@
 						</a-form-item>
 					</a-col>
 					<a-col :span="12">
-						<a-form-item label="组织编码：" name="code">
-							<a-input v-model:value="formData.code" disabled/>
+						<a-form-item label="组织机构类型：" name="orgType" :rules="[required('请选择菜单类型')]">
+							<a-radio-group v-model:value="formData.orgType" button-style="solid">
+								<!-- 组织机构类型(字典 1公司组织 2部门机构 3虚拟节点) -->
+								<a-radio-button :value="1">公司组织</a-radio-button>
+								<a-radio-button :value="2">部门机构</a-radio-button>
+								<a-radio-button :value="3">虚拟节点</a-radio-button>
+							</a-radio-group>
 						</a-form-item>
 					</a-col>
 					<a-col :span="12">
@@ -35,14 +40,6 @@
 							/>
 						</a-form-item>
 					</a-col>
-					<a-form-item label="组织机构类型：" name="orgType" :rules="[required('请选择菜单类型')]">
-						<a-radio-group v-model:value="formData.orgType" button-style="solid">
-							<!-- 组织机构类型(字典 1公司组织 2部门机构 3虚拟节点) -->
-							<a-radio-button :value="1">公司组织</a-radio-button>
-							<a-radio-button :value="2">部门机构</a-radio-button>
-							<a-radio-button :value="3">虚拟节点</a-radio-button>
-						</a-radio-group>
-					</a-form-item>
 					<a-col :span="12">
 						<a-form-item label="排序:" name="sortNum">
 							<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
@@ -95,7 +92,13 @@
 	const treeData = ref([])
 	const iconSelector = ref()
 	// 表单数据，这里有默认值
-	const formData = ref({})
+	const formData = ref({
+		orgType: 1,
+		orgLevel: 2,
+		sortNum: 99,
+		visible: 1,
+		status: 1
+	})
 	// 默认展开的节点(顶级)
 	const defaultExpandedKeys = ref([0])
 	const submitLoading = ref(false)
@@ -105,12 +108,9 @@
 	})
 
 	// 打开抽屉
-	const onOpen = (record) => {
+	const onOpen = (parentCode) => {
 		visible.value = true
-		// 获取菜单信息
-		orgApi.orgDetail({ code: record.code }).then((res) => {
-			formData.value = res
-		})
+		formData.value.parentCode = parentCode
 		// 获取菜单树并加入顶级节点
 		orgApi.orgTree({}).then((res) => {
 			treeData.value = res
@@ -142,9 +142,8 @@
 	// 验证并提交数据
 	const onSubmit = () => {
 		formRef.value.validate().then(() => {
-			const param = formData.value
 			submitLoading.value = true
-			orgApi.editOrg(param).then(() => {
+			orgApi.editOrg(formData.value).then(() => {
 				emit('successful')
 				onClose()
 			}).finally(() => {

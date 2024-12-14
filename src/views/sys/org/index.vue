@@ -45,7 +45,7 @@
 				<s-table
 					ref="tableRef"
 					:columns="columns"
-					:data="loadData"
+					:data="loadTableData"
 					:expand-row-by-click="true"
 					:alert="options.alert.show"
 					bordered
@@ -55,7 +55,7 @@
 				>
 					<template #operator class="table-operator">
 						<a-space>
-							<a-button type="primary" @click="formRef.onOpen(undefined, searchFormState.parentId)">
+							<a-button type="primary" @click="addFormRef.onOpen(searchFormState.parentCode)">
 								<template #icon><plus-outlined /></template>
 								新增
 							</a-button>
@@ -96,28 +96,22 @@
 									</a-popconfirm>
 								</a-tooltip>
 							</a-space>
-
-							<a @click="formRef.onOpen(record)">编辑</a>
-							<a-divider type="vertical" />
-							<a-popconfirm title="删除此组织与下级组织吗？" @confirm="deleteOrg(record)">
-								<a-button type="link" danger size="small">删除</a-button>
-							</a-popconfirm>
 						</template>
 					</template>
 				</s-table>
 			</a-card>
 		</a-col>
 	</a-row>
-	<Form ref="formRef" @successful="tableRef.refresh()" />
 	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />
+	<AddForm ref="addFormRef" @successful="tableRef.refresh()" />
 </template>
 
 <script setup>
+	import { onMounted, h } from "vue";
 	import orgApi from '@/api/sys/orgApi'
-	import { h } from "vue";
 	import { Empty } from 'ant-design-vue'
 	import { DeleteOutlined, FormOutlined } from "@ant-design/icons-vue";
-	import Form from './form.vue'
+	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
 
 	const columns = [
@@ -186,7 +180,6 @@
 	// 定义tableDOM
 	const tableRef = ref()
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
-	const formRef = ref()
 	const addFormRef = ref()
 	const editFormRef = ref()
 	const searchFormRef = ref()
@@ -198,9 +191,12 @@
 	const treeFieldNames = { children: 'children', title: 'name', key: 'code' }
 	const cardLoading = ref(true)
 
-	// 表格查询 返回 Promise 对象
-	const loadData = (parameter) => {
+	onMounted(() => {
 		loadTreeData()
+	})
+
+	// 表格查询 返回 Promise 对象
+	const loadTableData = (parameter) => {
 		return orgApi.orgPage(Object.assign(parameter, searchFormState.value)).then((res) => {
 			return res
 		})
@@ -244,6 +240,11 @@
 		orgApi.deleteOrgTree(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
+	}
+	// 成功回调
+	const handleSuccess = () => {
+		loadTreeData()
+		loadTableData()
 	}
 </script>
 
