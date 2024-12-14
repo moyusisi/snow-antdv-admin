@@ -24,7 +24,7 @@
 							</a-form-item>
 						</a-col>
 						<a-col :span="6">
-							<a-form-item label="状态" name="status">
+							<a-form-item label="组织状态" name="status">
 								<a-select v-model:value="searchFormState.status" placeholder="请选择状态" :options="statusOptions" />
 							</a-form-item>
 						</a-col>
@@ -50,6 +50,7 @@
 					:alert="options.alert.show"
 					bordered
 					:row-key="(record) => record.id"
+					:tool-config="toolConfig"
 					:row-selection="options.rowSelection"
 				>
 					<template #operator class="table-operator">
@@ -169,14 +170,15 @@
 	]
 	// 定义tableDOM
 	const tableRef = ref()
+	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
 	const formRef = ref()
 	const searchFormRef = ref()
 	const searchFormState = ref({})
 	// 默认展开的节点
 	const defaultExpandedKeys = ref([])
 	const treeData = ref([])
-	// 替换treeNode 中 title,key,children
-	const treeFieldNames = { children: 'children', title: 'name', key: 'id' }
+	// 替换treeNode 中 children,title,key
+	const treeFieldNames = { children: 'children', title: 'name', key: 'code' }
 	const cardLoading = ref(true)
 
 	// 表格查询 返回 Promise 对象
@@ -201,8 +203,8 @@
 					// 默认展开2级
 					treeData.value.forEach((item) => {
 						// 因为0的顶级
-						if (item.parentId === '0') {
-							defaultExpandedKeys.value.push(item.id)
+						if (item.parentCode === '0') {
+							defaultExpandedKeys.value.push(item.code)
 							// 取到下级ID
 							// if (item.children) {
 							// 	item.children.forEach((items) => {
