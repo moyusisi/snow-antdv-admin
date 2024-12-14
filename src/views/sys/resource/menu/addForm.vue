@@ -170,11 +170,10 @@
 		moduleId.value = moduleCode
 		// 获取菜单树并加入顶级节点
 		menuApi.menuTreeSelector({ module: moduleCode }).then((res) => {
-			defaultExpandedKeys.value = [moduleCode]
+			defaultExpandedKeys.value = ['0']
 			treeData.value = [
 				{
-					id: moduleCode,
-					parentId: '0',
+					code: '0',
 					name: '顶级',
 					children: res
 				}

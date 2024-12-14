@@ -170,12 +170,11 @@
 		// 获取菜单树并加入顶级节点
 		menuApi.menuTreeSelector({ module: moduleCode }).then((res) => {
 			treeData.value = [{
-				code: moduleCode,
-				parentCode: '0',
+				code: '0',
 				name: '顶级',
 				children: res
 			}]
-			defaultExpandedKeys.value = [moduleCode]
+			defaultExpandedKeys.value = ['0']
 		})
 	}
 	// 关闭抽屉
