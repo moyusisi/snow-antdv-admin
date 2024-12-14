@@ -1,6 +1,6 @@
 <template>
 	<!-- 上方模块选择 -->
-	<a-card :bordered="false">
+	<a-card :bordered="false" class="xn-mb10">
 		<a-space>
 			<a-radio-group v-model:value="module" button-style="solid">
 				<a-radio-button v-for="module in moduleList" :key="module.code" :value="module.code" @click="moduleClick(module.code)">
@@ -236,3 +236,9 @@
 		menuStore.fetchMenu()
 	}
 </script>
+
+<style scoped>
+.ant-form-item {
+	margin-bottom: 0 !important;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-	<a-card :bordered="false" :body-style="{ 'padding-bottom': '0px' }" class="mb-2">
+	<a-card :bordered="false" class="xn-mb10">
 		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
 			<a-row :gutter="24">
 				<a-col :span="8">
@@ -168,3 +168,9 @@
 		})
 	}
 </script>
+
+<style scoped>
+.ant-form-item {
+	margin-bottom: 0 !important;
+}
+</style>

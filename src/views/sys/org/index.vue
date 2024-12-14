@@ -1,5 +1,6 @@
 <template>
 	<a-row :gutter="10">
+		<!-- 左侧组织树 -->
 		<a-col :xs="24" :sm="24" :md="24" :lg="5" :xl="5">
 			<a-card :bordered="false" :loading="cardLoading">
 				<a-tree
@@ -12,13 +13,19 @@
 				<a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />
 			</a-card>
 		</a-col>
+		<!-- 右侧内容 -->
 		<a-col :xs="24" :sm="24" :md="24" :lg="19" :xl="19">
 			<a-card :bordered="false" class="xn-mb10">
-				<a-form ref="searchFormRef" name="advanced_search" class="ant-advanced-search-form" :model="searchFormState">
+				<a-form ref="searchFormRef" :model="searchFormState">
 					<a-row :gutter="24">
 						<a-col :span="8">
 							<a-form-item name="searchKey" label="名称关键词">
 								<a-input v-model:value="searchFormState.searchKey" placeholder="请输入组织名称关键词" />
+							</a-form-item>
+						</a-col>
+						<a-col :span="6">
+							<a-form-item label="状态" name="status">
+								<a-select v-model:value="searchFormState.status" placeholder="请选择状态" :options="statusOptions" />
 							</a-form-item>
 						</a-col>
 						<a-col :span="8">
@@ -26,7 +33,7 @@
 								<template #icon><SearchOutlined /></template>
 								查询
 							</a-button>
-							<a-button class="snowy-button-left" @click="reset">
+							<a-button class="xn-mg08" @click="reset">
 								<template #icon><redo-outlined /></template>
 								重置
 							</a-button>
@@ -61,6 +68,18 @@
 						</a-space>
 					</template>
 					<template #bodyCell="{ column, record }">
+						<template v-if="column.dataIndex === 'code'">
+							<a-tag v-if="record.code" :bordered="false">{{ record.code }}</a-tag>
+						</template>
+						<template v-if="column.dataIndex === 'orgType'">
+							<a-tag v-if="record.orgType === 1" color="cyan">公司组织</a-tag>
+							<a-tag v-if="record.orgType === 2" color="blue">部门机构</a-tag>
+							<a-tag v-if="record.orgType === 3" color="purple">虚拟节点</a-tag>
+						</template>
+						<template v-if="column.dataIndex === 'status'">
+							<a-tag v-if="record.status === 1" color="green">正常</a-tag>
+							<a-tag v-else>已停用</a-tag>
+						</template>
 						<template v-if="column.dataIndex === 'category'">
 							{{ $TOOL.dictTypeData('ORG_CATEGORY', record.category) }}
 						</template>
@@ -88,22 +107,44 @@
 	const columns = [
 		{
 			title: '组织名称',
-			dataIndex: 'name'
+			dataIndex: 'name',
+			width: 200
 		},
 		{
-			title: '分类',
-			dataIndex: 'category'
+			title: '组织编码',
+			dataIndex: 'code',
+			width: 100
+		},
+		{
+			title: '组织类型',
+			dataIndex: 'orgType',
+			align: 'center',
+			width: 80
+		},
+		{
+			title: '组织层级',
+			dataIndex: 'orgLevel',
+			align: 'center',
+			width: 80
 		},
 		{
 			title: '排序',
 			dataIndex: 'sortNum',
-			width: 100
+			sorter: true,
+			align: 'center',
+			width: 80
+		},
+		{
+			title: '状态',
+			dataIndex: 'status',
+			align: 'center',
+			width: 80
 		},
 		{
 			title: '操作',
 			dataIndex: 'action',
 			align: 'center',
-			width: '150px'
+			width: 120
 		}
 	]
 	const selectedRowKeys = ref([])
@@ -121,8 +162,13 @@
 			}
 		}
 	}
+	// 组织状态options
+	const statusOptions = [
+		{ label: "正常", value: 1 },
+		{ label: "已停用", value: 0 }
+	]
 	// 定义tableDOM
-	const tableRef = ref(null)
+	const tableRef = ref()
 	const formRef = ref()
 	const searchFormRef = ref()
 	const searchFormState = ref({})
