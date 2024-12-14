@@ -153,7 +153,7 @@
 	// 表单数据，这里有默认值
 	const formData = ref({})
 	// 默认展开的节点(顶级)
-	const defaultExpandedKeys = ref([0])
+	const defaultExpandedKeys = ref([])
 	const submitLoading = ref(false)
 
 	const drawerWidth = computed(() => {
@@ -170,8 +170,8 @@
 		// 获取菜单树并加入顶级节点
 		menuApi.menuTreeSelector({ module: moduleCode }).then((res) => {
 			treeData.value = [{
-				id: moduleCode,
-				parentId: '0',
+				code: moduleCode,
+				parentCode: '0',
 				name: '顶级',
 				children: res
 			}]
