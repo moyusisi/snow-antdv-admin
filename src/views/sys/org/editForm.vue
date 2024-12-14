@@ -52,17 +52,20 @@
 			</a-card>
 			<a-card title="资源信息">
 				<a-row :gutter="24">
-					<!-- 目录、菜单、外链:是否可见 -->
+					<!-- 使用状态 -->
 					<a-col :span="12">
 						<a-form-item label="使用状态:" name="status" :rules="[required('请选择使用状态')]">
 							<a-radio-group v-model:value="formData.status" button-style="solid" :options="statusOptions" />
 						</a-form-item>
 					</a-col>
-					<!-- 目录、菜单、外链:图标 -->
-					<a-col :span="12" v-if="formData.menuType === 2 || formData.menuType === 3 || formData.menuType === 5">
-						<a-form-item label="图标：" name="icon">
-							<a-input v-model:value="formData.icon" class="xn-wdcalc-70" placeholder="请选择图标" allow-clear disabled />
-							<a-button type="primary" @click="iconSelector.showIconModal(formData.icon)">选择</a-button>
+					<!-- 公司层级 -->
+					<a-col :span="12" v-if="formData.orgType === 1">
+						<a-form-item label="公司层级：" name="orgLevel" :rules="[required('请选择层级')]">
+							<a-radio-group v-model:value="formData.orgLevel" button-style="solid">
+								<a-radio-button :value="1">总部</a-radio-button>
+								<a-radio-button :value="2">二级公司</a-radio-button>
+								<a-radio-button :value="3">三级公司</a-radio-button>
+							</a-radio-group>
 						</a-form-item>
 					</a-col>
 				</a-row>
@@ -78,7 +81,6 @@
 
 <script setup>
 	import orgApi from '@/api/sys/orgApi'
-	import menuApi from '@/api/sys/menuApi'
 
 	import { required } from '@/utils/formRules'
 	import IconSelector from '@/components/Selector/iconSelector.vue'
@@ -142,7 +144,7 @@
 		formRef.value.validate().then(() => {
 			const param = buildParam(formData.value)
 			submitLoading.value = true
-			menuApi.editMenu(param).then(() => {
+			orgApi.editOrg(param).then(() => {
 				emit('successful')
 				onClose()
 			}).finally(() => {
