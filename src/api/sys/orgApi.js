@@ -44,10 +44,6 @@ export default {
 	submitForm(data, edit = false) {
 		return request(edit ? 'edit' : 'add', data)
 	},
-	// 删除组织
-	orgDelete(data) {
-		return request('delete', data)
-	},
 
 	// 获取组织树选择器
 	orgOrgTreeSelector(data) {
