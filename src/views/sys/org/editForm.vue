@@ -1,0 +1,165 @@
+<template>
+	<a-drawer
+		:open="visible"
+		title="编辑组织机构"
+		:width="drawerWidth"
+		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
+		@close="onClose"
+	>
+		<a-form ref="formRef" :model="formData">
+			<a-card title="基本信息">
+				<a-row :gutter="24">
+					<a-col :span="12">
+						<a-form-item label="组织名称：" name="name" :rules="[required('请输入名称')]">
+							<a-input v-model:value="formData.name" placeholder="请输入显示名称" allow-clear />
+						</a-form-item>
+					</a-col>
+					<a-col :span="12">
+						<a-form-item label="组织编码：" name="code">
+							<a-input v-model:value="formData.code" disabled/>
+						</a-form-item>
+					</a-col>
+					<a-col :span="12">
+						<a-form-item label="上级组织：" name="parentCode" :rules="[required('请选择上级菜单')]">
+							<a-tree-select
+								v-model:value="formData.parentCode"
+								v-model:treeExpandedKeys="defaultExpandedKeys"
+								:dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+								placeholder="请选择上级组织"
+								allow-clear
+								:tree-data="treeData"
+								:field-names="{ children: 'children', label: 'name', value: 'code' }"
+								selectable="false"
+								tree-line
+								@change="parentChange"
+							/>
+						</a-form-item>
+					</a-col>
+					<a-form-item label="组织机构类型：" name="orgType" :rules="[required('请选择菜单类型')]">
+						<a-radio-group v-model:value="formData.orgType" button-style="solid">
+							<!-- 组织机构类型(字典 1公司组织 2部门机构 3虚拟节点) -->
+							<a-radio-button :value="1">公司组织</a-radio-button>
+							<a-radio-button :value="2">部门机构</a-radio-button>
+							<a-radio-button :value="3">虚拟节点</a-radio-button>
+						</a-radio-group>
+					</a-form-item>
+					<a-col :span="12">
+						<a-form-item label="排序:" name="sortNum">
+							<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
+						</a-form-item>
+					</a-col>
+				</a-row>
+			</a-card>
+			<a-card title="资源信息">
+				<a-row :gutter="24">
+					<!-- 目录、菜单、外链:是否可见 -->
+					<a-col :span="12">
+						<a-form-item label="使用状态:" name="status" :rules="[required('请选择使用状态')]">
+							<a-radio-group v-model:value="formData.status" button-style="solid" :options="statusOptions" />
+						</a-form-item>
+					</a-col>
+					<!-- 目录、菜单、外链:图标 -->
+					<a-col :span="12" v-if="formData.menuType === 2 || formData.menuType === 3 || formData.menuType === 5">
+						<a-form-item label="图标：" name="icon">
+							<a-input v-model:value="formData.icon" class="xn-wdcalc-70" placeholder="请选择图标" allow-clear disabled />
+							<a-button type="primary" @click="iconSelector.showIconModal(formData.icon)">选择</a-button>
+						</a-form-item>
+					</a-col>
+				</a-row>
+			</a-card>
+		</a-form>
+		<template #footer :footerStyle="{ float: right }">
+			<a-button class="xn-mr8" @click="onClose">关闭</a-button>
+			<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
+		</template>
+		<Icon-selector ref="iconSelector" @iconCallBack="iconCallBack" />
+	</a-drawer>
+</template>
+
+<script setup>
+	import orgApi from '@/api/sys/orgApi'
+	import menuApi from '@/api/sys/menuApi'
+
+	import { required } from '@/utils/formRules'
+	import IconSelector from '@/components/Selector/iconSelector.vue'
+	import { globalStore } from "@/store";
+
+	const store = globalStore()
+
+	// 默认是关闭状态
+	const visible = ref(false)
+	const emit = defineEmits({ successful: null })
+	const formRef = ref()
+	const treeData = ref([])
+	const iconSelector = ref()
+	// 表单数据，这里有默认值
+	const formData = ref({})
+	// 默认展开的节点(顶级)
+	const defaultExpandedKeys = ref([0])
+	const submitLoading = ref(false)
+
+	const drawerWidth = computed(() => {
+		return store.menuIsCollapse ? `calc(100% - 80px)` : `calc(100% - 210px)`
+	})
+
+	// 打开抽屉
+	const onOpen = (record, moduleCode) => {
+		visible.value = true
+		// 获取菜单信息
+		orgApi.orgDetail({ code: record.code }).then((res) => {
+			formData.value = res
+		})
+		// 获取菜单树并加入顶级节点
+		orgApi.orgTree({ module: moduleCode }).then((res) => {
+			treeData.value = res
+			defaultExpandedKeys.value = [res[0]?.code]
+		})
+	}
+	// 关闭抽屉
+	const onClose = () => {
+		formRef.value.resetFields()
+		visible.value = false
+	}
+	// 选择上级加载模块的选择框
+	const parentChange = (value) => {
+		formData.value.parentCode = value
+	}
+	// 图标选择器回调
+	const iconCallBack = (value) => {
+		if (value) {
+			formRef.value.clearValidate('icon')
+		}
+		formData.value.icon = value
+	}
+
+	// 组织状态options
+	const statusOptions = [
+		{ label: "正常", value: 1 },
+		{ label: "已停用", value: 0 }
+	]
+	// 验证并提交数据
+	const onSubmit = () => {
+		formRef.value.validate().then(() => {
+			const param = buildParam(formData.value)
+			submitLoading.value = true
+			menuApi.editMenu(param).then(() => {
+				emit('successful')
+				onClose()
+			}).finally(() => {
+				submitLoading.value = false
+			})
+		}).catch(() => {
+		})
+	}
+	const buildParam = (data) => {
+		// 如果用户输入的组件带反斜线，则去掉
+		if (data.component && data.component.slice(0, 1) === '/') {
+			data.component = data.component.slice(1)
+		}
+		return data
+	}
+	// 调用这个函数将子组件的一些数据和方法暴露出去
+	defineExpose({
+		onOpen
+	})
+</script>

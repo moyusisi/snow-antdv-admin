@@ -49,7 +49,7 @@
 					:expand-row-by-click="true"
 					:alert="options.alert.show"
 					bordered
-					:row-key="(record) => record.id"
+					:row-key="(record) => record.code"
 					:tool-config="toolConfig"
 					:row-selection="options.rowSelection"
 				>
@@ -85,6 +85,18 @@
 							{{ $TOOL.dictTypeData('ORG_CATEGORY', record.category) }}
 						</template>
 						<template v-if="column.dataIndex === 'action'">
+							<a-space>
+								<a-tooltip title="编辑">
+									<a-button type="link" size="small" :icon="h(FormOutlined)" @click="editFormRef.onOpen(record, module)" />
+								</a-tooltip>
+								<a-divider type="vertical" />
+								<a-tooltip title="删除">
+									<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteOrg(record)">
+										<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
+									</a-popconfirm>
+								</a-tooltip>
+							</a-space>
+
 							<a @click="formRef.onOpen(record)">编辑</a>
 							<a-divider type="vertical" />
 							<a-popconfirm title="删除此组织与下级组织吗？" @confirm="deleteOrg(record)">
@@ -97,13 +109,16 @@
 		</a-col>
 	</a-row>
 	<Form ref="formRef" @successful="tableRef.refresh()" />
+<!--	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />-->
 </template>
 
-<script setup name="sysOrg">
-	import { Empty } from 'ant-design-vue'
-	import { isEmpty } from 'lodash-es'
+<script setup>
 	import orgApi from '@/api/sys/orgApi'
+	import { h } from "vue";
+	import { Empty } from 'ant-design-vue'
+	import { DeleteOutlined, FormOutlined } from "@ant-design/icons-vue";
 	import Form from './form.vue'
+	// import EditForm from './editForm.vue'
 
 	const columns = [
 		{
@@ -172,6 +187,8 @@
 	const tableRef = ref()
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
 	const formRef = ref()
+	const addFormRef = ref()
+	const editFormRef = ref()
 	const searchFormRef = ref()
 	const searchFormState = ref({})
 	// 默认展开的节点
@@ -199,21 +216,7 @@
 			cardLoading.value = false
 			if (res !== null) {
 				treeData.value = res
-				if (isEmpty(defaultExpandedKeys.value)) {
-					// 默认展开2级
-					treeData.value.forEach((item) => {
-						// 因为0的顶级
-						if (item.parentCode === '0') {
-							defaultExpandedKeys.value.push(item.code)
-							// 取到下级ID
-							// if (item.children) {
-							// 	item.children.forEach((items) => {
-							// 		defaultExpandedKeys.value.push(items.id)
-							// 	})
-							// }
-						}
-					})
-				}
+				defaultExpandedKeys.value = [res[0]?.code]
 			}
 		}).finally(() => {
 			cardLoading.value = false
@@ -238,7 +241,7 @@
 	// 批量删除
 	const batchDeleteOrg = (params) => {
 		let data = { codes: selectedRowKeys.value }
-		orgApi.orgDelete(data).then(() => {
+		orgApi.deleteOrgTree(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
 	}
@@ -247,8 +250,5 @@
 <style scoped>
 	.ant-form-item {
 		margin-bottom: 0 !important;
-	}
-	.snowy-button-left {
-		margin-left: 8px;
 	}
 </style>
