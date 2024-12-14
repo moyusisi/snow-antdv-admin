@@ -222,9 +222,9 @@
 	// 点击树查询
 	const treeSelect = (selectedKeys) => {
 		if (selectedKeys.length > 0) {
-			searchFormState.value.parentId = selectedKeys.toString()
+			searchFormState.value.parentCode = selectedKeys.toString()
 		} else {
-			delete searchFormState.value.parentId
+			delete searchFormState.value.parentCode
 		}
 		tableRef.value.refresh(true)
 	}
