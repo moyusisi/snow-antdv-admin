@@ -17,7 +17,7 @@
 			:data="loadData"
 			:alert="options.alert.show"
 			bordered
-			:row-key="(node) => node.id"
+			:row-key="(node) => node.code"
 			:show-pagination="false"
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
@@ -211,7 +211,7 @@
 	}
 	// 单个删除
 	const deleteMenu = (node) => {
-		let data = { codes: [node.id] }
+		let data = { codes: [node.code] }
 		menuApi.deleteMenuTree(data).then(() => {
 			tableRef.value.refresh(true)
 			refreshCacheMenu()

@@ -32,7 +32,7 @@
 								placeholder="请选择上级菜单"
 								allow-clear
 								:tree-data="treeData"
-								:field-names="{ children: 'children', label: 'name', value: 'id' }"
+								:field-names="{ children: 'children', label: 'name', value: 'code' }"
 								selectable="false"
 								tree-line
 								@change="parentChange"
@@ -188,8 +188,7 @@
 	}
 	// 选择上级加载模块的选择框
 	const parentChange = (value) => {
-		console.log(value)
-		// formData.value.parentCode = value
+		formData.value.parentCode = value
 	}
 	// 图标选择器回调
 	const iconCallBack = (value) => {
