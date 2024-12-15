@@ -3,17 +3,17 @@
 		<a-form ref="searchFormRef" :model="searchFormData">
 			<a-row :gutter="24">
 				<a-col :span="8">
-					<a-form-item label="名称关键词" name="searchKey">
+					<a-form-item name="searchKey" label="名称关键词">
 						<a-input v-model:value="searchFormData.searchKey" placeholder="请输入模块名称关键词" />
 					</a-form-item>
 				</a-col>
 				<a-col :span="6">
-					<a-form-item label="使用状态" name="status">
+					<a-form-item name="status" label="使用状态">
 						<a-select v-model:value="searchFormData.status" placeholder="请选择状态" :options="statusOptions" />
 					</a-form-item>
 				</a-col>
 				<a-col :span="8">
-					<a-button type="primary" @click="tableRef.refresh(true)">查询</a-button>
+					<a-button type="primary" :icon="h(SearchOutlined)">查询</a-button>
 					<a-button class="xn-mg08" @click="reset">重置</a-button>
 				</a-col>
 			</a-row>
