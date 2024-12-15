@@ -5,7 +5,7 @@ export default [
 		method: 'post',
 		response: {
 			"code": 0,
-			"msg": "登陆成功",
+			"message": "登陆成功",
 			"data": "HTu68uF47pvzQR9ZfnekccntfXdm5oh3"
 		}
 	},
@@ -14,7 +14,7 @@ export default [
 		method: 'get',
 		response: {
 			"code": 0,
-			"msg": "操作成功",
+			"message": "操作成功",
 			"data": {
 				"id": "1543837863788879871",
 				"tenantId": "-1",
@@ -161,7 +161,7 @@ export default [
 		method: 'get',
 		response: {
 			"code": 0,
-			"msg": "操作成功",
+			"message": "操作成功",
 			"data": [
 				{
 					"id": "1548901111999770525",
