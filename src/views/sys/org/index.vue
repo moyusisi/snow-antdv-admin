@@ -78,7 +78,7 @@
 							<a-tag v-if="record.orgType === 3" color="purple">虚拟节点</a-tag>
 						</template>
 						<template v-if="column.dataIndex === 'status'">
-							<a-tag v-if="record.status === 1" color="green">正常</a-tag>
+							<a-tag v-if="record.status === 0" color="green">正常</a-tag>
 							<a-tag v-else>已停用</a-tag>
 						</template>
 						<template v-if="column.dataIndex === 'category'">
@@ -91,7 +91,7 @@
 								</a-tooltip>
 								<a-divider type="vertical" />
 								<a-tooltip title="删除">
-									<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteOrg(record)">
+									<a-popconfirm title="确定要删除此组织吗？" @confirm="deleteOrg(record)">
 										<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
 									</a-popconfirm>
 								</a-tooltip>
@@ -172,10 +172,10 @@
 			}
 		}
 	}
-	// 组织状态options
+	// 使用状态options（0正常 1停用）
 	const statusOptions = [
-		{ label: "正常", value: 1 },
-		{ label: "已停用", value: 0 }
+		{ label: "正常", value: 0 },
+		{ label: "已停用", value: 1 }
 	]
 	// 定义tableDOM
 	const tableRef = ref()

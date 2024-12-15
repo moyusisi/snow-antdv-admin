@@ -15,7 +15,7 @@
 						</a-form-item>
 					</a-col>
 					<a-col :span="12">
-						<a-form-item label="组织机构类型：" name="orgType" :rules="[required('请选择菜单类型')]">
+						<a-form-item label="组织类型：" name="orgType" :rules="[required('请选择组织类型')]">
 							<a-radio-group v-model:value="formData.orgType" button-style="solid">
 								<!-- 组织机构类型(字典 1公司组织 2部门机构 3虚拟节点) -->
 								<a-radio-button :value="1">公司组织</a-radio-button>
@@ -25,7 +25,7 @@
 						</a-form-item>
 					</a-col>
 					<a-col :span="12">
-						<a-form-item label="上级组织：" name="parentCode" :rules="[required('请选择上级菜单')]">
+						<a-form-item label="上级组织：" name="parentCode" :rules="[required('请选择上级组织')]">
 							<a-tree-select
 								v-model:value="formData.parentCode"
 								v-model:treeExpandedKeys="defaultExpandedKeys"
@@ -40,8 +40,14 @@
 							/>
 						</a-form-item>
 					</a-col>
+					<!-- 使用状态 -->
 					<a-col :span="12">
-						<a-form-item label="排序:" name="sortNum">
+						<a-form-item label="使用状态:" name="status" :rules="[required('请选择使用状态')]">
+							<a-radio-group v-model:value="formData.status" option-type="button" button-style="solid" :options="statusOptions" />
+						</a-form-item>
+					</a-col>
+					<a-col :span="12">
+						<a-form-item label="排序:" name="sortNum" :rules="[required('请填写排序值')]">
 							<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
 						</a-form-item>
 					</a-col>
@@ -49,12 +55,6 @@
 			</a-card>
 			<a-card title="资源信息">
 				<a-row :gutter="24">
-					<!-- 使用状态 -->
-					<a-col :span="12">
-						<a-form-item label="使用状态:" name="status" :rules="[required('请选择使用状态')]">
-							<a-radio-group v-model:value="formData.status" button-style="solid" :options="statusOptions" />
-						</a-form-item>
-					</a-col>
 					<!-- 公司层级 -->
 					<a-col :span="12" v-if="formData.orgType === 1">
 						<a-form-item label="公司层级：" name="orgLevel" :rules="[required('请选择层级')]">
@@ -97,12 +97,17 @@
 		orgLevel: 2,
 		sortNum: 99,
 		visible: 1,
-		status: 1
+		status: 0
 	})
 	// 默认展开的节点(顶级)
 	const defaultExpandedKeys = ref([0])
 	const submitLoading = ref(false)
-
+	// 使用状态options（0正常 1停用）
+	const statusOptions = [
+		{ label: "正常", value: 0 },
+		{ label: "已停用", value: 1 }
+	]
+	// 抽屉宽度
 	const drawerWidth = computed(() => {
 		return store.menuIsCollapse ? `calc(100% - 80px)` : `calc(100% - 210px)`
 	})
@@ -111,7 +116,7 @@
 	const onOpen = (parentCode) => {
 		visible.value = true
 		formData.value.parentCode = parentCode
-		// 获取菜单树并加入顶级节点
+		// 获取组织树并加入顶级节点
 		orgApi.orgTree({}).then((res) => {
 			treeData.value = res
 			defaultExpandedKeys.value = [res[0]?.code]
@@ -134,11 +139,6 @@
 		formData.value.icon = value
 	}
 
-	// 组织状态options
-	const statusOptions = [
-		{ label: "正常", value: 1 },
-		{ label: "已停用", value: 0 }
-	]
 	// 验证并提交数据
 	const onSubmit = () => {
 		formRef.value.validate().then(() => {

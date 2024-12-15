@@ -1,10 +1,15 @@
 <template>
 	<a-card :bordered="false" class="xn-mb10">
-		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormState" class="ant-advanced-search-form">
+		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormData" class="ant-advanced-search-form">
 			<a-row :gutter="24">
 				<a-col :span="8">
 					<a-form-item label="名称关键词" name="searchKey">
-						<a-input v-model:value="searchFormState.searchKey" placeholder="请输入模块名称关键词" />
+						<a-input v-model:value="searchFormData.searchKey" placeholder="请输入模块名称关键词" />
+					</a-form-item>
+				</a-col>
+				<a-col :span="6">
+					<a-form-item label="使用状态" name="status">
+						<a-select v-model:value="searchFormData.status" placeholder="请选择状态" :options="statusOptions" />
 					</a-form-item>
 				</a-col>
 				<a-col :span="8">
@@ -50,6 +55,10 @@
 					</span>
 					<span v-else />
 				</template>
+				<template v-if="column.dataIndex === 'status'">
+					<a-tag v-if="record.status === 0" color="green">正常</a-tag>
+					<a-tag v-else>已停用</a-tag>
+				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a-space>
 						<a-tooltip title="编辑">
@@ -82,7 +91,7 @@
 	import EditForm from "@/views/sys/resource/module/editForm.vue";
 
 	// menuType=1标识模块
-	const searchFormState = ref({ 'menuType': 1 })
+	const searchFormData = ref({ 'menuType': 1 })
 	const addFormRef = ref()
 	const editFormRef = ref()
 	const searchFormRef = ref()
@@ -113,6 +122,12 @@
 			width: 100
 		},
 		{
+			title: '状态',
+			dataIndex: 'status',
+			align: 'center',
+			width: 100
+		},
+		{
 			title: '创建时间',
 			dataIndex: 'createTime',
 			sorter: true,
@@ -127,6 +142,11 @@
 		}
 	]
 	let selectedRowKeys = ref([])
+	// 使用状态options（0正常 1停用）
+	const statusOptions = [
+		{ label: "正常", value: 0 },
+		{ label: "已停用", value: 1 }
+	]
 	// 列表选择配置
 	const options = {
 		alert: {
@@ -142,7 +162,7 @@
 		}
 	}
 	const loadData = (parameter) => {
-		return menuApi.menuPage(Object.assign(parameter, searchFormState.value)).then((res) => {
+		return menuApi.menuPage(Object.assign(parameter, searchFormData.value)).then((res) => {
 			return res
 		})
 	}

@@ -45,7 +45,7 @@
 						</a-radio-group>
 					</a-form-item>
 					<a-col :span="12">
-						<a-form-item label="排序:" name="sortNum">
+						<a-form-item label="排序:" name="sortNum" :rules="[required('请填写排序值')]">
 							<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
 						</a-form-item>
 					</a-col>
@@ -115,7 +115,7 @@
 					<!-- 目录、菜单、外链:是否可见 -->
 					<a-col :span="12" v-if="formData.menuType === 2 || formData.menuType === 3 || formData.menuType === 5">
 						<a-form-item label="是否可见:" name="visible" :rules="[required('请选择是否可见')]">
-							<a-radio-group v-model:value="formData.visible" button-style="solid" :options="visibleOptions" />
+							<a-radio-group v-model:value="formData.visible" option-type="button" button-style="solid" :options="visibleOptions"/>
 						</a-form-item>
 					</a-col>
 					<!-- 目录、菜单、外链:图标 -->

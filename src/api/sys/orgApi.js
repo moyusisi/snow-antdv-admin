@@ -11,7 +11,7 @@ const request = (url, ...arg) => baseRequest(`/sys/org/` + url, ...arg)
 export default {
 	// 查询组织机构列表
 	orgList(data) {
-		return service.postJson('/api/sys/menu/list', data)
+		return service.postJson('/api/sys/org/list', data)
 	},
 	// 分页查询组织机构列表
 	orgPage(data) {

@@ -18,6 +18,10 @@
 				<a-input v-model:value="formData.icon" placeholder="请选择图标" style="width: calc(100% - 70px)" allow-clear disabled />
 				<a-button type="primary" @click="iconSelectorRef.showIconModal(formData.icon)">选择</a-button>
 			</a-form-item>
+			<!-- 使用状态 -->
+			<a-form-item label="使用状态:" name="status" :rules="[required('请选择使用状态')]">
+				<a-radio-group v-model:value="formData.status" option-type="button" button-style="solid" :options="statusOptions"/>
+			</a-form-item>
 			<a-form-item label="排序:" name="sortNum">
 				<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
 			</a-form-item>
@@ -41,6 +45,11 @@
 	const iconSelectorRef = ref()
 	// 表单数据
 	const formData = ref({ sortNum: 99 })
+	// 使用状态options（0正常 1停用）
+	const statusOptions = [
+		{ label: "正常", value: 0 },
+		{ label: "已停用", value: 1 }
+	]
 
 	// 打开抽屉
 	const onOpen = (record) => {
