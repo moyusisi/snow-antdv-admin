@@ -1,6 +1,6 @@
 <template>
 	<a-card :bordered="false" class="xn-mb10">
-		<a-form ref="searchFormRef" name="advanced_search" :model="searchFormData" class="ant-advanced-search-form">
+		<a-form ref="searchFormRef" :model="searchFormData">
 			<a-row :gutter="24">
 				<a-col :span="8">
 					<a-form-item label="名称关键词" name="searchKey">
@@ -30,7 +30,7 @@
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
 		>
-			<template #operator class="table-operator">
+			<template #operator>
 				<a-space>
 					<a-button type="primary" @click="addFormRef.onOpen()">
 						<template #icon><plus-outlined /></template>
