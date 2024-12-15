@@ -60,21 +60,11 @@
 					<a-tag v-else>已停用</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
-					<a-space>
-						<a-tooltip title="编辑">
-							<a-button type="link" size="small" @click="editFormRef.onOpen(record)">
-								<template #icon>
-									<FormOutlined/>
-								</template>
-							</a-button>
-						</a-tooltip>
-						<a-divider type="vertical" />
-						<a-tooltip title="删除">
-							<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteModule(record)">
-								<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
-							</a-popconfirm>
-						</a-tooltip>
-					</a-space>
+					<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
+					<a-divider type="vertical" />
+					<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteModule(record)">
+						<a-button type="link" size="small" danger>删除</a-button>
+					</a-popconfirm>
 				</template>
 			</template>
 		</s-table>
@@ -86,7 +76,7 @@
 <script setup>
 	import menuApi from '@/api/sys/menuApi'
 	import { h } from "vue";
-	import { DeleteOutlined, FormOutlined } from "@ant-design/icons-vue";
+	import { SearchOutlined } from "@ant-design/icons-vue";
 	import AddForm from "@/views/sys/resource/module/addForm.vue";
 	import EditForm from "@/views/sys/resource/module/editForm.vue";
 
