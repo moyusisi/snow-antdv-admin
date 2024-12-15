@@ -13,7 +13,7 @@
 					</a-form-item>
 				</a-col>
 				<a-col :span="8">
-					<a-button type="primary" :icon="h(SearchOutlined)">查询</a-button>
+					<a-button type="primary" :icon="h(SearchOutlined)" @click="tableRef.refresh(true)">查询</a-button>
 					<a-button class="xn-mg08" @click="reset">重置</a-button>
 				</a-col>
 			</a-row>
@@ -32,12 +32,9 @@
 			:row-selection="options.rowSelection"
 			@resizeColumn="handleResizeColumn"
 		>
-			<template #operator class="table-operator">
+			<template #operator>
 				<a-space>
-					<a-button
-						type="primary"
-						@click="formRef.onOpen(undefined, searchFormData.category, searchFormData.orgId)"
-					>
+					<a-button type="primary" @click="formRef.onOpen()">
 						<template #icon><plus-outlined /></template>
 						新增角色
 					</a-button>
@@ -51,8 +48,12 @@
 				</a-space>
 			</template>
 			<template #bodyCell="{ column, record }">
-				<template v-if="column.dataIndex === 'category'">
-					{{ $TOOL.dictTypeData('ROLE_CATEGORY', record.category) }}
+				<template v-if="column.dataIndex === 'code'">
+					<a-tag v-if="record.code" :bordered="false">{{ record.code }}</a-tag>
+				</template>
+				<template v-if="column.dataIndex === 'status'">
+					<a-tag v-if="record.status === 0" color="green">正常</a-tag>
+					<a-tag v-else>已停用</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
 					<a @click="formRef.onOpen(record)">编辑</a>
@@ -121,12 +122,22 @@
 			width: 150
 		},
 		{
-			title: '分类',
-			dataIndex: 'category'
+			title: '唯一编码',
+			dataIndex: 'code',
+			resizable: true,
+			width: 200
 		},
 		{
 			title: '排序',
-			dataIndex: 'sortCode',
+			dataIndex: 'sortNum',
+			sorter: true,
+			align: 'center',
+			width: 100
+		},
+		{
+			title: '状态',
+			dataIndex: 'status',
+			align: 'center',
 			width: 100
 		},
 		{

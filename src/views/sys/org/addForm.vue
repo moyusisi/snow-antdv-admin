@@ -143,7 +143,7 @@
 	const onSubmit = () => {
 		formRef.value.validate().then(() => {
 			submitLoading.value = true
-			orgApi.editOrg(formData.value).then(() => {
+			orgApi.addOrg(formData.value).then(() => {
 				emit('successful')
 				onClose()
 			}).finally(() => {
