@@ -66,21 +66,11 @@
 					<span v-else ></span>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
-					<a-space>
-						<a-tooltip title="编辑">
-							<a-button type="link" size="small" @click="editFormRef.onOpen(node, module)">
-								<template #icon>
-									<FormOutlined/>
-								</template>
-							</a-button>
-						</a-tooltip>
-						<a-divider type="vertical" />
-						<a-tooltip title="删除">
-							<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(node)">
-								<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
-							</a-popconfirm>
-						</a-tooltip>
-					</a-space>
+					<a-button type="link" size="small" @click="editFormRef.onOpen(node, module)">编辑</a-button>
+					<a-divider type="vertical" />
+					<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(record)">
+						<a-button type="link" size="small" danger>删除</a-button>
+					</a-popconfirm>
 				</template>
 			</template>
 		</s-table>

@@ -83,9 +83,9 @@
 
 	import { required } from '@/utils/formRules'
 	import IconSelector from '@/components/Selector/iconSelector.vue'
-	import { globalStore } from "@/store";
+	import { useGlobalStore } from "@/store";
 
-	const store = globalStore()
+	const store = useGlobalStore()
 
 	// 默认是关闭状态
 	const visible = ref(false)

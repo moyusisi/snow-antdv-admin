@@ -61,7 +61,7 @@
 				<template v-if="column.dataIndex === 'action'">
 					<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
 					<a-divider type="vertical" />
-					<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteModule(record)">
+					<a-popconfirm title="确定要删除此模块吗？" @confirm="deleteModule(record)">
 						<a-button type="link" size="small" danger>删除</a-button>
 					</a-popconfirm>
 				</template>

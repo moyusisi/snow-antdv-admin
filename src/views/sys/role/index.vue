@@ -55,10 +55,12 @@
 					<a-tag v-else>已停用</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
-					<a @click="editFormRef.onOpen(record)">编辑</a>
+					<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
 					<a-divider type="vertical" />
-					<a-popconfirm title="确定删除此角色？" @confirm="deleteRole(record)">
-						<a-button type="link" danger size="small">删除</a-button>
+					<a-button type="link" size="small" @click="grantPermFormRef.onOpen(record)">授权</a-button>
+					<a-divider type="vertical" />
+					<a-popconfirm title="确定要删除此角色吗？" @confirm="deleteRole(record)">
+						<a-button type="link" size="small" danger>删除</a-button>
 					</a-popconfirm>
 					<a-divider type="vertical" />
 					<a-dropdown>
@@ -87,6 +89,7 @@
 			</template>
 		</s-table>
 	</a-card>
+	<grant-perm-form ref="grantPermFormRef" @successful="tableRef.refresh()" />
 	<grantResourceForm ref="grantResourceFormRef" @successful="tableRef.refresh()" />
 	<grantMobileResourceForm ref="grantMobileResourceFormRef" @successful="tableRef.refresh()" />
 	<grantPermissionForm ref="grantPermissionFormRef" @successful="tableRef.refresh()" />
@@ -114,6 +117,7 @@
 	import Form from './form.vue'
 	import AddForm from "./addForm.vue";
 	import EditForm from "./editForm.vue";
+	import GrantPermForm from "@/views/sys/role/grantPermForm.vue";
 
 	const columns = [
 		{
@@ -175,6 +179,7 @@
 	const editFormRef = ref()
 	const module = ref()
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
+	const grantPermFormRef = ref()
 	const grantResourceFormRef = ref()
 	const grantMobileResourceFormRef = ref()
 	const grantPermissionFormRef = ref()
