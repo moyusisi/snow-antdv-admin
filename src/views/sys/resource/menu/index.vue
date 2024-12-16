@@ -25,9 +25,7 @@
 		>
 			<template #operator>
 				<a-space>
-					<a-button type="primary" @click="addFormRef.onOpen(module)">
-						<template #icon><plus-outlined /></template>新增菜单
-					</a-button>
+					<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(module)">新增菜单</a-button>
 					<xn-batch-button
 						buttonName="批量删除"
 						icon="DeleteOutlined"
@@ -95,7 +93,7 @@
 	import menuApi from '@/api/sys/menuApi'
 
 	import { h } from 'vue'
-	import { DeleteOutlined, FormOutlined } from '@ant-design/icons-vue'
+	import { DeleteOutlined, FormOutlined, PlusOutlined } from '@ant-design/icons-vue'
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
 	import { useMenuStore } from '@/store/menu'

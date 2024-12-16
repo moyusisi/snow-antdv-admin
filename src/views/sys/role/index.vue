@@ -13,8 +13,10 @@
 					</a-form-item>
 				</a-col>
 				<a-col :span="8">
-					<a-button type="primary" :icon="h(SearchOutlined)" @click="tableRef.refresh(true)">查询</a-button>
-					<a-button class="xn-mg08" @click="reset">重置</a-button>
+					<a-space>
+						<a-button type="primary" :icon="h(SearchOutlined)" @click="tableRef.refresh(true)">查询</a-button>
+						<a-button @click="reset">重置</a-button>
+					</a-space>
 				</a-col>
 			</a-row>
 		</a-form>
@@ -34,7 +36,7 @@
 		>
 			<template #operator>
 				<a-space>
-					<a-button type="primary" :icon="h(PlusOutlined)"  @click="addFormRef.onOpen()">新增模块</a-button>
+					<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(module)">新增角色</a-button>
 					<xn-batch-button
 						buttonName="批量删除"
 						icon="DeleteOutlined"
@@ -166,6 +168,7 @@
 	const formRef = ref()
 	const addFormRef = ref()
 	const editFormRef = ref()
+	const module = ref()
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
 	const grantResourceFormRef = ref()
 	const grantMobileResourceFormRef = ref()

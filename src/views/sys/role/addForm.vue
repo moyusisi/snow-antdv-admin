@@ -58,7 +58,9 @@
 	// 打开抽屉
 	const onOpen = (moduleCode) => {
 		visible.value = true
-		formData.value.module = moduleCode
+		if (moduleCode){
+			formData.value.module = moduleCode
+		}
 	}
 	// 关闭抽屉
 	const onClose = () => {

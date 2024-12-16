@@ -29,14 +29,10 @@
 							</a-form-item>
 						</a-col>
 						<a-col :span="8">
-							<a-button type="primary" @click="tableRef.refresh(true)">
-								<template #icon><SearchOutlined /></template>
-								查询
-							</a-button>
-							<a-button class="xn-mg08" @click="reset">
-								<template #icon><redo-outlined /></template>
-								重置
-							</a-button>
+							<a-space>
+								<a-button type="primary" :icon="h(SearchOutlined)" @click="tableRef.refresh(true)">查询</a-button>
+								<a-button @click="reset">重置</a-button>
+							</a-space>
 						</a-col>
 					</a-row>
 				</a-form>
@@ -55,10 +51,7 @@
 				>
 					<template #operator class="table-operator">
 						<a-space>
-							<a-button type="primary" @click="addFormRef.onOpen(searchFormState.parentCode)">
-								<template #icon><plus-outlined /></template>
-								新增
-							</a-button>
+							<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(searchFormState.parentCode)">新增</a-button>
 							<xn-batch-button
 								buttonName="批量删除"
 								icon="DeleteOutlined"
@@ -110,7 +103,7 @@
 	import { onMounted, h } from "vue";
 	import orgApi from '@/api/sys/orgApi'
 	import { Empty } from 'ant-design-vue'
-	import { DeleteOutlined, FormOutlined } from "@ant-design/icons-vue";
+	import { DeleteOutlined, FormOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons-vue";
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
 
