@@ -11,6 +11,9 @@
 			<a-form-item label="模块名称：" name="name" :rules="[required('请输入模块名称')]">
 				<a-input v-model:value="formData.name" placeholder="请输入显示名称" allow-clear />
 			</a-form-item>
+			<a-form-item label="唯一编码" name="code" tooltip="不可更改！不填将会自动生成">
+				<a-input v-model:value="formData.code" placeholder="唯一编码，不填将自动生成，创建后不可更改" allow-clear />
+			</a-form-item>
 			<a-form-item label="图标：" name="icon">
 				<a-input v-model:value="formData.icon" placeholder="请选择图标" style="width: calc(100% - 70px)" allow-clear disabled />
 				<a-button type="primary" @click="iconSelectorRef.showIconModal(formData.icon)">选择</a-button>
@@ -20,7 +23,7 @@
 				<a-radio-group v-model:value="formData.status" option-type="button" button-style="solid" :options="statusOptions"/>
 			</a-form-item>
 			<a-form-item label="排序:" name="sortNum">
-				<a-input-number class="xn-wd" v-model:value="formData.sortNum" :max="100" />
+				<a-input-number v-model:value="formData.sortNum" :max="100" style="width: 100%"/>
 			</a-form-item>
 		</a-form>
 		<template #footer>

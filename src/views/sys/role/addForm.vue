@@ -11,12 +11,15 @@
 			<a-form-item label="角色名称：" name="name" :rules="[required('请输入角色名称')]">
 				<a-input v-model:value="formData.name" placeholder="请输入角色名称" allow-clear show-count :maxlength="20" />
 			</a-form-item>
+			<a-form-item label="唯一编码" name="code" tooltip="不可更改！不填将会自动生成">
+				<a-input v-model:value="formData.code" placeholder="唯一编码，不填将自动生成，创建后不可更改" allow-clear />
+			</a-form-item>
 			<!-- 使用状态 -->
 			<a-form-item label="使用状态:" name="status" :rules="[required('请选择使用状态')]">
 				<a-radio-group v-model:value="formData.status" option-type="button" button-style="solid" :options="statusOptions"/>
 			</a-form-item>
 			<a-form-item label="排序：" name="sortNum">
-				<a-input-number v-model:value="formData.sortNum" :max="100" />
+				<a-input-number v-model:value="formData.sortNum" :max="100" style="width: 100%"/>
 			</a-form-item>
 			<a-form-item label="备注：" name="remark" >
 				<a-input v-model:value="formData.remark" placeholder="备注信息" show-count :maxlength="100" />
