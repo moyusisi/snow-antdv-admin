@@ -147,7 +147,7 @@
 			title: '操作',
 			dataIndex: 'action',
 			align: 'center',
-			width: 100,
+			width: 160,
 			scopedSlots: { customRender: 'action' }
 		}
 	]
