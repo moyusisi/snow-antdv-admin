@@ -57,7 +57,7 @@
 				<template v-if="column.dataIndex === 'action'">
 					<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
 					<a-divider type="vertical" />
-					<a-button type="link" size="small" @click="grantPermFormRef.onOpen(record)">授权</a-button>
+					<a-button type="link" size="small" @click="grantMenuFormRef.onOpen(record)">授权</a-button>
 					<a-divider type="vertical" />
 					<a-popconfirm title="确定要删除此角色吗？" @confirm="deleteRole(record)">
 						<a-button type="link" size="small" danger>删除</a-button>
@@ -89,7 +89,7 @@
 			</template>
 		</s-table>
 	</a-card>
-	<grant-perm-form ref="grantPermFormRef" @successful="tableRef.refresh()" />
+	<grant-menu-form ref="grantMenuFormRef" @successful="tableRef.refresh()" />
 	<grantResourceForm ref="grantResourceFormRef" @successful="tableRef.refresh()" />
 	<grantMobileResourceForm ref="grantMobileResourceFormRef" @successful="tableRef.refresh()" />
 	<grantPermissionForm ref="grantPermissionFormRef" @successful="tableRef.refresh()" />
@@ -117,7 +117,7 @@
 	import Form from './form.vue'
 	import AddForm from "./addForm.vue";
 	import EditForm from "./editForm.vue";
-	import GrantPermForm from "@/views/sys/role/grantPermForm.vue";
+	import GrantMenuForm from "./grantMenuForm.vue";
 
 	const columns = [
 		{
@@ -179,7 +179,7 @@
 	const editFormRef = ref()
 	const module = ref()
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
-	const grantPermFormRef = ref()
+	const grantMenuFormRef = ref()
 	const grantResourceFormRef = ref()
 	const grantMobileResourceFormRef = ref()
 	const grantPermissionFormRef = ref()
