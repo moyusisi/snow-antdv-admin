@@ -1,6 +1,6 @@
 <template>
 	<a-drawer
-		title="角色授权"
+		title="角色授权-功能权限"
 		:open="visible"
 		:width="drawerWidth"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
