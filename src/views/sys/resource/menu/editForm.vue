@@ -128,9 +128,11 @@
 				</a-row>
 			</a-card>
 		</a-form>
-		<template #footer :footerStyle="{ float: right }">
-			<a-button class="xn-mr8" @click="onClose">关闭</a-button>
-			<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
+		<template #footer>
+			<a-space>
+				<a-button @click="onClose">关闭</a-button>
+				<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
+			</a-space>
 		</template>
 		<Icon-selector ref="iconSelector" @iconCallBack="iconCallBack" />
 	</a-drawer>

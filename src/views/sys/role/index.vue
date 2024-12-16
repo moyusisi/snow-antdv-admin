@@ -34,10 +34,7 @@
 		>
 			<template #operator>
 				<a-space>
-					<a-button type="primary" @click="formRef.onOpen()">
-						<template #icon><plus-outlined /></template>
-						新增角色
-					</a-button>
+					<a-button type="primary" :icon="h(PlusOutlined)"  @click="addFormRef.onOpen()">新增模块</a-button>
 					<xn-batch-button
 						buttonName="批量删除"
 						icon="DeleteOutlined"
@@ -92,6 +89,7 @@
 	<grantMobileResourceForm ref="grantMobileResourceFormRef" @successful="tableRef.refresh()" />
 	<grantPermissionForm ref="grantPermissionFormRef" @successful="tableRef.refresh()" />
 	<Form ref="formRef" @successful="tableRef.refresh()" />
+	<AddForm ref="addFormRef" @successful="tableRef.refresh()" />
 	<xn-user-selector
 		ref="userSelectorPlusRef"
 		:org-tree-api="selectorApiFunction.orgTreeApi"
@@ -107,12 +105,13 @@
 	import orgApi from '@/api/sys/orgApi'
 
 	import { h } from "vue"
-	import { SearchOutlined } from "@ant-design/icons-vue"
+	import { PlusOutlined, SearchOutlined } from "@ant-design/icons-vue"
 	import { isEmpty } from 'lodash-es'
 	import GrantResourceForm from './grantResourceForm.vue'
 	import GrantMobileResourceForm from './grantMobileResourceForm.vue'
 	import GrantPermissionForm from './grantPermissionForm.vue'
 	import Form from './form.vue'
+	import AddForm from "./addForm.vue";
 
 	const columns = [
 		{
@@ -165,6 +164,8 @@
 	// 定义tableDOM
 	const tableRef = ref()
 	const formRef = ref()
+	const addFormRef = ref()
+	const editFormRef = ref()
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
 	const grantResourceFormRef = ref()
 	const grantMobileResourceFormRef = ref()
@@ -223,22 +224,6 @@
 			}
 		}
 	})
-	// 点击树查询
-	const treeSelect = (selectedKeys) => {
-		if (selectedKeys.length > 0) {
-			if (selectedKeys[0] === 'GLOBAL') {
-				searchFormData.value.category = selectedKeys[0]
-				delete searchFormData.value.orgId
-			} else {
-				searchFormData.value.orgId = selectedKeys.toString()
-				delete searchFormData.value.category
-			}
-		} else {
-			delete searchFormData.value.category
-			delete searchFormData.value.orgId
-		}
-		tableRef.value.refresh(true)
-	}
 	// 可伸缩列
 	const handleResizeColumn = (w, col) => {
 		col.width = w
