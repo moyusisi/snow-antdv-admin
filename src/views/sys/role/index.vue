@@ -4,7 +4,7 @@
 			<a-row :gutter="24">
 				<a-col :span="8">
 					<a-form-item name="searchKey" label="名称关键词">
-						<a-input v-model:value="searchFormData.searchKey" placeholder="请输入角色名称关键词" />
+						<a-input v-model:value="searchFormData.searchKey" placeholder="请输入关键词" allowClear />
 					</a-form-item>
 				</a-col>
 				<a-col :span="6">
