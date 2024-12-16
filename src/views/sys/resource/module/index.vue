@@ -117,13 +117,6 @@
 			width: 100
 		},
 		{
-			title: '创建时间',
-			dataIndex: 'createTime',
-			sorter: true,
-			align: 'center',
-			width: 200
-		},
-		{
 			title: '操作',
 			dataIndex: 'action',
 			align: 'center',
