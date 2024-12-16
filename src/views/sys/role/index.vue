@@ -9,7 +9,7 @@
 				</a-col>
 				<a-col :span="6">
 					<a-form-item label="使用状态" name="status">
-						<a-select v-model:value="searchFormData.status" placeholder="请选择状态" :options="statusOptions" />
+						<a-select v-model:value="searchFormData.status" placeholder="请选择状态" :options="statusOptions" allowClear />
 					</a-form-item>
 				</a-col>
 				<a-col :span="8">
@@ -55,9 +55,9 @@
 					<a-tag v-else>已停用</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
-					<a @click="formRef.onOpen(record)">编辑</a>
+					<a @click="editFormRef.onOpen(record)">编辑</a>
 					<a-divider type="vertical" />
-					<a-popconfirm title="确定删除此角色？" @confirm="removeOrg(record)">
+					<a-popconfirm title="确定删除此角色？" @confirm="deleteRole(record)">
 						<a-button type="link" danger size="small">删除</a-button>
 					</a-popconfirm>
 					<a-divider type="vertical" />
@@ -92,6 +92,7 @@
 	<grantPermissionForm ref="grantPermissionFormRef" @successful="tableRef.refresh()" />
 	<Form ref="formRef" @successful="tableRef.refresh()" />
 	<AddForm ref="addFormRef" @successful="tableRef.refresh()" />
+	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />
 	<xn-user-selector
 		ref="userSelectorPlusRef"
 		:org-tree-api="selectorApiFunction.orgTreeApi"
@@ -104,16 +105,15 @@
 
 <script setup>
 	import roleApi from '@/api/sys/roleApi'
-	import orgApi from '@/api/sys/orgApi'
 
 	import { h } from "vue"
 	import { PlusOutlined, SearchOutlined } from "@ant-design/icons-vue"
-	import { isEmpty } from 'lodash-es'
 	import GrantResourceForm from './grantResourceForm.vue'
 	import GrantMobileResourceForm from './grantMobileResourceForm.vue'
 	import GrantPermissionForm from './grantPermissionForm.vue'
 	import Form from './form.vue'
 	import AddForm from "./addForm.vue";
+	import EditForm from "./editForm.vue";
 
 	const columns = [
 		{
@@ -149,6 +149,11 @@
 		}
 	]
 	const selectedRowKeys = ref([])
+	// 使用状态options（0正常 1停用）
+	const statusOptions = [
+		{ label: "正常", value: 0 },
+		{ label: "已停用", value: 1 }
+	]
 	// 列表选择配置
 	const options = {
 		alert: {
@@ -176,12 +181,6 @@
 	const userSelectorPlusRef = ref()
 	const searchFormRef = ref()
 	const searchFormData = ref({})
-	// 默认展开的节点
-	const defaultExpandedKeys = ref([])
-	const treeData = ref([])
-	// 替换treeNode 中 title,key,children
-	const treeFieldNames = { children: 'children', title: 'name', key: 'id' }
-	const cardLoading = ref(true)
 	// 记录数据
 	const recordCacheData = ref({})
 
@@ -197,54 +196,21 @@
 		searchFormRef.value.resetFields()
 		tableRef.value.refresh(true)
 	}
-	// 加载左侧的树
-	orgApi.orgTree().then((res) => {
-		cardLoading.value = false
-		if (res !== null) {
-			// 树中插入全局角色类型
-			const globalRoleType = [
-				{
-					id: 'GLOBAL',
-					parentId: '-1',
-					name: '全局'
-				}
-			]
-			treeData.value = globalRoleType.concat(res)
-			if (isEmpty(defaultExpandedKeys.value)) {
-				// 默认展开2级
-				treeData.value.forEach((item) => {
-					// 因为0的顶级
-					if (item.parentId === '0') {
-						defaultExpandedKeys.value.push(item.id)
-						// 取到下级ID
-						if (item.children) {
-							item.children.forEach((items) => {
-								defaultExpandedKeys.value.push(items.id)
-							})
-						}
-					}
-				})
-			}
-		}
-	})
 	// 可伸缩列
 	const handleResizeColumn = (w, col) => {
 		col.width = w
 	}
 	// 删除
-	const removeOrg = (record) => {
-		let params = [
-			{
-				id: record.id
-			}
-		]
-		roleApi.roleDelete(params).then(() => {
+	const deleteRole = (record) => {
+		let data = { ids: [record.id] }
+		roleApi.deleteRole(data).then(() => {
 			tableRef.value.refresh(true)
 		})
 	}
 	// 批量删除
 	const deleteBatchRole = (params) => {
-		roleApi.roleDelete(params).then(() => {
+		let data = { ids: selectedRowKeys.value }
+		roleApi.deleteRole(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
 	}

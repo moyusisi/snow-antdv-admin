@@ -24,8 +24,8 @@
 							</a-form-item>
 						</a-col>
 						<a-col :span="6">
-							<a-form-item label="组织状态" name="status">
-								<a-select v-model:value="searchFormState.status" placeholder="请选择状态" :options="statusOptions" />
+							<a-form-item label="使用状态" name="status">
+								<a-select v-model:value="searchFormState.status" placeholder="请选择状态" :options="statusOptions" allowClear />
 							</a-form-item>
 						</a-col>
 						<a-col :span="8">

@@ -90,7 +90,7 @@ service.interceptors.response.use(
 		// 响应code不为0则认为失败
 		if (res.code !== 0) {
 			console.log("网络错误:" + response.config.url)
-			message.error(res.msg || "网络错误")
+			message.error(res.message || "网络错误")
 			return Promise.reject(res)
 		} else {
 			// 统一成功提示
@@ -117,7 +117,7 @@ service.interceptors.response.use(
 			apiNameArray.forEach((apiName) => {
 				// 上面去掉接口路径后，方法内包含内置的进行统一提示成功
 				if (functionName.includes(apiName)) {
-					message.success(res.msg)
+					message.success(res.message)
 				}
 			})
 		}

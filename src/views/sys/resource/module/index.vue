@@ -9,7 +9,7 @@
 				</a-col>
 				<a-col :span="6">
 					<a-form-item name="status" label="使用状态">
-						<a-select v-model:value="searchFormData.status" placeholder="请选择状态" :options="statusOptions" />
+						<a-select v-model:value="searchFormData.status" placeholder="请选择状态" :options="statusOptions" allowClear />
 					</a-form-item>
 				</a-col>
 				<a-col :span="8">
@@ -162,7 +162,6 @@
 	}
 	// 删除
 	const deleteModule = (record) => {
-		console.log(record)
 		let data = { ids: [record.id] }
 		menuApi.deleteMenu(data).then(() => {
 			tableRef.value.refresh(true)
