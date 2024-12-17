@@ -7,7 +7,6 @@
 		:destroy-on-close="true"
 		@close="onClose"
 	>
-		<a-alert message="非超管角色不可被授权系统模块菜单资源" banner  class="xn-mb10"/>
 		<a-spin :spinning="spinningLoading">
 			<a-space class="xn-pb10">
 				<a-radio-group v-model:value="moduleId" button-style="solid">
@@ -16,29 +15,44 @@
 					</a-radio-button>
 				</a-radio-group>
 			</a-space>
-			<a-table size="middle" :columns="columns" :data-source="loadDatas" :pagination="false" bordered>
+			<!-- 菜单权限授权表格 -->
+			<a-table size="middle"
+					 ref="tableRef"
+					 :columns="columns"
+					 :data-source="tableData"
+					 :row-key="(record) => record.code"
+					 :row-selection="rowSelection"
+					 :defaultExpandAllRows="true"
+					 bordered>
 				<template #bodyCell="{ column, record }">
-					<template v-if="column.dataIndex === 'parentName'">
-						<a-checkbox :checked="record.parentCheck" @update:checked="(val) => changeParent(record, val)">
-							{{ record.parentName }}
-						</a-checkbox>
+					<template v-if="column.dataIndex === 'name'">
+						<span v-if="record.menuType === 1">
+							<a-tag color="orange">模块</a-tag>{{record.name}}
+						</span>
+						<span v-if="record.menuType === 1">
+							<a-tag color="orange">模块</a-tag>{{record.name}}
+						</span>
+						<span v-if="record.menuType === 2">
+							<a-tag color="cyan">目录</a-tag>{{record.name}}
+						</span>
+						<span v-if="record.menuType === 3">
+							<a-tag color="blue">菜单</a-tag>{{record.name}}
+						</span>
+						<span v-if="record.menuType === 4">
+							<a-tag color="purple">按钮</a-tag>{{record.name}}
+						</span>
+						<span v-if="record.menuType === 5">
+							<a-tag color="green">链接</a-tag>{{record.name}}
+						</span>
 					</template>
-
-					<template v-if="column.dataIndex === 'title'">
-						<a-checkbox :checked="record.nameCheck" @update:checked="(val) => changeSub(record, val)">{{
-							record.title
-						}}</a-checkbox>
-					</template>
-
-					<template v-if="column.dataIndex === 'button'">
-						<template v-if="record.button.length > 0">
-							<template v-for="(item, index) in record.button" :key="item.id">
-								<a-checkbox v-model:checked="item.check" @change="(evt) => changeChildCheckBox(record, evt)">{{
-									item.title
-								}}</a-checkbox>
-								<br v-if="(index + 1) % 5 === 0" />
-							</template>
-						</template>
+					<template v-if="column.dataIndex === 'buttonList'">
+						<a-space v-if="record.allButtonList">
+							<a-checkbox-group v-model:value="record.grantButtonList" @change="(evt) => onButtonChange(evt, record)">
+								<a-checkbox v-for="item in record.allButtonList" :checked="item.checked" :key="item.code" :value="item.code">
+									{{ item.name }}
+								</a-checkbox>
+							</a-checkbox-group>
+						</a-space>
 					</template>
 				</template>
 			</a-table>
@@ -57,6 +71,7 @@
 	import { useMenuStore } from '@/store/menu'
 	import { userStore } from '@/store/user'
 	import { useGlobalStore } from "@/store";
+	import { Table } from "ant-design-vue";
 
 	const globalStore = useGlobalStore()
 
@@ -68,36 +83,40 @@
 	const drawerWidth = computed(() => {
 		return globalStore.menuIsCollapse ? `calc(100% - 80px)` : `calc(100% - 210px)`
 	})
-	// 自动获取宽度，默认获取浏览器的宽度的90%
-	//(window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * 0.9
 
+	const tableRef = ref(Table)
 	const columns = [
 		{
-			key: 'parentName',
-			title: '一级目录',
-			dataIndex: 'parentName',
-			customCell: (row, index) => {
-				const parentName = row.parentName
-				const indexArr = firstShowMap.value[parentName]
-				if (index === indexArr[0]) {
-					return { rowSpan: indexArr.length }
-				}
-				return { rowSpan: 0 }
-			},
-			width: 150
+			title: '菜单权限',
+			dataIndex: 'name',
+			resizable: true,
+			width: 300
 		},
 		{
-			key: 'title',
-			title: '菜单',
-			dataIndex: 'title',
-			width: 240
-		},
-		{
-			key: 'button',
-			title: '按钮授权',
-			dataIndex: 'button'
+			title: '按钮权限',
+			dataIndex: 'buttonList'
 		}
 	]
+	// 已选中的菜单
+	const selectedRowKeys = ref([])
+	// 已选中的按钮
+	const selectedBtnKeys = ref([])
+	// 列表选择配置
+	const rowSelection = ref({
+		checkStrictly: false,
+		selectedRowKeys: selectedRowKeys,
+		onChange: (selectedKeys, selectedRows) => {
+			selectedRowKeys.value = selectedKeys
+			console.log('onChange:', selectedKeys);
+		},
+		onSelect: (record, selected, selectedRows) => {
+			// 取消选择时，menu下的按钮也要取消
+			if (selected === false) {
+				record.grantButtonList = []
+			}
+		}
+	});
+
 	const moduleId = ref('')
 	// 模块的所有清单数据
 	const moduleDataList = ref([])
@@ -112,6 +131,7 @@
 		if (moduleDataList.value.length > 0) {
 			// 选中模块的菜单权限清单
 			tableData.value = moduleDataList.value.find((e) => e.code === moduleId.value).children
+			console.log(tableData.value)
 		} else {
 			// 菜单权限树
 			spinningLoading.value = true
@@ -122,6 +142,7 @@
 			moduleDataList.value = res
 			tableData.value = moduleDataList.value[0].children
 		}
+		// 已选菜单
 		// // firstShowMap = {} // 重置单元格合并映射
 		// // 如果有数据，我们再不去反复的查询
 		// if (echoDatalist.value.length > 0) {
@@ -245,6 +266,15 @@
 			record.parentCheck = checked
 		}
 	}
+	// 按钮授权列表变更
+	const onButtonChange = (evt, record) => {
+		// 选中按钮时，若菜单未选中，则需要选中菜单
+		if (evt.length > 0 && selectedRowKeys.value.indexOf(record.code) === -1) {
+			selectedRowKeys.value = [...selectedRowKeys.value, record.code]
+			record.checked = true
+		}
+		console.log(record.allButtonList)
+	}
 	// 二级菜单的勾选
 	const changeSub = (record, val) => {
 		// 选中二级菜单
@@ -273,7 +303,9 @@
 	const onClose = () => {
 		// 将这些缓存的给清空
 		echoDatalist.value = []
+		moduleDataList.value = []
 		moduleId.value = ''
+		tableData.value = []
 		loadDatas.value = []
 		firstShowMap.value = {}
 		visible.value = false
@@ -304,6 +336,8 @@
 	}
 	// 验证并提交数据
 	const onSubmit = () => {
+		// 收集所有的已选菜单和已选按钮
+
 		const param = convertData()
 		submitLoading.value = true
 		roleApi

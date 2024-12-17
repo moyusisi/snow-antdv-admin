@@ -37,6 +37,10 @@ export default {
 	menuTreeForGrant(data) {
 		return service.postJson('/api/sys/role/menuTreeForGrant', data)
 	},
+	// 给角色授权菜单
+	roleGrantMenu(data) {
+		return service.postJson('/api/sys/role/grantMenu', data)
+	},
 
 	// 提交表单 edit为true时为编辑，默认为新增
 	submitForm(data, edit = false) {
