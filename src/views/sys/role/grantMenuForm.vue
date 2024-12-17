@@ -214,7 +214,7 @@
 		const menuList = selectedRowKeys.value
 		const param = {
 			code: roleCode.value,
-			codes: [...menuList, ...buttonList]
+			grantMenuList: [...menuList, ...buttonList]
 		}
 		submitLoading.value = true
 		roleApi.roleGrantMenu(param).then(() => {
