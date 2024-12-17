@@ -83,7 +83,7 @@
 	import menuApi from '@/api/sys/menuApi'
 
 	import { h } from 'vue'
-	import { DeleteOutlined, FormOutlined, PlusOutlined } from '@ant-design/icons-vue'
+	import { PlusOutlined } from '@ant-design/icons-vue'
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
 	import { useMenuStore } from '@/store/menu'
@@ -169,7 +169,7 @@
 	const loadData = (parameter) => {
 		if (!module.value) {
 			// 若无module, 则查询module列表第一个module作为默认module
-			return menuApi.menuList({ "menuType": 1 }).then((data) => {
+			return menuApi.moduleList().then((data) => {
 				moduleList.value = data
 				module.value = data.length > 0 ? data[0].code : ''
 				queryForm.value.module = module.value

@@ -8,6 +8,10 @@ export default {
 	menuList(data) {
 		return service.postJson('/api/sys/menu/list', data)
 	},
+	// 查询模块列表(menuType=1)
+	moduleList(data) {
+		return service.postJson('/api/sys/menu/list', { "menuType": 1 })
+	},
 	// 分页查询菜单列表(模块列表)
 	menuPage(data) {
 		return service.postJson('/api/sys/menu/page', data)

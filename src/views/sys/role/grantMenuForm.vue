@@ -7,20 +7,15 @@
 		:destroy-on-close="true"
 		@close="onClose"
 	>
-		<a-alert message="非超管角色不可被授权系统模块菜单资源" banner class="mb-2" />
+		<a-alert message="非超管角色不可被授权系统模块菜单资源" banner  class="xn-mb10"/>
 		<a-spin :spinning="spinningLoading">
-			<a-radio-group v-model:value="moduleId" button-style="solid" class="xn-pb10">
-				<a-radio-button
-					:key="module.id"
-					v-for="module in echoDatalist"
-					:value="module.id"
-					@click="moduleClock(module.id)"
-				>
-					<component :is="module.icon" />
-					{{ module.title }}</a-radio-button
-				>
-			</a-radio-group>
-
+			<a-space class="xn-pb10">
+				<a-radio-group v-model:value="moduleId" button-style="solid">
+					<a-radio-button v-for="module in moduleDataList" :key="module.code" :value="module.code" @click="moduleClock(module.code)">
+						<component :is="module.icon" /> {{ module.name }}
+					</a-radio-button>
+				</a-radio-group>
+			</a-space>
 			<a-table size="middle" :columns="columns" :data-source="loadDatas" :pagination="false" bordered>
 				<template #bodyCell="{ column, record }">
 					<template v-if="column.dataIndex === 'parentName'">
@@ -103,31 +98,49 @@
 			dataIndex: 'button'
 		}
 	]
-	const echoDatalist = ref([])
 	const moduleId = ref('')
+	// 模块的所有清单数据
+	const moduleDataList = ref([])
+	// 表格中的数据
+	const tableData = ref([])
+	const echoDatalist = ref([])
+	const roleCode = ref('')
 	const loadDatas = ref([])
 
-	// 获取数据
-	const loadData = async () => {
-		// firstShowMap = {} // 重置单元格合并映射
-		// 如果有数据，我们再不去反复的查询
-		if (echoDatalist.value.length > 0) {
-			// 这里必须保持联动，不可克隆
-			loadDatas.value = echoDatalist.value.find((f) => f.id === moduleId.value).menu
+	const loadData = async (parameter) => {
+		// 已有数据不重复查询
+		if (moduleDataList.value.length > 0) {
+			// 选中模块的菜单权限清单
+			tableData.value = moduleDataList.value.find((e) => e.code === moduleId.value).children
 		} else {
-			// 获取表格数据
+			// 菜单权限树
 			spinningLoading.value = true
-			const res = await roleApi.roleResourceTreeSelector()
-			const param = {
-				id: resultDataModel.id
-			}
-			// 获取回显数据
-			const resEcho = await roleApi.roleOwnResource(param)
+			const param = { code: roleCode.value }
+			const res = await roleApi.menuTreeForGrant(param)
 			spinningLoading.value = false
-			echoDatalist.value = echoModuleData(res, resEcho)
-			moduleId.value = res[0].id
-			loadDatas.value = echoDatalist.value[0].menu
+			moduleId.value = res[0].code
+			moduleDataList.value = res
+			tableData.value = moduleDataList.value[0].children
 		}
+		// // firstShowMap = {} // 重置单元格合并映射
+		// // 如果有数据，我们再不去反复的查询
+		// if (echoDatalist.value.length > 0) {
+		// 	// 这里必须保持联动，不可克隆
+		// 	loadDatas.value = echoDatalist.value.find((f) => f.code === moduleId.value).menu
+		// } else {
+		// 	// 获取表格数据
+		// 	spinningLoading.value = true
+		// 	const res = await roleApi.roleResourceTreeSelector()
+		// 	const param = {
+		// 		id: resultDataModel.id
+		// 	}
+		// 	// 获取回显数据
+		// 	const resEcho = await roleApi.roleOwnResource(param)
+		// 	spinningLoading.value = false
+		// 	echoDatalist.value = echoModuleData(res, resEcho)
+		// 	moduleId.value = res[0].id
+		// 	loadDatas.value = echoDatalist.value[0].menu
+		// }
 	}
 	const checkFieldKeys = ['button']
 	const visible = ref(false)
@@ -138,9 +151,10 @@
 	}
 	// 打开抽屉
 	const onOpen = (record) => {
-		resultDataModel.id = record.id
 		visible.value = true
+		roleCode.value = record.code
 		firstShowMap.value = {}
+		// 再查询授权清单树
 		loadData()
 	}
 	// 数据转换

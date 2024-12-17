@@ -33,7 +33,10 @@ export default {
 	editRole(data) {
 		return service.postJson('/api/sys/role/edit', data)
 	},
-
+	// 获取角色菜单树，用于给角色授权时选择
+	menuTreeForGrant(data) {
+		return service.postJson('/api/sys/role/menuTreeForGrant', data)
+	},
 
 	// 提交表单 edit为true时为编辑，默认为新增
 	submitForm(data, edit = false) {
