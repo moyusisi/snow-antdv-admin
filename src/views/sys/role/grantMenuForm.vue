@@ -17,7 +17,6 @@
 			</a-space>
 			<!-- 菜单权限授权表格 -->
 			<a-table size="small"
-					 ref="tableRef"
 					 :columns="columns"
 					 :data-source="tableData"
 					 :row-key="(record) => record.code"
@@ -73,7 +72,6 @@
 	import { useMenuStore } from '@/store/menu'
 	import { userStore } from '@/store/user'
 	import { useGlobalStore } from "@/store";
-	import { Table } from "ant-design-vue";
 
 	const globalStore = useGlobalStore()
 
@@ -86,7 +84,16 @@
 		return globalStore.menuIsCollapse ? `calc(100% - 80px)` : `calc(100% - 210px)`
 	})
 
-	const tableRef = ref(Table)
+	const roleCode = ref('')
+	const moduleId = ref('')
+	// 所有模块的菜单数据(loadData中会更新)
+	const moduleDataList = ref([])
+	// 表格中的数据(loadData中会更新)
+	const tableData = ref([])
+	// 已选中的菜单(loadData中会更新)
+	const selectedRowKeys = ref([])
+	// 默认展开的行(loadData中会更新)
+	const defaultExpandedRowKeys = ref([])
 	const columns = [
 		{
 			title: '菜单权限',
@@ -99,10 +106,6 @@
 			dataIndex: 'buttonList'
 		}
 	]
-	// 已选中的菜单
-	const selectedRowKeys = ref([])
-	// 默认展开的行
-	const defaultExpandedRowKeys = ref([])
 	// 列表选择配置
 	const rowSelection = ref({
 		checkStrictly: false,
@@ -118,13 +121,6 @@
 			}
 		}
 	});
-
-	const roleCode = ref('')
-	const moduleId = ref('')
-	// 所有模块的菜单数据
-	const moduleDataList = ref([])
-	// 表格中的数据
-	const tableData = ref([])
 
 	// 打开抽屉
 	const onOpen = (record) => {
