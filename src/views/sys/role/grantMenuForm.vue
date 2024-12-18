@@ -109,12 +109,12 @@
 		selectedRowKeys: selectedRowKeys,
 		onChange: (selectedKeys, selectedRows) => {
 			selectedRowKeys.value = selectedKeys
-			// console.log('onChange:', selectedKeys);
+			console.log('onChange,selectedKeys:', selectedKeys);
 		},
 		onSelect: (record, selected, selectedRows) => {
-			// 取消选择时，menu下的按钮也要取消
+			// 取消选择时，menu下的按钮也要取消，同时递归取消子节点下已授权按钮
 			if (selected === false) {
-				record.grantButtonList = []
+				cleanGrantButtonList([record])
 			}
 		}
 	});
@@ -152,24 +152,6 @@
 		selectedRowKeys.value = getCheckedMenuList(tableData.value)
 	}
 
-	// 获取有权限的菜单列表
-	const getCheckedMenuList = (recordList) => {
-		const selectedList = []
-		recordList.forEach((record) => {
-			// 选中状态的记录则有权限
-			if (record.checked) {
-				selectedList.push(record.code)
-			}
-			// 如果有子节点,继续遍历子节点的列表
-			if (record.children) {
-				const list = getCheckedMenuList(record.children)
-				selectedList.push(...list)
-				// 默认展开的行，有子节点就展开
-				defaultExpandedRowKeys.value.push(record.code)
-			}
-		})
-		return selectedList
-	}
 	// 通过应用分菜单
 	const moduleClock = (value) => {
 		moduleId.value = value
@@ -191,8 +173,43 @@
 		tableData.value = []
 		visible.value = false
 	}
-	// 提交之前收集选中的按钮权限
-	const grantButtonList = (recordList) => {
+	// 获取有权限的菜单列表(初始化选中菜单时用)
+	const getCheckedMenuList = (recordList) => {
+		const selectedList = []
+		recordList.forEach((record) => {
+			// 选中状态的记录则有权限
+			if (record.checked) {
+				selectedList.push(record.code)
+			}
+			// 如果有子节点,继续遍历子节点的列表
+			if (record.children) {
+				const list = getCheckedMenuList(record.children)
+				selectedList.push(...list)
+				// 默认展开的行，有子节点就展开
+				defaultExpandedRowKeys.value.push(record.code)
+			}
+		})
+		return selectedList
+	}
+	// 清空节点下的按钮权限(取消父节点时用)
+	const cleanGrantButtonList = (recordList) => {
+		const selectedList = []
+		recordList.forEach((record) => {
+			// selectedRowKeys还未更新，不能通过selectedRowKeys.value.indexOf(record.code) === -1)判定
+			// 存在授权的按钮则清空
+			if (record.grantButtonList) {
+				// 用.slice(0)重新设置一遍list，强制刷新，参考：https://www.cnblogs.com/wiliam/p/13892649.html
+				record.grantButtonList.splice(0, record.grantButtonList.length)
+			}
+			// 如果有子节点,继续遍历子节点的列表
+			if (record.children) {
+				cleanGrantButtonList(record.children)
+			}
+		})
+		return selectedList
+	}
+	// 收集选中的按钮权限(提交之前用)
+	const collectGrantButtonList = (recordList) => {
 		const checkedList = []
 		recordList.forEach((record) => {
 			// 选中状态的记录则有权限
@@ -201,7 +218,7 @@
 			}
 			// 如果有子节点,继续遍历子节点的列表
 			if (record.children) {
-				const list = grantButtonList(record.children)
+				const list = collectGrantButtonList(record.children)
 				checkedList.push(...list)
 			}
 		})
@@ -210,7 +227,7 @@
 	// 验证并提交数据
 	const onSubmit = () => {
 		// 收集所有的已选菜单和已选按钮
-		const buttonList = grantButtonList(tableData.value)
+		const buttonList = collectGrantButtonList(tableData.value)
 		const menuList = selectedRowKeys.value
 		const param = {
 			code: roleCode.value,
@@ -225,7 +242,6 @@
 			submitLoading.value = false
 		})
 	}
-
 	// 刷新缓存
 	const refreshCache = () => {
 		const menuStore = useMenuStore()
