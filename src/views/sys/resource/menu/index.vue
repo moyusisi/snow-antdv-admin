@@ -2,7 +2,7 @@
 	<!-- 上方模块选择 -->
 	<a-card :bordered="false" class="xn-mb10">
 		<a-space>
-			<a-radio-group v-model:value="module" button-style="solid">
+			<a-radio-group v-model:value="moduleId" button-style="solid">
 				<a-radio-button v-for="module in moduleList" :key="module.code" :value="module.code" @click="moduleClick(module.code)">
 					<component :is="module.icon" /> {{ module.name }}
 				</a-radio-button>
@@ -25,7 +25,7 @@
 		>
 			<template #operator>
 				<a-space>
-					<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(module)">新增菜单</a-button>
+					<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(moduleId)">新增菜单</a-button>
 					<xn-batch-button
 						buttonName="批量删除"
 						icon="DeleteOutlined"
@@ -66,7 +66,7 @@
 					<span v-else ></span>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
-					<a-button type="link" size="small" @click="editFormRef.onOpen(node, module)">编辑</a-button>
+					<a-button type="link" size="small" @click="editFormRef.onOpen(node, moduleId)">编辑</a-button>
 					<a-divider type="vertical" />
 					<a-popconfirm title="确定要删除此菜单吗？" @confirm="deleteMenu(record)">
 						<a-button type="link" size="small" danger>删除</a-button>
@@ -92,7 +92,7 @@
 	const tableRef = ref()
 	const addFormRef = ref()
 	const editFormRef = ref()
-	const module = ref()
+	const moduleId = ref()
 	const moduleList = ref([])
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
 	const columns = [
@@ -167,12 +167,12 @@
 		}
 	}
 	const loadData = (parameter) => {
-		if (!module.value) {
-			// 若无module, 则查询module列表第一个module作为默认module
+		if (!moduleId.value) {
+			// 若无moduleId, 则查询module列表第一个module的code作为默认moduleId
 			return menuApi.moduleList().then((data) => {
 				moduleList.value = data
-				module.value = data.length > 0 ? data[0].code : ''
-				queryForm.value.module = module.value
+				moduleId.value = data.length > 0 ? data[0].code : ''
+				queryForm.value.module = moduleId.value
 				return menuApi.menuTree(Object.assign(parameter, queryForm.value)).then((data) => {
 					if (data) {
 						return data
