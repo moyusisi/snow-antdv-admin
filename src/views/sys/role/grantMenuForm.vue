@@ -121,7 +121,7 @@
 
 	const roleCode = ref('')
 	const moduleId = ref('')
-	// 模块的所有清单数据
+	// 所有模块的菜单数据
 	const moduleDataList = ref([])
 	// 表格中的数据
 	const tableData = ref([])
@@ -231,6 +231,7 @@
 		const menuList = selectedRowKeys.value
 		const param = {
 			code: roleCode.value,
+			module: moduleId.value,
 			grantMenuList: [...menuList, ...buttonList]
 		}
 		submitLoading.value = true
