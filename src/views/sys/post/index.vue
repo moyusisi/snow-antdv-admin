@@ -16,16 +16,16 @@
 		<!-- 右侧内容 -->
 		<a-col :xs="24" :sm="24" :md="24" :lg="19" :xl="19">
 			<a-card :bordered="false" class="xn-mb10">
-				<a-form ref="searchFormRef" :model="searchFormState">
+				<a-form ref="searchFormRef" :model="searchFormData">
 					<a-row :gutter="24">
 						<a-col :span="8">
 							<a-form-item name="searchKey" label="名称关键词">
-								<a-input v-model:value="searchFormState.searchKey" placeholder="请输入关键词" allowClear />
+								<a-input v-model:value="searchFormData.searchKey" placeholder="请输入关键词" allowClear />
 							</a-form-item>
 						</a-col>
 						<a-col :span="6">
 							<a-form-item label="使用状态" name="status">
-								<a-select v-model:value="searchFormState.status" placeholder="请选择状态" :options="statusOptions" allowClear />
+								<a-select v-model:value="searchFormData.status" placeholder="请选择状态" :options="statusOptions" allowClear />
 							</a-form-item>
 						</a-col>
 						<a-col :span="8">
@@ -51,7 +51,7 @@
 				>
 					<template #operator class="table-operator">
 						<a-space>
-							<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(searchFormState.parentCode)">新增</a-button>
+							<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(searchFormData.parentCode)">新增</a-button>
 							<xn-batch-button
 								buttonName="批量删除"
 								icon="DeleteOutlined"
@@ -177,7 +177,7 @@
 	const addFormRef = ref()
 	const editFormRef = ref()
 	const searchFormRef = ref()
-	const searchFormState = ref({})
+	const searchFormData = ref({})
 	// 默认展开的节点
 	const defaultExpandedKeys = ref([])
 	const treeData = ref([])
@@ -191,7 +191,7 @@
 
 	// 表格查询 返回 Promise 对象
 	const loadTableData = (parameter) => {
-		return postApi.orgPage(Object.assign(parameter, searchFormState.value)).then((res) => {
+		return postApi.postPage(Object.assign(parameter, searchFormData.value)).then((res) => {
 			return res
 		})
 	}
@@ -215,9 +215,9 @@
 	// 点击树查询
 	const treeSelect = (selectedKeys) => {
 		if (selectedKeys.length > 0) {
-			searchFormState.value.parentCode = selectedKeys.toString()
+			searchFormData.value.parentCode = selectedKeys.toString()
 		} else {
-			delete searchFormState.value.parentCode
+			delete searchFormData.value.parentCode
 		}
 		tableRef.value.refresh(true)
 	}
