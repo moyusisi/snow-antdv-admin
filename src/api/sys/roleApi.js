@@ -3,10 +3,7 @@ import { baseRequest } from '@/utils/request'
 
 const request = (url, ...arg) => baseRequest(`/sys/role/` + url, ...arg)
 /**
- * 角色
- *
- * @author yubaoshan
- * @date 2022-09-22 22:33:20
+ * 角色相关接口
  */
 export default {
 	// 查询角色列表

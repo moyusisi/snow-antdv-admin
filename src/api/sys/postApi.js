@@ -1,10 +1,7 @@
 import service from '@/utils/request'
 
 /**
- * 分组(角色组、岗位)
- *
- * @author yubaoshan
- * @date 2022-09-22 22:33:20
+ * 分组(角色组、岗位)相关接口
  */
 export default {
 	// 查询岗位分组列表

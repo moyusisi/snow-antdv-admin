@@ -1,7 +1,7 @@
 <template>
 	<a-drawer
 		:open="visible"
-		title="编辑组织机构"
+		title="新增分组(角色组、岗位)"
 		:width="drawerWidth"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
 		@close="onClose"
@@ -10,27 +10,27 @@
 			<a-card title="基本信息">
 				<a-row :gutter="24">
 					<a-col :span="12">
-						<a-form-item label="组织名称：" name="name" :rules="[required('请输入名称')]">
-							<a-input v-model:value="formData.name" placeholder="请输入显示名称" allow-clear />
+						<a-form-item label="分组名称：" name="name" :rules="[required('请输入名称')]">
+							<a-input v-model:value="formData.name" placeholder="请输入名称" allow-clear />
 						</a-form-item>
 					</a-col>
 					<a-col :span="12">
-						<a-form-item label="组织类型：" name="orgType" :rules="[required('请选择组织类型')]">
-							<a-radio-group v-model:value="formData.orgType" button-style="solid">
-								<!-- 组织机构类型(字典 1公司组织 2部门机构 3虚拟节点) -->
-								<a-radio-button :value="1">公司组织</a-radio-button>
-								<a-radio-button :value="2">部门机构</a-radio-button>
-								<a-radio-button :value="3">虚拟节点</a-radio-button>
+						<a-form-item label="分组类型：" name="postType" :rules="[required('请选择分组类型')]">
+							<a-radio-group v-model:value="formData.postType" button-style="solid">
+								<!-- 岗位类型(字典 1特有 2通用 3自建) -->
+								<a-radio-button :value="1">特有</a-radio-button>
+								<a-radio-button :value="2">通用</a-radio-button>
+								<a-radio-button :value="3">自建</a-radio-button>
 							</a-radio-group>
 						</a-form-item>
 					</a-col>
 					<a-col :span="12">
-						<a-form-item label="上级组织：" name="parentCode" :rules="[required('请选择上级组织')]">
+						<a-form-item label="直属组织：" name="orgCode" :rules="[required('请选择直属组织')]">
 							<a-tree-select
-								v-model:value="formData.parentCode"
+								v-model:value="formData.orgCode"
 								v-model:treeExpandedKeys="defaultExpandedKeys"
 								:dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-								placeholder="请选择上级组织"
+								placeholder="请选择直属组织"
 								allow-clear
 								:tree-data="treeData"
 								:field-names="{ children: 'children', label: 'name', value: 'code' }"
@@ -53,20 +53,6 @@
 					</a-col>
 				</a-row>
 			</a-card>
-			<a-card title="资源信息">
-				<a-row :gutter="24">
-					<!-- 公司层级 -->
-					<a-col :span="12" v-if="formData.orgType === 1">
-						<a-form-item label="公司层级：" name="orgLevel" :rules="[required('请选择层级')]">
-							<a-radio-group v-model:value="formData.orgLevel" button-style="solid">
-								<a-radio-button :value="1">总部</a-radio-button>
-								<a-radio-button :value="2">二级公司</a-radio-button>
-								<a-radio-button :value="3">三级公司</a-radio-button>
-							</a-radio-group>
-						</a-form-item>
-					</a-col>
-				</a-row>
-			</a-card>
 		</a-form>
 		<template #footer>
 			<a-space>
@@ -74,15 +60,14 @@
 				<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
 			</a-space>
 		</template>
-		<Icon-selector ref="iconSelector" @iconCallBack="iconCallBack" />
 	</a-drawer>
 </template>
 
 <script setup>
 	import orgApi from '@/api/sys/orgApi'
+	import postApi from '@/api/sys/postApi'
 
 	import { required } from '@/utils/formRules'
-	import IconSelector from '@/components/Selector/iconSelector.vue'
 	import { useGlobalStore } from "@/store";
 
 	const store = useGlobalStore()
@@ -95,8 +80,7 @@
 	const iconSelector = ref()
 	// 表单数据，这里有默认值
 	const formData = ref({
-		orgType: 1,
-		orgLevel: 2,
+		postType: 1,
 		sortNum: 99,
 		visible: 1,
 		status: 0
@@ -117,7 +101,7 @@
 	// 打开抽屉
 	const onOpen = (parentCode) => {
 		visible.value = true
-		formData.value.parentCode = parentCode
+		formData.value.orgCode = parentCode
 		// 获取组织树并加入顶级节点
 		orgApi.orgTree({}).then((res) => {
 			treeData.value = res
@@ -131,21 +115,14 @@
 	}
 	// 选择上级加载模块的选择框
 	const parentChange = (value) => {
-		formData.value.parentCode = value
-	}
-	// 图标选择器回调
-	const iconCallBack = (value) => {
-		if (value) {
-			formRef.value.clearValidate('icon')
-		}
-		formData.value.icon = value
+		formData.value.orgCode = value
 	}
 
 	// 验证并提交数据
 	const onSubmit = () => {
 		formRef.value.validate().then(() => {
 			submitLoading.value = true
-			orgApi.addOrg(formData.value).then(() => {
+			postApi.addPost(formData.value).then(() => {
 				emit('successful')
 				onClose()
 			}).finally(() => {

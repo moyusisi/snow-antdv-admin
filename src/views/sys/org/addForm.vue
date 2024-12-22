@@ -1,7 +1,7 @@
 <template>
 	<a-drawer
 		:open="visible"
-		title="编辑组织机构"
+		title="新增组织机构"
 		:width="drawerWidth"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
 		@close="onClose"

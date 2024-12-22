@@ -3,10 +3,7 @@ import { baseRequest } from '@/utils/request'
 
 const request = (url, ...arg) => baseRequest(`/sys/org/` + url, ...arg)
 /**
- * 机构
- *
- * @author yubaoshan
- * @date 2022-09-22 22:33:20
+ * 组织机构接口
  */
 export default {
 	// 查询组织机构列表
