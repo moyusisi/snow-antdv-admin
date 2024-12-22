@@ -98,9 +98,9 @@
 	})
 
 	// 打开抽屉
-	const onOpen = (parentCode) => {
+	const onOpen = (orgCode) => {
 		visible.value = true
-		formData.value.orgCode = parentCode
+		formData.value.orgCode = orgCode
 		// 获取组织树并加入顶级节点
 		orgApi.orgTree({}).then((res) => {
 			treeData.value = res

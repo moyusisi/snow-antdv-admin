@@ -51,7 +51,7 @@
 				>
 					<template #operator class="table-operator">
 						<a-space>
-							<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(searchFormData.parentCode)">新增</a-button>
+							<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(searchFormData.orgs)">新增</a-button>
 							<xn-batch-button
 								buttonName="批量删除"
 								icon="DeleteOutlined"
@@ -120,12 +120,6 @@
 		{
 			title: '分组类型',
 			dataIndex: 'postType',
-			align: 'center',
-			width: 80
-		},
-		{
-			title: '组织层级',
-			dataIndex: 'orgLevel',
 			align: 'center',
 			width: 80
 		},
@@ -213,9 +207,9 @@
 	// 点击树查询
 	const treeSelect = (selectedKeys) => {
 		if (selectedKeys.length > 0) {
-			searchFormData.value.parentCode = selectedKeys.toString()
+			searchFormData.value.orgs = selectedKeys.toString()
 		} else {
-			delete searchFormData.value.parentCode
+			delete searchFormData.value.orgs
 		}
 		tableRef.value.refresh(true)
 	}
