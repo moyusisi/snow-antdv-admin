@@ -74,9 +74,6 @@
 							<a-tag v-if="record.status === 0" color="green">正常</a-tag>
 							<a-tag v-else>已停用</a-tag>
 						</template>
-						<template v-if="column.dataIndex === 'category'">
-							{{ $TOOL.dictTypeData('ORG_CATEGORY', record.category) }}
-						</template>
 						<template v-if="column.dataIndex === 'action'">
 							<a-space>
 								<a-tooltip title="编辑">

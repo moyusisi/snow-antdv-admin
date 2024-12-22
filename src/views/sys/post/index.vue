@@ -65,17 +65,15 @@
 						<template v-if="column.dataIndex === 'code'">
 							<a-tag v-if="record.code" :bordered="false">{{ record.code }}</a-tag>
 						</template>
-						<template v-if="column.dataIndex === 'orgType'">
-							<a-tag v-if="record.orgType === 1" color="cyan">公司组织</a-tag>
-							<a-tag v-if="record.orgType === 2" color="blue">部门机构</a-tag>
-							<a-tag v-if="record.orgType === 3" color="purple">虚拟节点</a-tag>
+						<template v-if="column.dataIndex === 'postType'">
+							<!-- 岗位类型(字典 1特有 2通用 3自建) -->
+							<a-tag v-if="record.postType === 1" color="cyan">特有</a-tag>
+							<a-tag v-if="record.postType === 2" color="blue">通用</a-tag>
+							<a-tag v-if="record.postType === 3" color="purple">自建</a-tag>
 						</template>
 						<template v-if="column.dataIndex === 'status'">
 							<a-tag v-if="record.status === 0" color="green">正常</a-tag>
 							<a-tag v-else>已停用</a-tag>
-						</template>
-						<template v-if="column.dataIndex === 'category'">
-							{{ $TOOL.dictTypeData('ORG_CATEGORY', record.category) }}
 						</template>
 						<template v-if="column.dataIndex === 'action'">
 							<a-space>
@@ -110,18 +108,18 @@
 
 	const columns = [
 		{
-			title: '组织名称',
+			title: '分组名称',
 			dataIndex: 'name',
 			width: 200
 		},
 		{
-			title: '组织编码',
+			title: '唯一编码',
 			dataIndex: 'code',
 			width: 100
 		},
 		{
-			title: '组织类型',
-			dataIndex: 'orgType',
+			title: '分组类型',
+			dataIndex: 'postType',
 			align: 'center',
 			width: 80
 		},

@@ -77,7 +77,6 @@
 	const emit = defineEmits({ successful: null })
 	const formRef = ref()
 	const treeData = ref([])
-	const iconSelector = ref()
 	// 表单数据，这里有默认值
 	const formData = ref({
 		postType: 1,

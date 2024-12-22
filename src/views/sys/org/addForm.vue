@@ -74,7 +74,6 @@
 				<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
 			</a-space>
 		</template>
-		<Icon-selector ref="iconSelector" @iconCallBack="iconCallBack" />
 	</a-drawer>
 </template>
 
@@ -82,7 +81,6 @@
 	import orgApi from '@/api/sys/orgApi'
 
 	import { required } from '@/utils/formRules'
-	import IconSelector from '@/components/Selector/iconSelector.vue'
 	import { useGlobalStore } from "@/store";
 
 	const store = useGlobalStore()
@@ -92,7 +90,6 @@
 	const emit = defineEmits({ successful: null })
 	const formRef = ref()
 	const treeData = ref([])
-	const iconSelector = ref()
 	// 表单数据，这里有默认值
 	const formData = ref({
 		orgType: 1,
