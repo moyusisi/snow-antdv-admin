@@ -108,14 +108,15 @@
 
 	const columns = [
 		{
-			title: '分组名称',
-			dataIndex: 'name',
-			width: 200
+			title: '组织机构',
+			dataIndex: 'orgName',
+			width: 200,
+			ellipsis: true
 		},
 		{
-			title: '唯一编码',
-			dataIndex: 'code',
-			width: 100
+			title: '角色组名称',
+			dataIndex: 'name',
+			width: 200
 		},
 		{
 			title: '分组类型',
