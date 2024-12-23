@@ -76,15 +76,11 @@
 						</template>
 						<template v-if="column.dataIndex === 'action'">
 							<a-space>
-								<a-tooltip title="编辑">
-									<a-button type="link" size="small" :icon="h(FormOutlined)" @click="editFormRef.onOpen(record, module)" />
-								</a-tooltip>
+								<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
 								<a-divider type="vertical" />
-								<a-tooltip title="删除">
-									<a-popconfirm title="确定要删除此组织吗？" @confirm="deleteOrg(record)">
-										<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
-									</a-popconfirm>
-								</a-tooltip>
+								<a-popconfirm title="确定要删除此组织吗？" @confirm="deleteOrg(record)">
+									<a-button type="link" size="small" danger>删除</a-button>
+								</a-popconfirm>
 							</a-space>
 						</template>
 					</template>

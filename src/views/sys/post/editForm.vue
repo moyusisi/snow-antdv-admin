@@ -15,7 +15,7 @@
 						</a-form-item>
 					</a-col>
 					<a-col :span="12">
-						<a-form-item label="组织编码：" name="code">
+						<a-form-item label="唯一编码：" name="code">
 							<a-input v-model:value="formData.code" disabled/>
 						</a-form-item>
 					</a-col>

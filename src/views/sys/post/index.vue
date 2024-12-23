@@ -42,12 +42,11 @@
 					ref="tableRef"
 					:columns="columns"
 					:data="loadTableData"
-					:expand-row-by-click="true"
-					:alert="options.alert.show"
 					bordered
 					:row-key="(record) => record.code"
 					:tool-config="toolConfig"
 					:row-selection="options.rowSelection"
+					:scroll="{ x: true }"
 				>
 					<template #operator class="table-operator">
 						<a-space>
@@ -77,15 +76,13 @@
 						</template>
 						<template v-if="column.dataIndex === 'action'">
 							<a-space>
-								<a-tooltip title="编辑">
-									<a-button type="link" size="small" :icon="h(FormOutlined)" @click="editFormRef.onOpen(record, module)" />
-								</a-tooltip>
+								<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
 								<a-divider type="vertical" />
-								<a-tooltip title="删除">
-									<a-popconfirm title="确定要删除此组织吗？" @confirm="deletePost(record)">
-										<a-button type="text" danger size="small" :icon="h(DeleteOutlined)" />
-									</a-popconfirm>
-								</a-tooltip>
+								<a-button type="link" size="small" @click="grantMenuFormRef.onOpen(record)">授权</a-button>
+								<a-divider type="vertical" />
+								<a-popconfirm title="确定要删除此岗位吗？" @confirm="deletePost(record)">
+									<a-button type="link" size="small" danger>删除</a-button>
+								</a-popconfirm>
 							</a-space>
 						</template>
 					</template>
@@ -141,7 +138,7 @@
 			title: '操作',
 			dataIndex: 'action',
 			align: 'center',
-			width: 120
+			width: 200
 		}
 	]
 	const selectedRowKeys = ref([])
