@@ -1,8 +1,8 @@
 <template>
-	<a-row :gutter="10">
+	<a-row :gutter="8">
 		<!-- 左侧组织树 -->
-		<a-col :xs="24" :sm="24" :md="24" :lg="5" :xl="5">
-			<a-card :bordered="false" :loading="cardLoading">
+		<a-col :span="5">
+			<a-card :bordered="false" :loading="cardLoading" >
 				<a-tree
 					v-if="treeData.length > 0"
 					v-model:expandedKeys="defaultExpandedKeys"
@@ -14,8 +14,8 @@
 			</a-card>
 		</a-col>
 		<!-- 右侧内容 -->
-		<a-col :xs="24" :sm="24" :md="24" :lg="19" :xl="19">
-			<a-card :bordered="false" class="xn-mb10">
+		<a-col :span="19">
+			<a-card :bordered="false">
 				<a-form ref="searchFormRef" :model="searchFormData">
 					<a-row :gutter="24">
 						<a-col :span="8">
@@ -42,11 +42,12 @@
 					ref="tableRef"
 					:columns="columns"
 					:data="loadTableData"
+					:scroll="{ x: 1200 }"
 					bordered
 					:row-key="(record) => record.code"
 					:tool-config="toolConfig"
 					:row-selection="options.rowSelection"
-					:scroll="{ x: true }"
+					@resizeColumn="handleResizeColumn"
 				>
 					<template #operator class="table-operator">
 						<a-space>
@@ -99,7 +100,7 @@
 	import orgApi from '@/api/sys/orgApi'
 	import postApi from '@/api/sys/postApi'
 	import { Empty } from 'ant-design-vue'
-	import { DeleteOutlined, FormOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons-vue";
+	import { PlusOutlined, SearchOutlined } from "@ant-design/icons-vue";
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
 
@@ -107,32 +108,46 @@
 		{
 			title: '组织机构',
 			dataIndex: 'orgName',
+			resizable: true,
 			width: 200,
 			ellipsis: true
 		},
 		{
 			title: '角色组名称',
 			dataIndex: 'name',
+			resizable: true,
 			width: 200
 		},
 		{
 			title: '分组类型',
 			dataIndex: 'postType',
 			align: 'center',
-			width: 80
+			width: 100
 		},
 		{
 			title: '排序',
 			dataIndex: 'sortNum',
 			sorter: true,
 			align: 'center',
-			width: 80
+			width: 100
 		},
 		{
 			title: '状态',
 			dataIndex: 'status',
 			align: 'center',
-			width: 80
+			width: 100
+		},
+		{
+			title: '创建时间',
+			dataIndex: 'createTime',
+			align: 'center',
+			width: 160
+		},
+		{
+			title: '更新时间',
+			dataIndex: 'updateTime',
+			align: 'center',
+			width: 160
 		},
 		{
 			title: '操作',
@@ -224,6 +239,10 @@
 		postApi.deletePost(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
+	}
+	// 可伸缩列
+	const handleResizeColumn = (w, col) => {
+		col.width = w
 	}
 	// 成功回调
 	const handleSuccess = () => {

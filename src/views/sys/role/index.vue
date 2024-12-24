@@ -26,8 +26,8 @@
 			ref="tableRef"
 			:columns="columns"
 			:data="loadData"
-			:expand-row-by-click="true"
 			:alert="options.alert.show"
+			:scroll="{ x: 1200 }"
 			bordered
 			:row-key="(record) => record.id"
 			:tool-config="toolConfig"
@@ -146,9 +146,22 @@
 			width: 100
 		},
 		{
+			title: '创建时间',
+			dataIndex: 'createTime',
+			align: 'center',
+			width: 160
+		},
+		{
+			title: '更新时间',
+			dataIndex: 'updateTime',
+			align: 'center',
+			width: 160
+		},
+		{
 			title: '操作',
 			dataIndex: 'action',
 			align: 'center',
+			resizable: true,
 			width: 200
 		}
 	]
