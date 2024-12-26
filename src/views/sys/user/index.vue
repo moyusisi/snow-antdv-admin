@@ -81,11 +81,16 @@
 						</template>
 						<template v-if="column.dataIndex === 'action'">
 							<a-space>
-								<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
-<!--								<a-button type="link" size="small" @click="grantMenuFormRef.onOpen(record)">授权</a-button>-->
-								<a-popconfirm title="确定要删除此用户吗？" @confirm="deleteUser(record)">
-									<a-button type="link" size="small" danger>删除</a-button>
-								</a-popconfirm>
+								<a-tooltip title="编辑">
+									<a @click="editFormRef.onOpen(record)"><FormOutlined /></a>
+								</a-tooltip>
+								<a-divider type="vertical" />
+								<a-tooltip title="删除">
+									<a-popconfirm title="确认删除？" @confirm="deleteUser(record)">
+										<a style="color:#FF4D4F;"><DeleteOutlined/></a>
+									</a-popconfirm>
+								</a-tooltip>
+								<a-divider type="vertical" />
 							</a-space>
 							<a-dropdown>
 								<a class="ant-dropdown-link">
@@ -381,12 +386,5 @@
 <style scoped>
 	.ant-form-item {
 		margin-bottom: 0 !important;
-	}
-	.snowy-table-avatar {
-		margin-top: -10px;
-		margin-bottom: -10px;
-	}
-	.snowy-button-left {
-		margin-left: 8px;
 	}
 </style>
