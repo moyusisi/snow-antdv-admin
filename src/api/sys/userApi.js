@@ -27,6 +27,14 @@ export default {
 	editUser(data) {
 		return service.postJson('/api/sys/user/edit', data)
 	},
+	// 修改密码
+	updatePassword(data) {
+		return service.postJson('/api/sys/user/updatePwd', data)
+	},
+	// 重置密码
+	resetPassword(data) {
+		return service.postJson('/api/sys/user/resetPwd', data)
+	},
 
 	// 提交表单 edit为true时为编辑，默认为新增
 	submitForm(data, edit = false) {

@@ -91,6 +91,12 @@
 									</a-popconfirm>
 								</a-tooltip>
 								<a-divider type="vertical" />
+                <a-tooltip title="重置密码">
+                  <a-popconfirm title="确定要重置吗？" @confirm="deleteUser(record)">
+                    <a style="color:darkorange;"><LockOutlined/></a>
+                  </a-popconfirm>
+                </a-tooltip>
+                <a-divider type="vertical" />
 							</a-space>
 							<a-dropdown>
 								<a class="ant-dropdown-link">
@@ -357,7 +363,7 @@
 	}
 	// 重置用户密码
 	const resetPassword = (record) => {
-		userApi.userResetPassword(record).then(() => {})
+		userApi.resetPassword(record).then(() => {})
 	}
 	// 导出用户信息
 	const exportUserInfo = (record) => {
