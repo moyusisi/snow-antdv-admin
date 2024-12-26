@@ -15,7 +15,7 @@
 		</a-col>
 		<!-- 右侧内容 -->
 		<a-col :span="19">
-			<a-card :bordered="false">
+			<a-card :bordered="false" class="xn-mb10">
 				<a-form ref="searchFormRef" :model="searchFormData">
 					<a-row :gutter="24">
 						<a-col :span="8">
