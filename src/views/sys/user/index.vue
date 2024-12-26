@@ -80,14 +80,13 @@
 							<a-tag v-else>已停用</a-tag>
 						</template>
 						<template v-if="column.dataIndex === 'action'">
-							<a @click="formRef.onOpen(record)">{{ $t('common.editButton') }}</a>
-							<a-divider type="vertical" />
-							<a-popconfirm :title="$t('user.popconfirmDeleteUser')" placement="topRight" @confirm="removeUser(record)">
-								<a-button type="link" danger size="small">
-									{{ $t('common.removeButton') }}
-								</a-button>
-							</a-popconfirm>
-							<a-divider type="vertical" />
+							<a-space>
+								<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
+<!--								<a-button type="link" size="small" @click="grantMenuFormRef.onOpen(record)">授权</a-button>-->
+								<a-popconfirm title="确定要删除此用户吗？" @confirm="deleteUser(record)">
+									<a-button type="link" size="small" danger>删除</a-button>
+								</a-popconfirm>
+							</a-space>
 							<a-dropdown>
 								<a class="ant-dropdown-link">
 									{{ $t('common.more') }}
@@ -155,7 +154,7 @@
 	import GrantResourceForm from './grantResourceForm.vue'
 	import GrantPermissionForm from './grantPermissionForm.vue'
 	import AddForm from './addForm.vue'
-	import EditForm from "@/views/sys/post/editForm.vue";
+	import EditForm from "./editForm.vue"
 
 	const columns = [
 		{
@@ -285,38 +284,18 @@
 		}
 		tableRef.value.refresh(true)
 	}
-	// 修改状态
-	const editStatus = (record) => {
-		loading.value = true
-		if (record.userStatus === 'ENABLE') {
-			userApi
-				.userDisableUser(record)
-				.then(() => {
-					tableRef.value.refresh()
-				})
-				.finally(() => {
-					loading.value = false
-				})
-		} else {
-			userApi
-				.userEnableUser(record)
-				.then(() => {
-					tableRef.value.refresh()
-				})
-				.finally(() => {
-					loading.value = false
-				})
-		}
-	}
 	// 删除用户
-	const removeUser = (record) => {
-		let params = [
-			{
-				id: record.id
-			}
-		]
-		userApi.userDelete(params).then(() => {
-			tableRef.value.refresh()
+	const deleteUser = (record) => {
+		let data = { ids: [record.id] }
+		userApi.deleteUser(data).then(() => {
+			tableRef.value.refresh(true)
+		})
+	}
+	// 批量删除
+	const batchDeleteUser = (params) => {
+		let data = { ids: selectedRowKeys.value }
+		userApi.deleteUser(data).then(() => {
+			tableRef.value.clearRefreshSelected()
 		})
 	}
 	// 批量导出校验并加参数
@@ -348,13 +327,6 @@
 		userApi.userExport(params).then((res) => {
 			downloadUtil.resultDownload(res)
 			tableRef.value.clearSelected()
-		})
-	}
-	// 批量删除
-	const batchDeleteUser = (params) => {
-		let data = { ids: selectedRowKeys.value }
-		userApi.deleteUser(data).then(() => {
-			tableRef.value.clearRefreshSelected()
 		})
 	}
 	// 打开角色选择器

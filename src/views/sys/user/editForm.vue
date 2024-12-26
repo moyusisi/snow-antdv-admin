@@ -1,7 +1,7 @@
 <template>
 	<a-drawer
 		:open="visible"
-		title="新增用户"
+		title="编辑用户"
 		:width="drawerWidth"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
 		@close="onClose"
@@ -11,7 +11,7 @@
 				<a-row :gutter="24">
 					<a-col :span="8">
 						<a-form-item label="登陆账号：" name="account" :rules="[required('请输入账号')]">
-							<a-input v-model:value="formData.account" placeholder="请输入账号" allow-clear />
+							<a-input v-model:value="formData.account" placeholder="请输入账号" disabled />
 						</a-form-item>
 					</a-col>
 					<a-col :span="8">
@@ -21,7 +21,7 @@
 					</a-col>
 					<a-col :span="8">
 						<a-form-item label="员工编号：" name="staffCode">
-							<a-input v-model:value="formData.staffCode" placeholder="请输入员工编号" allow-clear />
+							<a-input v-model:value="formData.staffCode" placeholder="请输入员工编号" disabled />
 						</a-form-item>
 					</a-col>
 					<a-col :span="8">
@@ -135,10 +135,11 @@
 
 <script setup>
 import orgApi from '@/api/sys/orgApi'
+import userApi from '@/api/sys/userApi'
+import postApi from '@/api/sys/postApi'
 
 import { required } from '@/utils/formRules'
 import { useGlobalStore } from "@/store";
-import userApi from "@/api/sys/userApi";
 
 const store = useGlobalStore()
 
@@ -167,9 +168,12 @@ const drawerWidth = computed(() => {
 })
 
 // 打开抽屉
-const onOpen = (orgCode) => {
+const onOpen = (record) => {
 	visible.value = true
-	formData.value.orgCode = orgCode
+	// 获取用户信息
+	userApi.userDetail({ account: record.account }).then((res) => {
+		formData.value = res
+	})
 	// 获取组织树并加入顶级节点
 	orgApi.orgTree({}).then((res) => {
 		treeData.value = res
@@ -190,7 +194,7 @@ const parentChange = (value) => {
 const onSubmit = () => {
 	formRef.value.validate().then(() => {
 		submitLoading.value = true
-		userApi.addUser(formData.value).then(() => {
+		userApi.editUser(formData.value).then(() => {
 			emit('successful')
 			onClose()
 		}).finally(() => {
