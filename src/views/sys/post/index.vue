@@ -47,7 +47,6 @@
 					:row-key="(record) => record.code"
 					:tool-config="toolConfig"
 					:row-selection="options.rowSelection"
-					@resizeColumn="handleResizeColumn"
 				>
 					<template #operator class="table-operator">
 						<a-space>
@@ -78,9 +77,7 @@
 						<template v-if="column.dataIndex === 'action'">
 							<a-space>
 								<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
-								<a-divider type="vertical" />
 								<a-button type="link" size="small" @click="grantMenuFormRef.onOpen(record)">授权</a-button>
-								<a-divider type="vertical" />
 								<a-popconfirm title="确定要删除此岗位吗？" @confirm="deletePost(record)">
 									<a-button type="link" size="small" danger>删除</a-button>
 								</a-popconfirm>
@@ -153,7 +150,7 @@
 			title: '操作',
 			dataIndex: 'action',
 			align: 'center',
-			width: 200
+			width: 200,
 		}
 	]
 	const selectedRowKeys = ref([])
@@ -239,10 +236,6 @@
 		postApi.deletePost(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
-	}
-	// 可伸缩列
-	const handleResizeColumn = (w, col) => {
-		col.width = w
 	}
 	// 成功回调
 	const handleSuccess = () => {

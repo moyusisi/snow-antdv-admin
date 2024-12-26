@@ -102,6 +102,7 @@
 					emit('onExpand', expanded, record)
 				}
 			"
+			@resizeColumn="handleResizeColumn"
 			:rowClassName="
 				(record, index) => (data.localSettings.rowClassNameSwitch ? ((index + 1) % 2 == 0 ? 'odd' : '') : null)
 			"
@@ -564,6 +565,10 @@
 	const clearRefreshSelected = (bool = false) => {
 		refresh(bool)
 		clearSelected()
+	}
+	// 可伸缩列
+	const handleResizeColumn = (w, col) => {
+		col.width = w
 	}
 	// 暴露子组件的方法
 	defineExpose({

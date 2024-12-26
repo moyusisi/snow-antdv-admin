@@ -32,7 +32,6 @@
 			:row-key="(record) => record.id"
 			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
-			@resizeColumn="handleResizeColumn"
 		>
 			<template #operator>
 				<a-space>
@@ -213,10 +212,6 @@
 	const reset = () => {
 		searchFormRef.value.resetFields()
 		tableRef.value.refresh(true)
-	}
-	// 可伸缩列
-	const handleResizeColumn = (w, col) => {
-		col.width = w
 	}
 	// 删除
 	const deleteRole = (record) => {

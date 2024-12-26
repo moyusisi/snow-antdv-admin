@@ -104,6 +104,7 @@
 		{
 			title: '组织名称',
 			dataIndex: 'name',
+			resizable: true,
 			width: 200
 		},
 		{
