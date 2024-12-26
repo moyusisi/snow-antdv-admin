@@ -2,7 +2,7 @@
 	<a-row :gutter="8">
 		<!-- 左侧组织树 -->
 		<a-col :span="5">
-			<a-card :bordered="false" :loading="cardLoading">
+			<a-card :bordered="false" :loading="cardLoading" bodyStyle="padding-left:5px;padding-right:5px;">
 				<a-tree
 					v-if="treeData.length > 0"
 					v-model:expandedKeys="defaultExpandedKeys"
@@ -188,7 +188,7 @@
 			width: 150
 		},
 		{
-			title: '机构',
+			title: '组织机构',
 			dataIndex: 'orgName',
 			resizable: true,
 			width: 200,
