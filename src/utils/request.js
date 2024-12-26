@@ -127,10 +127,7 @@ service.interceptors.response.use(
 		if (error) {
 			const status = 503
 			const description = errorCodeMap[status]
-			console.error({
-				message: '请求错误',
-				description
-			})
+			console.error({ message: '请求错误', description })
 			return Promise.reject(status)
 		}
 	}
