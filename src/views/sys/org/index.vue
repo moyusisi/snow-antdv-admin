@@ -75,6 +75,17 @@
 							<a-tag v-else>已停用</a-tag>
 						</template>
 						<template v-if="column.dataIndex === 'action'">
+<!--							<a-space>-->
+<!--								<a-tooltip title="编辑">-->
+<!--									<a @click="editFormRef.onOpen(record)"><FormOutlined /></a>-->
+<!--								</a-tooltip>-->
+<!--								<a-divider type="vertical" />-->
+<!--								<a-tooltip title="删除">-->
+<!--									<a-popconfirm title="确认删除吗？" @confirm="deleteOrg(record)">-->
+<!--										<a style="color:#FF4D4F;"><DeleteOutlined/></a>-->
+<!--									</a-popconfirm>-->
+<!--								</a-tooltip>-->
+<!--							</a-space>-->
 							<a-space>
 								<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
 								<a-divider type="vertical" />
