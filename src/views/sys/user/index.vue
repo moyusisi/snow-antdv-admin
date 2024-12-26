@@ -205,6 +205,20 @@
 		}
 	]
 	const selectedRowKeys = ref([])
+	// 列表选择配置
+	const options = {
+		alert: {
+			show: false,
+			clear: () => {
+				selectedRowKeys.value = ref([])
+			}
+		},
+		rowSelection: {
+			onChange: (selectedRowKey, selectedRows) => {
+				selectedRowKeys.value = selectedRowKey
+			}
+		}
+	}
 	// 使用状态options（0正常 1停用）
 	const statusOptions = [
 		{ label: "正常", value: 0 },
@@ -236,6 +250,12 @@
 		loadTreeData()
 	})
 
+	// 表格查询 返回 Promise 对象
+	const loadTableData = (parameter) => {
+		return userApi.userPage(Object.assign(parameter, searchFormData.value)).then((res) => {
+			return res
+		})
+	}
 	// 加载左侧的树
 	const loadTreeData = () => {
 		orgApi.orgTree().then((res) => {
@@ -248,48 +268,6 @@
 			cardLoading.value = false
 		})
 	}
-	// 表格查询 返回 Promise 对象
-	const loadTableData = (parameter) => {
-		return userApi.userPage(Object.assign(parameter, searchFormData.value)).then((res) => {
-			return res
-		})
-	}
-	// 左侧树查询
-	orgApi.orgTree().then((res) => {
-		cardLoading.value = false
-		if (res !== null) {
-			treeData.value = res
-			if (isEmpty(defaultExpandedKeys.value)) {
-				// 默认展开2级
-				treeData.value.forEach((item) => {
-					// 因为0的顶级
-					if (item.parentId === '0') {
-						defaultExpandedKeys.value.push(item.id)
-						// 取到下级ID
-						if (item.children) {
-							item.children.forEach((items) => {
-								defaultExpandedKeys.value.push(items.id)
-							})
-						}
-					}
-				})
-			}
-		}
-	})
-	// 列表选择配置
-	const options = {
-		alert: {
-			show: false,
-			clear: () => {
-				selectedRowKeys.value = ref([])
-			}
-		},
-		rowSelection: {
-			onChange: (selectedRowKey, selectedRows) => {
-				selectedRowKeys.value = selectedRowKey
-			}
-		}
-	}
 	// 重置
 	const reset = () => {
 		searchFormRef.value.resetFields()
@@ -298,9 +276,9 @@
 	// 点击树查询
 	const treeSelect = (selectedKeys) => {
 		if (selectedKeys.length > 0) {
-			searchFormData.value.orgId = selectedKeys.toString()
+			searchFormData.value.orgCode = selectedKeys.toString()
 		} else {
-			delete searchFormData.value.orgId
+			delete searchFormData.value.orgCode
 		}
 		tableRef.value.refresh(true)
 	}
