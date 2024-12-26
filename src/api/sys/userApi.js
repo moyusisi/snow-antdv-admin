@@ -7,10 +7,6 @@ const request = (url, ...arg) => baseRequest(`/sys/user/` + url, ...arg)
  * 用户接口api
  */
 export default {
-	// 查询用户列表
-	userList(data) {
-		return service.postJson('/api/sys/user/list', data)
-	},
 	// 分页查询用户列表
 	userPage(data) {
 		return service.postJson('/api/sys/user/page', data)

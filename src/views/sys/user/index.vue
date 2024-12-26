@@ -47,6 +47,7 @@
 					:alert="options.alert.show"
 					:row-key="(record) => record.id"
 					:row-selection="options.rowSelection"
+					:tool-config="toolConfig"
 				>
 					<template #operator class="table-operator">
 						<a-space>
@@ -72,14 +73,14 @@
 						</a-space>
 					</template>
 					<template #bodyCell="{ column, record }">
-						<template v-if="column.dataIndex === 'avatar'">
-							<a-avatar :src="record.avatar" style="margin-bottom: -5px; margin-top: -5px" />
-						</template>
 						<template v-if="column.dataIndex === 'gender'">
-							{{ $TOOL.dictTypeData('GENDER', record.gender) }}
+							<a-tag v-if="record.gender === 1" color="green">男</a-tag>
+							<a-tag v-else-if="record.gender === 2" color="red">女</a-tag>
+							<a-tag v-else>未知</a-tag>
 						</template>
-						<template v-if="column.dataIndex === 'userStatus'">
-							<a-switch :loading="loading" :checked="record.userStatus === 'ENABLE'" @change="editStatus(record)" />
+						<template v-if="column.dataIndex === 'status'">
+							<a-tag v-if="record.status === 0" color="green">正常</a-tag>
+							<a-tag v-else>已停用</a-tag>
 						</template>
 						<template v-if="column.dataIndex === 'action'">
 							<a @click="formRef.onOpen(record)">{{ $t('common.editButton') }}</a>
@@ -149,7 +150,6 @@
 	import { h } from "vue";
 	import { message, Empty } from 'ant-design-vue'
 	import { SearchOutlined, RedoOutlined } from "@ant-design/icons-vue";
-	import { isEmpty } from 'lodash-es'
 	import downloadUtil from '@/utils/downloadUtil'
 	import Form from './form.vue'
 	import ImpExp from './impExp.vue'
@@ -158,23 +158,20 @@
 
 	const columns = [
 		{
-			title: '头像',
-			dataIndex: 'avatar',
-			align: 'center',
-			width: '80px'
-		},
-		{
 			title: '账号',
 			dataIndex: 'account',
+			resizable: true,
 			ellipsis: true
 		},
 		{
 			title: '姓名',
-			dataIndex: 'name'
+			dataIndex: 'name',
+			resizable: true,
+			width: 150
 		},
 		{
 			title: '性别',
-			dataIndex: 'genderName',
+			dataIndex: 'gender',
 			width: '50px'
 		},
 		{
@@ -185,23 +182,26 @@
 		{
 			title: '机构',
 			dataIndex: 'orgName',
+			resizable: true,
+			width: 200,
 			ellipsis: true
 		},
 		{
 			title: '职位',
-			dataIndex: 'positionName',
+			dataIndex: 'post',
 			ellipsis: true
 		},
 		{
 			title: '状态',
-			dataIndex: 'userStatus',
-			width: '80px'
+			dataIndex: 'status',
+			width: 80
 		},
 		{
 			title: '操作',
 			dataIndex: 'action',
 			align: 'center',
-			width: '220px'
+			resizable: true,
+			width: 220
 		}
 	]
 	const selectedRowKeys = ref([])

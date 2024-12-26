@@ -30,8 +30,8 @@
 			:scroll="{ x: 1200 }"
 			bordered
 			:row-key="(record) => record.id"
-			:tool-config="toolConfig"
 			:row-selection="options.rowSelection"
+			:tool-config="toolConfig"
 		>
 			<template #operator>
 				<a-space>
