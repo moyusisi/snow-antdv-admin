@@ -15,7 +15,7 @@
 				<a-col :span="8">
 					<a-space>
 						<a-button type="primary" :icon="h(SearchOutlined)" @click="tableRef.refresh(true)">查询</a-button>
-						<a-button @click="reset">重置</a-button>
+						<a-button :icon="h(RedoOutlined)" @click="reset">重置</a-button>
 					</a-space>
 				</a-col>
 			</a-row>
@@ -75,7 +75,7 @@
 <script setup>
 	import menuApi from '@/api/sys/menuApi'
 	import { h } from "vue";
-	import { PlusOutlined, SearchOutlined } from "@ant-design/icons-vue";
+	import { PlusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
 	import AddForm from "@/views/sys/resource/module/addForm.vue";
 	import EditForm from "@/views/sys/resource/module/editForm.vue";
 

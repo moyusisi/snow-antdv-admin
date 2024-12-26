@@ -1,52 +1,38 @@
 <template>
-	<a-row :gutter="10">
-		<a-col :xs="24" :sm="24" :md="24" :lg="5" :xl="5">
-			<a-card class="mb-3" :bordered="false" :loading="cardLoading">
+	<a-row :gutter="8">
+		<!-- 左侧组织树 -->
+		<a-col :span="5">
+			<a-card :bordered="false" :loading="cardLoading">
 				<a-tree
 					v-if="treeData.length > 0"
 					v-model:expandedKeys="defaultExpandedKeys"
 					:tree-data="treeData"
 					:field-names="treeFieldNames"
 					@select="treeSelect"
-				>
-				</a-tree>
+				/>
 				<a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />
 			</a-card>
 		</a-col>
-		<a-col :xs="24" :sm="24" :md="24" :lg="19" :xl="19">
+		<!-- 右侧内容 -->
+		<a-col :span="19">
 			<a-card :bordered="false" class="xn-mb10">
-				<a-form ref="searchFormRef" name="advanced_search" class="ant-advanced-search-form" :model="searchFormState">
+				<a-form ref="searchFormRef" :model="searchFormData">
 					<a-row :gutter="24">
 						<a-col :span="8">
-							<a-form-item name="searchKey" :label="$t('common.searchKey')">
-								<a-input
-									v-model:value="searchFormState.searchKey"
-									:placeholder="$t('user.placeholderNameAndSearchKey')"
-								/>
+							<a-form-item name="searchKey" label="关键词">
+								<a-input v-model:value="searchFormData.searchKey" placeholder="请输入姓名或关键词" allowClear />
+							</a-form-item>
+						</a-col>
+						<a-col :span="6">
+							<a-form-item label="用户状态" name="status">
+								<a-select v-model:value="searchFormData.status" placeholder="请选择状态" :options="statusOptions" allowClear />
 							</a-form-item>
 						</a-col>
 						<a-col :span="8">
-							<a-form-item name="userStatus" :label="$t('user.userStatus')">
-								<a-select
-									v-model:value="searchFormState.userStatus"
-									:placeholder="$t('user.placeholderUserStatus')"
-									:getPopupContainer="(trigger) => trigger.parentNode"
-								>
-									<a-select-option v-for="item in statusData" :key="item.value" :value="item.value">{{
-										item.label
-									}}</a-select-option>
-								</a-select>
-							</a-form-item>
-						</a-col>
-						<a-col :span="8">
-							<a-button type="primary" @click="tableRef.refresh(true)">
-								<template #icon><SearchOutlined /></template>
-								{{ $t('common.searchButton') }}
-							</a-button>
-							<a-button class="snowy-button-left" @click="reset">
-								<template #icon><redo-outlined /></template>
-								{{ $t('common.resetButton') }}
-							</a-button>
+							<a-space>
+								<a-button type="primary" :icon="h(SearchOutlined)" @click="tableRef.refresh(true)">查询</a-button>
+								<a-button :icon="h(RedoOutlined)" @click="reset">重置</a-button>
+							</a-space>
 						</a-col>
 					</a-row>
 				</a-form>
@@ -55,7 +41,7 @@
 				<s-table
 					ref="tableRef"
 					:columns="columns"
-					:data="loadData"
+					:data="loadTableData"
 					:expand-row-by-click="true"
 					bordered
 					:alert="options.alert.show"
@@ -64,7 +50,7 @@
 				>
 					<template #operator class="table-operator">
 						<a-space>
-							<a-button type="primary" @click="formRef.onOpen(undefined, searchFormState.orgId)">
+							<a-button type="primary" @click="formRef.onOpen(undefined, searchFormData.orgId)">
 								<template #icon><plus-outlined /></template>
 								<span>{{ $t('common.addButton') }}{{ $t('model.user') }}</span>
 							</a-button>
@@ -156,13 +142,15 @@
 	<grantPermissionForm ref="grantPermissionFormRef" @successful="tableRef.refresh()" />
 </template>
 
-<script setup name="sysUser">
-	import { message, Empty } from 'ant-design-vue'
-	import { isEmpty } from 'lodash-es'
-	import tool from '@/utils/tool'
-	import downloadUtil from '@/utils/downloadUtil'
+<script setup>
 	import userApi from '@/api/sys/userApi'
 	import orgApi from '@/api/sys/orgApi'
+
+	import { h } from "vue";
+	import { message, Empty } from 'ant-design-vue'
+	import { SearchOutlined, RedoOutlined } from "@ant-design/icons-vue";
+	import { isEmpty } from 'lodash-es'
+	import downloadUtil from '@/utils/downloadUtil'
 	import Form from './form.vue'
 	import ImpExp from './impExp.vue'
 	import GrantResourceForm from './grantResourceForm.vue'
@@ -216,25 +204,53 @@
 			width: '220px'
 		}
 	]
-	const statusData = tool.dictList('COMMON_STATUS')
-	const searchFormRef = ref()
-	const defaultExpandedKeys = ref([])
-	const searchFormState = ref({})
-	const tableRef = ref(null)
-	const treeData = ref([])
 	const selectedRowKeys = ref([])
-	const treeFieldNames = { children: 'children', title: 'name', key: 'id' }
+	// 使用状态options（0正常 1停用）
+	const statusOptions = [
+		{ label: "正常", value: 0 },
+		{ label: "已停用", value: 1 }
+	]
+	// 定义tableDOM
+	const tableRef = ref()
+	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
+	const addFormRef = ref()
+	const editFormRef = ref()
+	const searchFormRef = ref()
+	const searchFormData = ref({})
+
 	const formRef = ref(null)
 	const RoleSelectorPlusRef = ref()
 	const selectedRecord = ref({})
 	const loading = ref(false)
-	const cardLoading = ref(true)
 	const ImpExpRef = ref()
 	const grantResourceFormRef = ref()
 	const grantPermissionFormRef = ref()
+	// 默认展开的节点
+	const defaultExpandedKeys = ref([])
+	const treeData = ref([])
+	// 替换treeNode 中 children,title,key
+	const treeFieldNames = { children: 'children', title: 'name', key: 'code' }
+	const cardLoading = ref(true)
+
+	onMounted(() => {
+		loadTreeData()
+	})
+
+	// 加载左侧的树
+	const loadTreeData = () => {
+		orgApi.orgTree().then((res) => {
+			cardLoading.value = false
+			if (res !== null) {
+				treeData.value = res
+				defaultExpandedKeys.value = [res[0]?.code]
+			}
+		}).finally(() => {
+			cardLoading.value = false
+		})
+	}
 	// 表格查询 返回 Promise 对象
-	const loadData = (parameter) => {
-		return userApi.userPage(Object.assign(parameter, searchFormState.value)).then((res) => {
+	const loadTableData = (parameter) => {
+		return userApi.userPage(Object.assign(parameter, searchFormData.value)).then((res) => {
 			return res
 		})
 	}
@@ -282,9 +298,9 @@
 	// 点击树查询
 	const treeSelect = (selectedKeys) => {
 		if (selectedKeys.length > 0) {
-			searchFormState.value.orgId = selectedKeys.toString()
+			searchFormData.value.orgId = selectedKeys.toString()
 		} else {
-			delete searchFormState.value.orgId
+			delete searchFormData.value.orgId
 		}
 		tableRef.value.refresh(true)
 	}
@@ -324,7 +340,7 @@
 	}
 	// 批量导出校验并加参数
 	const exportBatchUserVerify = () => {
-		if ((selectedRowKeys.value.length < 1) & !searchFormState.value.searchKey & !searchFormState.value.userStatus) {
+		if ((selectedRowKeys.value.length < 1) & !searchFormData.value.searchKey & !searchFormData.value.userStatus) {
 			message.warning('请输入查询条件或勾选要导出的信息')
 		}
 		if (selectedRowKeys.value.length > 0) {
@@ -338,10 +354,10 @@
 			exportBatchUser(params)
 			return
 		}
-		if (searchFormState.value.searchKey || searchFormState.value.userStatus) {
+		if (searchFormData.value.searchKey || searchFormData.value.userStatus) {
 			const params = {
-				searchKey: searchFormState.value.searchKey,
-				userStatus: searchFormState.value.userStatus
+				searchKey: searchFormData.value.searchKey,
+				userStatus: searchFormData.value.userStatus
 			}
 			exportBatchUser(params)
 		}
