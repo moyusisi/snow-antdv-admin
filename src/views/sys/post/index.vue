@@ -51,7 +51,7 @@
 				>
 					<template #operator class="table-operator">
 						<a-space>
-							<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(searchFormData.orgs)">新增</a-button>
+							<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(searchFormData.orgCode)">新增</a-button>
 							<xn-batch-button
 								buttonName="批量删除"
 								icon="DeleteOutlined"
@@ -220,9 +220,9 @@
 	// 点击树查询
 	const treeSelect = (selectedKeys) => {
 		if (selectedKeys.length > 0) {
-			searchFormData.value.orgs = selectedKeys.toString()
+			searchFormData.value.orgCode = selectedKeys.toString()
 		} else {
-			delete searchFormData.value.orgs
+			delete searchFormData.value.orgCode
 		}
 		tableRef.value.refresh(true)
 	}
