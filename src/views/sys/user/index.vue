@@ -42,7 +42,7 @@
 					ref="tableRef"
 					:columns="columns"
 					:data="loadTableData"
-					:expand-row-by-click="true"
+					:scroll="{ x: 1200 }"
 					bordered
 					:alert="options.alert.show"
 					:row-key="(record) => record.id"
