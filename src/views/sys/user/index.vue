@@ -161,6 +161,7 @@
 			title: '账号',
 			dataIndex: 'account',
 			resizable: true,
+			width: 200,
 			ellipsis: true
 		},
 		{
@@ -178,18 +179,14 @@
 		{
 			title: '手机',
 			dataIndex: 'phone',
-			ellipsis: true
+			align: 'center',
+			width: 150
 		},
 		{
 			title: '机构',
 			dataIndex: 'orgName',
 			resizable: true,
 			width: 200,
-			ellipsis: true
-		},
-		{
-			title: '职位',
-			dataIndex: 'post',
 			ellipsis: true
 		},
 		{
