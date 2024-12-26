@@ -71,8 +71,8 @@
 					</template>
 					<template #bodyCell="{ column, record }">
 						<template v-if="column.dataIndex === 'gender'">
-							<a-tag v-if="record.gender === 1" color="green">男</a-tag>
-							<a-tag v-else-if="record.gender === 2" color="red">女</a-tag>
+							<a-tag v-if="record.gender === 1" color="blue">男</a-tag>
+							<a-tag v-else-if="record.gender === 2" color="pink">女</a-tag>
 							<a-tag v-else>未知</a-tag>
 						</template>
 						<template v-if="column.dataIndex === 'status'">
