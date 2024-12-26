@@ -49,12 +49,9 @@
 					:row-selection="options.rowSelection"
 					:tool-config="toolConfig"
 				>
-					<template #operator class="table-operator">
+					<template #operator>
 						<a-space>
-							<a-button type="primary" @click="formRef.onOpen(undefined, searchFormData.orgId)">
-								<template #icon><plus-outlined /></template>
-								<span>{{ $t('common.addButton') }}{{ $t('model.user') }}</span>
-							</a-button>
+							<a-button type="primary" :icon="h(PlusOutlined)" @click="addFormRef.onOpen(searchFormData.orgCode)">新增用户</a-button>
 							<a-button @click="ImpExpRef.onOpen()">
 								<template #icon><import-outlined /></template>
 								<span>{{ $t('common.imports') }}</span>
@@ -64,11 +61,11 @@
 								{{ $t('user.batchExportButton') }}
 							</a-button>
 							<xn-batch-button
-								:buttonName="$t('common.batchRemoveButton')"
+								buttonName="批量删除"
 								icon="DeleteOutlined"
 								buttonDanger
 								:selectedRowKeys="selectedRowKeys"
-								@batchCallBack="deleteBatchUser"
+								@batchCallBack="batchDeleteUser"
 							/>
 						</a-space>
 					</template>
@@ -141,6 +138,8 @@
 	<ImpExp ref="ImpExpRef" />
 	<grantResourceForm ref="grantResourceFormRef" @successful="tableRef.refresh()" />
 	<grantPermissionForm ref="grantPermissionFormRef" @successful="tableRef.refresh()" />
+	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />
+	<AddForm ref="addFormRef" @successful="tableRef.refresh()" />
 </template>
 
 <script setup>
@@ -149,12 +148,14 @@
 
 	import { h } from "vue";
 	import { message, Empty } from 'ant-design-vue'
-	import { SearchOutlined, RedoOutlined } from "@ant-design/icons-vue";
+	import { SearchOutlined, RedoOutlined, PlusOutlined } from "@ant-design/icons-vue";
 	import downloadUtil from '@/utils/downloadUtil'
 	import Form from './form.vue'
 	import ImpExp from './impExp.vue'
 	import GrantResourceForm from './grantResourceForm.vue'
 	import GrantPermissionForm from './grantPermissionForm.vue'
+	import AddForm from './addForm.vue'
+	import EditForm from "@/views/sys/post/editForm.vue";
 
 	const columns = [
 		{
@@ -172,7 +173,8 @@
 		{
 			title: '性别',
 			dataIndex: 'gender',
-			width: '50px'
+			align: 'center',
+			width: 80
 		},
 		{
 			title: '手机',
@@ -194,6 +196,7 @@
 		{
 			title: '状态',
 			dataIndex: 'status',
+			align: 'center',
 			width: 80
 		},
 		{
@@ -348,8 +351,9 @@
 		})
 	}
 	// 批量删除
-	const deleteBatchUser = (params) => {
-		userApi.userDelete(params).then(() => {
+	const batchDeleteUser = (params) => {
+		let data = { ids: selectedRowKeys.value }
+		userApi.deleteUser(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
 	}
