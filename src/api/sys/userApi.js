@@ -1,5 +1,4 @@
 import service from '@/utils/request'
-
 import { baseRequest } from '@/utils/request'
 
 const request = (url, ...arg) => baseRequest(`/sys/user/` + url, ...arg)

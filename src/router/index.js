@@ -77,9 +77,7 @@ router.beforeEach(async (to, from, next) => {
 	if (to.path === '/login') {
 		// 当用户输入了login路由，将其跳转首页即可
 		if (token) {
-			next({
-				path: '/'
-			})
+			next({ path: '/' })
 			return false
 		}
 		// 删除路由(替换当前layout路由)
