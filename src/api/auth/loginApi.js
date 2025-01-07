@@ -11,7 +11,7 @@ const request = (url, ...arg) => baseRequest(`/auth/b/` + url, ...arg)
 export default {
 	// 表单登陆
 	login(data) {
-		return service.postForm('/api/login', data)
+		return service.postForm('/api/auth/login', data)
 	},
 	// B端获取图片验证码
 	getPicCaptcha(data) {

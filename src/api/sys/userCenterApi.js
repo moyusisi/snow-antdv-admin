@@ -8,7 +8,7 @@ const request = (url, ...arg) => baseRequest(`/sys/userCenter/` + url, ...arg)
 export default {
 	// 获取登陆用户的信息
 	loginUserInfo(data) {
-		return service.postJson('/api/userCenter/me', data)
+		return service.postJson('/api/sys/userCenter/me', data)
 	},
 
 	// 获取登陆用户的菜单树

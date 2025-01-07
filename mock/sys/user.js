@@ -2,6 +2,7 @@
 export default [
 	{
 		url: '/auth/b/doLogin',
+		// url: '/api/auth/login',
 		method: 'post',
 		response: {
 			"code": 0,
@@ -11,6 +12,7 @@ export default [
 	},
 	{
 		url: '/auth/b/getLoginUser',
+		// url: '/api/sys/userCenter/me',
 		method: 'get',
 		response: {
 			"code": 0,
