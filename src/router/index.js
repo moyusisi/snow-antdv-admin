@@ -7,7 +7,7 @@ import whiteListRouters from './whiteList'
 import userRoutes from '@/config/route'
 import tool from '@/utils/tool'
 import { cloneDeep } from 'lodash-es'
-import { globalStore } from '@/store'
+import { useGlobalStore } from '@/store'
 import { NextLoading } from '@/utils/loading'
 import { useMenuStore } from '@/store/menu'
 
@@ -45,7 +45,7 @@ const whiteList = exportWhiteListFromRouter(whiteListRouters)
 // 每个请求都拦截处理
 router.beforeEach(async (to, from, next) => {
 	NProgress.start()
-	const store = globalStore()
+	const store = useGlobalStore()
 
 	const sysBaseConfig = tool.data.get('SNOWY_SYS_BASE_CONFIG') || store.sysBaseConfig
 	// 动态标题
