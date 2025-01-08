@@ -25,7 +25,7 @@
 							</a-col>
 							<a-col :span="8">
 								<a-space>
-									<a-button type="primary" :icon="h(SearchOutlined)" @click="tableRef.refresh(true)">查询</a-button>
+									<a-button type="primary" :icon="h(SearchOutlined)" @click="loadTableData()">查询</a-button>
 									<a-button :icon="h(RedoOutlined)" @click="reset">重置</a-button>
 								</a-space>
 							</a-col>
@@ -169,25 +169,32 @@
 	}
 	// 关闭抽屉
 	const onClose = () => {
-		// 表单数据
+		// 表单清空
 		searchFormData.value = {}
-		// table数据
+		// table数据清空
 		tableData.value = []
 		selectedRowKeys.value = []
 		selectedRecords.value = []
+		// 右边table清空
 		toTableData.value = []
 		toSelectedRowKeys.value = []
+		// 关闭
 		visible.value = false
 	}
 
 	// 表格查询 返回 Promise 对象
 	const loadTableData = async () => {
+		selectedRowKeys.value = []
+		selectedRecords.value = []
 		const res = await roleApi.roleList(searchFormData.value)
 		tableData.value = res
 	}
 	// 重置
 	const reset = () => {
-		searchFormRef.value.resetFields()
+		searchFormData.value = {}
+		tableData.value = []
+		selectedRowKeys.value = []
+		selectedRecords.value = []
 		loadTableData()
 	}
 	// 添加记录
@@ -206,6 +213,7 @@
 			}
 		}
 		selectedRowKeys.value = []
+		selectedRecords.value = []
 		toTableData.value = list
 	}
 	// 删减记录
