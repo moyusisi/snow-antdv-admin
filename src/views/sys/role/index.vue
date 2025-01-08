@@ -27,7 +27,6 @@
 			:columns="columns"
 			:data="loadData"
 			:alert="options.alert.show"
-			:scroll="{ x: 1000 }"
 			bordered
 			:row-key="(record) => record.id"
 			:row-selection="options.rowSelection"

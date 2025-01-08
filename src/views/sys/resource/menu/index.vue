@@ -104,7 +104,8 @@
 	const columns = [
 		{
 			title: '显示名称',
-			dataIndex: 'name'
+			dataIndex: 'name',
+			resizable: true
 		},
 		{
 			title: '类型',
