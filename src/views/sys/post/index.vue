@@ -42,7 +42,7 @@
 					ref="tableRef"
 					:columns="columns"
 					:data="loadTableData"
-					:scroll="{ x: 1200 }"
+					:scroll="{ x: 1000 }"
 					bordered
 					:row-key="(record) => record.code"
 					:tool-config="toolConfig"
@@ -76,8 +76,8 @@
 						</template>
 						<template v-if="column.dataIndex === 'action'">
 							<a-space>
-								<a-tooltip title="分配角色">
-									<a style="color:#53C61D;" @click="groupUserRef.onOpen(record, treeData)"><UserAddOutlined /></a>
+								<a-tooltip title="授权角色">
+									<a style="color:#53C61D;" @click="groupRoleRef.onOpen(record)"><UnorderedListOutlined /></a>
 								</a-tooltip>
 								<a-divider type="vertical" />
 								<a-tooltip title="授权用户">
@@ -103,6 +103,7 @@
 	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />
 	<AddForm ref="addFormRef" @successful="tableRef.refresh()" />
 	<GroupUser ref="groupUserRef" @successful="handleSuccess()" />
+	<GroupRole ref="groupRoleRef" @successful="handleSuccess()" />
 </template>
 
 <script setup>
@@ -114,8 +115,15 @@
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
 	import GroupUser from './groupUser.vue'
+	import GroupRole from './groupRole.vue'
 
 	const columns = [
+		{
+			title: '角色组名称',
+			dataIndex: 'name',
+			resizable: true,
+			width: 200
+		},
 		{
 			title: '组织机构',
 			dataIndex: 'orgName',
@@ -124,41 +132,22 @@
 			ellipsis: true
 		},
 		{
-			title: '角色组名称',
-			dataIndex: 'name',
-			resizable: true,
-			width: 200
-		},
-		{
 			title: '分组类型',
 			dataIndex: 'postType',
 			align: 'center',
-			width: 100
-		},
-		{
-			title: '排序',
-			dataIndex: 'sortNum',
-			sorter: true,
-			align: 'center',
-			width: 100
+			width: 80
 		},
 		{
 			title: '状态',
 			dataIndex: 'status',
 			align: 'center',
-			width: 100
+			width: 80
 		},
 		{
 			title: '创建时间',
 			dataIndex: 'createTime',
 			align: 'center',
-			width: 160
-		},
-		{
-			title: '更新时间',
-			dataIndex: 'updateTime',
-			align: 'center',
-			width: 160
+			width: 140
 		},
 		{
 			title: '操作',
@@ -193,6 +182,7 @@
 	const addFormRef = ref()
 	const editFormRef = ref()
 	const groupUserRef = ref()
+	const groupRoleRef = ref()
 	const searchFormRef = ref()
 	const searchFormData = ref({})
 	// 默认展开的节点

@@ -11,23 +11,10 @@
 			<a-button type="primary" size="small" @click="onClose"><CloseOutlined /></a-button>
 		</template>
 		<!-- 页面内容 -->
-		<a-row>
-			<!-- 左侧组织树 -->
-			<a-col :span="5">
-				<a-card size="small" :loading="cardLoading" bodyStyle="padding-left:5px;padding-right:5px;">
-					<a-tree
-						v-if="treeData.length > 0"
-						v-model:expandedKeys="defaultExpandedKeys"
-						:tree-data="treeData"
-						:field-names="treeFieldNames"
-						@select="treeSelect"
-					/>
-					<a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />
-				</a-card>
-			</a-col>
-			<a-col :span="11">
+		<a-row :gutter="20">
+			<a-col :span="12">
 				<!-- 上方查询框 -->
-				<a-card size="small">
+				<a-card size="small" title="全部角色">
 					<a-form ref="searchFormRef" :model="searchFormData">
 						<a-row :gutter="16">
 							<a-col :span="8">
@@ -43,7 +30,7 @@
 							</a-col>
 							<a-col :span="8" style="text-align: right">
 								<a-form-item>
-									<a-button type="dashed" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加用户</a-button>
+									<a-button type="dashed" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加</a-button>
 								</a-form-item>
 							</a-col>
 						</a-row>
@@ -58,9 +45,9 @@
 					</a-table>
 				</a-card>
 			</a-col>
-			<a-col :span="8">
+			<a-col :span="12">
 				<!-- 上方查询框 -->
-				<a-card size="small" border="false">
+				<a-card size="small" title="已授权角色列表">
 					<a-form  style="text-align: right">
 						<a-form-item>
 							<a-button type="dashed" danger  :icon="h(MinusOutlined)">移除</a-button>
@@ -73,12 +60,6 @@
 							 :row-key="(record) => record.code"
 							 :row-selection="toRowSelection"
 							 bordered>
-						<template #title>
-							<span>已授权用户</span>
-<!--							<div v-if="!radioModel" class="xn-fdr">-->
-<!--								<a-button type="dashed" size="small" @click="addAllPageRecord">添加当前数据</a-button>-->
-<!--							</div>-->
-						</template>
 					</a-table>
 				</a-card>
 			</a-col>
@@ -98,40 +79,29 @@
 	const store = globalStore()
 	const columns = [
 		{
-			title: '姓名',
+			title: '角色名称',
 			dataIndex: 'name',
-			align: 'center',
 			resizable: true,
 			width: 100
 		},
 		{
-			title: '账号',
-			dataIndex: 'account',
-			align: 'center',
+			title: '唯一编码',
+			dataIndex: 'code',
 			resizable: true,
 			width: 100
-		},
-		{
-			title: '组织机构',
-			dataIndex: 'orgName',
-			resizable: true,
-			width: 200,
-			ellipsis: true
 		}
 	]
 	// 右边结果数据表的字段
 	const toColumns = [
 		{
-			title: '姓名',
+			title: '角色名称',
 			dataIndex: 'name',
-			align: 'center',
 			resizable: true,
 			width: 100
 		},
 		{
-			title: '账号',
-			dataIndex: 'account',
-			align: 'center',
+			title: '唯一编码',
+			dataIndex: 'code',
 			resizable: true,
 			width: 100
 		}
@@ -141,13 +111,6 @@
 	const visible = ref(false)
 	const group = ref()
 	const emit = defineEmits({ successful: null })
-	// 节点树
-	const treeData = ref([])
-	// 默认展开的节点(顶级)
-	const defaultExpandedKeys = ref([])
-	// 替换treeNode 中 children,title,key
-	const treeFieldNames = { children: 'children', title: 'name', key: 'code' }
-	const cardLoading = ref(false)
 	// 表单数据
 	const searchFormRef = ref()
 	const searchFormData = ref({})
@@ -201,17 +164,15 @@
 		{ label: "已停用", value: 1 }
 	]
 	const title = computed(() => {
-		return "用户组-" + group.value.name
+		return "角色组-" + group.value.name
 	})
 	const drawerWidth = computed(() => {
 		return `calc(100%)`
 	})
 
 	// 打开抽屉
-	const onOpen = (record, tradeData) => {
+	const onOpen = (record) => {
 		visible.value = true
-		treeData.value = tradeData
-		defaultExpandedKeys.value = [tradeData[0]?.code]
 		group.value = record;
 		// 加载组织树
 		// loadTreeData()
