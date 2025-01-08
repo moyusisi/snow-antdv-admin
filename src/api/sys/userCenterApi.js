@@ -13,7 +13,7 @@ export default {
 
 	// 获取登陆用户的菜单树
 	loginUserMenu(data) {
-		return service.postJson('/api/userCenter/userMenu', data)
+		return service.postJson('/api/sys/userCenter/userMenu', data)
 	},
 
 	// 获取图片验证码

@@ -160,6 +160,7 @@ export default [
 	},
 	{
 		url: '/sys/userCenter/loginMenu',
+		// url: '/api/sys/userCenter/userMenu',
 		method: 'get',
 		response: {
 			"code": 0,
