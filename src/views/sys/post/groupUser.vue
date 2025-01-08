@@ -10,9 +10,8 @@
 		<template #extra>
 			<a-button type="primary" size="small" @click="onClose"><CloseOutlined /></a-button>
 		</template>
-
 		<!-- 页面内容 -->
-		<a-row :gutter="8">
+		<a-row>
 			<!-- 左侧组织树 -->
 			<a-col :span="5">
 				<a-card size="small" :loading="cardLoading" bodyStyle="padding-left:5px;padding-right:5px;">
@@ -26,7 +25,7 @@
 					<a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />
 				</a-card>
 			</a-col>
-			<a-col :span="19">
+			<a-col :span="11">
 				<!-- 上方查询框 -->
 				<a-card size="small">
 					<a-form ref="searchFormRef" :model="searchFormData">
@@ -43,21 +42,36 @@
 								</a-space>
 							</a-col>
 							<a-col :span="8" style="text-align: right">
-								<a-space>
+								<a-form-item>
 									<a-button type="dashed" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加用户</a-button>
-									<a-button type="dashed" danger  :icon="h(MinusOutlined)">移除</a-button>
-								</a-space>
+								</a-form-item>
 							</a-col>
 						</a-row>
 					</a-form>
-				</a-card>
-				<a-card size="small">
 					<a-table size="small"
 							 ref="tableRef"
 							 :columns="columns"
 							 :data-source="tableData"
 							 :row-key="(record) => record.code"
 							 :row-selection="rowSelection"
+							 bordered>
+					</a-table>
+				</a-card>
+			</a-col>
+			<a-col :span="8">
+				<!-- 上方查询框 -->
+				<a-card size="small" border="false">
+					<a-form  style="text-align: right">
+						<a-form-item>
+							<a-button type="dashed" danger  :icon="h(MinusOutlined)">移除</a-button>
+						</a-form-item>
+					</a-form>
+					<a-table size="small"
+							 ref="toTableRef"
+							 :columns="toColumns"
+							 :data-source="toTableData"
+							 :row-key="(record) => record.code"
+							 :row-selection="toRowSelection"
 							 bordered>
 					</a-table>
 				</a-card>
@@ -99,6 +113,23 @@
 			ellipsis: true
 		}
 	]
+	// 右边结果数据表的字段
+	const toColumns = [
+		{
+			title: '姓名',
+			dataIndex: 'name',
+			align: 'center',
+			resizable: true,
+			width: 100
+		},
+		{
+			title: '账号',
+			dataIndex: 'account',
+			align: 'center',
+			resizable: true,
+			width: 100
+		}
+	]
 
 	// 默认是关闭状态
 	const visible = ref(false)
@@ -120,6 +151,39 @@
 	const tableData = ref([])
 	// 已选中的菜单(loadTableData中会更新)
 	const selectedRowKeys = ref([])
+	// 右侧table数据
+	const toTableRef = ref()
+	const toTableData = ref([])
+	const toSelectedRowKeys = ref([])
+	const toRowSelection = ref({
+		checkStrictly: false,
+		selectedRowKeys: selectedRowKeys,
+		onChange: (selectedKeys, selectedRows) => {
+			selectedRowKeys.value = selectedKeys
+			console.log('onChange,selectedKeys:', selectedKeys);
+		},
+		onSelect: (record, selected, selectedRows) => {
+			// 取消选择时，menu下的按钮也要取消，同时递归取消子节点下已授权按钮
+			if (selected === false) {
+				// cleanGrantButtonList([record])
+			}
+		}
+	});
+	// 列表选择配置
+	const rowSelection = ref({
+		checkStrictly: false,
+		selectedRowKeys: selectedRowKeys,
+		onChange: (selectedKeys, selectedRows) => {
+			selectedRowKeys.value = selectedKeys
+			console.log('onChange,selectedKeys:', selectedKeys);
+		},
+		onSelect: (record, selected, selectedRows) => {
+			// 取消选择时，menu下的按钮也要取消，同时递归取消子节点下已授权按钮
+			if (selected === false) {
+				// cleanGrantButtonList([record])
+			}
+		}
+	});
 
 	// onMounted(() => {
 	// 	loadTreeData()
@@ -190,7 +254,7 @@
 
 <style scoped>
 	.ant-form-item {
-		margin-bottom: 0 !important;
+		margin-bottom: 10px !important;
 	}
 	.selectorTree {
 		max-height: 600px;
