@@ -5,6 +5,7 @@
 		:width="drawerWidth"
 		:closable="false"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
+		:destroy-on-close="true"
 		@close="onClose"
 	>
 		<template #extra>
@@ -14,12 +15,12 @@
 		<a-row :gutter="20">
 			<a-col :span="12">
 				<!-- 上方查询框 -->
-				<a-card size="small" title="全部角色">
+				<a-card size="small" title="全部角色列表">
 					<a-form ref="searchFormRef" :model="searchFormData">
 						<a-row :gutter="16">
 							<a-col :span="8">
 								<a-form-item name="searchKey">
-									<a-input v-model:value="searchFormData.searchKey" placeholder="请输入用户名" allowClear />
+									<a-input v-model:value="searchFormData.searchKey" placeholder="请输入关键词" allowClear />
 								</a-form-item>
 							</a-col>
 							<a-col :span="8">
@@ -30,7 +31,7 @@
 							</a-col>
 							<a-col :span="8" style="text-align: right">
 								<a-form-item>
-									<a-button type="dashed" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加</a-button>
+									<a-button type="dashed" :icon="h(PlusOutlined)" @click="addRows" style="color: #52C41AFF; border-color: #52C41AFF">添加</a-button>
 								</a-form-item>
 							</a-col>
 						</a-row>
@@ -50,7 +51,7 @@
 				<a-card size="small" title="已授权角色列表">
 					<a-form  style="text-align: right">
 						<a-form-item>
-							<a-button type="dashed" danger  :icon="h(MinusOutlined)">移除</a-button>
+							<a-button type="dashed" danger @click="delRows" :icon="h(MinusOutlined)">移除</a-button>
 						</a-form-item>
 					</a-form>
 					<a-table size="small"
@@ -64,19 +65,25 @@
 				</a-card>
 			</a-col>
 		</a-row>
+		<!-- 底部内容 -->
+		<template #footer>
+			<a-space>
+				<a-button @click="onClose">关闭</a-button>
+				<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
+			</a-space>
+		</template>
 	</a-drawer>
 </template>
 
 <script setup>
-	import orgApi from '@/api/sys/orgApi'
 	import postApi from '@/api/sys/postApi'
+	import roleApi from "@/api/sys/roleApi"
 
-	import { globalStore } from "@/store";
-	import { Empty } from "ant-design-vue";
+	import { useGlobalStore } from "@/store";
 	import { h } from "vue";
 	import { PlusOutlined, MinusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
 
-	const store = globalStore()
+	const store = useGlobalStore()
 	const columns = [
 		{
 			title: '角色名称',
@@ -111,6 +118,7 @@
 	const visible = ref(false)
 	const group = ref()
 	const emit = defineEmits({ successful: null })
+	const submitLoading = ref(false)
 	// 表单数据
 	const searchFormRef = ref()
 	const searchFormData = ref({})
@@ -120,99 +128,114 @@
 	const tableData = ref([])
 	// 已选中的菜单(loadTableData中会更新)
 	const selectedRowKeys = ref([])
-	// 右侧table数据
-	const toTableRef = ref()
-	const toTableData = ref([])
-	const toSelectedRowKeys = ref([])
-	const toRowSelection = ref({
-		checkStrictly: false,
-		selectedRowKeys: selectedRowKeys,
-		onChange: (selectedKeys, selectedRows) => {
-			selectedRowKeys.value = selectedKeys
-			console.log('onChange,selectedKeys:', selectedKeys);
-		},
-		onSelect: (record, selected, selectedRows) => {
-			// 取消选择时，menu下的按钮也要取消，同时递归取消子节点下已授权按钮
-			if (selected === false) {
-				// cleanGrantButtonList([record])
-			}
-		}
-	});
+	const selectedRecords = ref([])
 	// 列表选择配置
 	const rowSelection = ref({
 		checkStrictly: false,
 		selectedRowKeys: selectedRowKeys,
 		onChange: (selectedKeys, selectedRows) => {
 			selectedRowKeys.value = selectedKeys
+			selectedRecords.value = selectedRows
 			console.log('onChange,selectedKeys:', selectedKeys);
-		},
-		onSelect: (record, selected, selectedRows) => {
-			// 取消选择时，menu下的按钮也要取消，同时递归取消子节点下已授权按钮
-			if (selected === false) {
-				// cleanGrantButtonList([record])
-			}
 		}
 	});
 
-	// onMounted(() => {
-	// 	loadTreeData()
-	// })
-
-	// 使用状态options（0正常 1停用）
-	const statusOptions = [
-		{ label: "正常", value: 0 },
-		{ label: "已停用", value: 1 }
-	]
+	// 右侧table数据
+	const toTableRef = ref()
+	const toTableData = ref([])
+	const toSelectedRowKeys = ref([])
+	const toRowSelection = ref({
+		checkStrictly: false,
+		selectedRowKeys: toSelectedRowKeys,
+		onChange: (selectedKeys, selectedRows) => {
+			toSelectedRowKeys.value = selectedKeys
+			console.log('onChange,selectedKeys:', selectedKeys);
+		}
+	});
 	const title = computed(() => {
 		return "角色组-" + group.value.name
 	})
+	// 抽屉宽度
 	const drawerWidth = computed(() => {
-		return `calc(100%)`
+		return store.menuIsCollapse ? `calc(100% - 80px)` : `calc(100% - 210px)`
 	})
 
 	// 打开抽屉
 	const onOpen = (record) => {
 		visible.value = true
 		group.value = record;
-		// 加载组织树
-		// loadTreeData()
-
-		// // 获取组织信息
-		// postApi.postDetail({ code: record.code }).then((res) => {
-		// 	formData.value = res
-		// })
-		// // 获取组织树并加入顶级节点
-		// orgApi.orgTree({}).then((res) => {
-		// 	treeData.value = res
-		// 	defaultExpandedKeys.value = [res[0]?.code]
-		// })
+		// 加载数据
+		loadTableData()
 	}
 	// 关闭抽屉
 	const onClose = () => {
+		// 表单数据
+		searchFormData.value = {}
+		// table数据
+		tableData.value = []
+		selectedRowKeys.value = []
+		selectedRecords.value = []
+		toTableData.value = []
+		toSelectedRowKeys.value = []
 		visible.value = false
 	}
-	// 加载左侧的树
-	const loadTreeData = () => {
-		orgApi.orgTree().then((res) => {
-			cardLoading.value = false
-			if (res !== null) {
-				treeData.value = res
-				defaultExpandedKeys.value = [res[0]?.code]
+
+	// 表格查询 返回 Promise 对象
+	const loadTableData = async () => {
+		const res = await roleApi.roleList(searchFormData.value)
+		tableData.value = res
+	}
+	// 重置
+	const reset = () => {
+		searchFormRef.value.resetFields()
+		loadTableData()
+	}
+	// 添加记录
+	const addRows = () => {
+		let allList = toTableData.value.concat(selectedRecords.value)
+		let list = []
+		for (let item1 of allList) {
+			let flag = true
+			for (let item2 of list) {
+				if (item1.code === item2.code) {
+					flag = false
+				}
 			}
-		}).finally(() => {
-			cardLoading.value = false
+			if (flag) {
+				list.push(item1)
+			}
+		}
+		selectedRowKeys.value = []
+		toTableData.value = list
+	}
+	// 删减记录
+	const delRows = () => {
+		let list = []
+		for (let item of toTableData.value) {
+			let flag = true
+			if (toSelectedRowKeys.value.indexOf(item.code) > -1) {
+				flag = false
+			}
+			if (flag) {
+				list.push(item)
+			}
+		}
+		toSelectedRowKeys.value = []
+		toTableData.value = list
+	}
+	// 验证并提交数据
+	const onSubmit = () => {
+		formRef.value.validate().then(() => {
+			submitLoading.value = true
+			postApi.addPost(formData.value).then(() => {
+				emit('successful')
+				onClose()
+			}).finally(() => {
+				submitLoading.value = false
+			})
+		}).catch(() => {
 		})
 	}
-	// 点击树查询
-	const treeSelect = (selectedKeys) => {
-		if (selectedKeys.length > 0) {
-			searchFormData.value.orgCode = selectedKeys.toString()
-		} else {
-			delete searchFormData.value.orgCode
-		}
-		tableRef.value.refresh(true)
-	}
-
 	// 调用这个函数将子组件的一些数据和方法暴露出去
 	defineExpose({
 		onOpen

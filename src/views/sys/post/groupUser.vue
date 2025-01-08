@@ -5,6 +5,7 @@
 		:width="drawerWidth"
 		:closable="false"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
+		:destroy-on-close="true"
 		@close="onClose"
 	>
 		<template #extra>
