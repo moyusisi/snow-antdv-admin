@@ -82,6 +82,7 @@
 	import { useGlobalStore } from "@/store";
 	import { h } from "vue";
 	import { PlusOutlined, MinusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
+	import { message } from "ant-design-vue";
 
 	const store = useGlobalStore()
 	const columns = [
@@ -199,6 +200,10 @@
 	}
 	// 添加记录
 	const addRows = () => {
+		if (selectedRowKeys.value.length < 1) {
+			message.warning('请选择一条或多条数据')
+			return
+		}
 		let allList = toTableData.value.concat(selectedRecords.value)
 		let list = []
 		for (let item1 of allList) {
@@ -218,6 +223,10 @@
 	}
 	// 删减记录
 	const delRows = () => {
+		if (toSelectedRowKeys.value.length < 1) {
+			message.warning('请选择一条或多条数据')
+			return
+		}
 		let list = []
 		for (let item of toTableData.value) {
 			let flag = true
