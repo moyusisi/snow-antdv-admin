@@ -2,7 +2,7 @@
 	<a-row :gutter="8">
 		<!-- 左侧组织树 -->
 		<a-col :span="5">
-			<a-card :bordered="false" :loading="cardLoading" >
+			<a-card :bordered="false" :loading="cardLoading" bodyStyle="padding-left:5px;padding-right:5px;">
 				<a-tree
 					v-if="treeData.length > 0"
 					v-model:expandedKeys="defaultExpandedKeys"
@@ -76,10 +76,12 @@
 						</template>
 						<template v-if="column.dataIndex === 'action'">
 							<a-space>
-								<a @click="grantMenuFormRef.onOpen(record)">授权</a>
+								<a-tooltip title="分配角色">
+									<a style="color:#53C61D;" @click="groupUserRef.onOpen(record, treeData)"><UserAddOutlined /></a>
+								</a-tooltip>
 								<a-divider type="vertical" />
-								<a-tooltip title="添加用户">
-									<a style="color:#53C61D;" @click="editFormRef.onOpen(record)"><UserAddOutlined /></a>
+								<a-tooltip title="授权用户">
+									<a style="color:#53C61D;" @click="groupUserRef.onOpen(record, treeData)"><UserAddOutlined /></a>
 								</a-tooltip>
 								<a-divider type="vertical" />
 								<a-tooltip title="编辑">
@@ -100,6 +102,7 @@
 	</a-row>
 	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />
 	<AddForm ref="addFormRef" @successful="tableRef.refresh()" />
+	<GroupUser ref="groupUserRef" @successful="handleSuccess()" />
 </template>
 
 <script setup>
@@ -110,6 +113,7 @@
 	import { PlusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
+	import GroupUser from './groupUser.vue'
 
 	const columns = [
 		{
@@ -188,6 +192,7 @@
 	const toolConfig = { refresh: true, height: true, columnSetting: false, striped: false }
 	const addFormRef = ref()
 	const editFormRef = ref()
+	const groupUserRef = ref()
 	const searchFormRef = ref()
 	const searchFormData = ref({})
 	// 默认展开的节点
@@ -257,5 +262,8 @@
 <style scoped>
 	.ant-form-item {
 		margin-bottom: 0 !important;
+	}
+	.selectorTree {
+		overflow: auto;
 	}
 </style>
