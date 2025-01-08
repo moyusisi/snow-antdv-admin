@@ -3,9 +3,13 @@
 		:open="visible"
 		title="编辑菜单"
 		:width="drawerWidth"
+		:closable="false"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
 		@close="onClose"
 	>
+		<template #extra>
+			<a-button type="primary" size="small" @click="onClose"><CloseOutlined /></a-button>
+		</template>
 		<a-form ref="formRef" :model="formData">
 			<a-card title="基本信息">
 				<a-row :gutter="24">

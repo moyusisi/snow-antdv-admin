@@ -1,11 +1,15 @@
 <template>
 	<a-drawer
 		:open="visible"
-		title="新增分组(角色组、岗位)"
+		title="新增分组(角色组、用户组、岗位)"
 		:width="drawerWidth"
+		:closable="false"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
 		@close="onClose"
 	>
+		<template #extra>
+			<a-button type="primary" size="small" @click="onClose"><CloseOutlined /></a-button>
+		</template>
 		<a-form ref="formRef" :model="formData">
 			<a-card title="基本信息">
 				<a-row :gutter="24">

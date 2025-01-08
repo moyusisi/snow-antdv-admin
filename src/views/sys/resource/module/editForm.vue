@@ -3,10 +3,14 @@
 		:open="visible"
 		title="编辑模块"
 		:width="550"
+		:closable="false"
 		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
 		:destroy-on-close="true"
 		@close="onClose"
 	>
+		<template #extra>
+			<a-button type="primary" size="small" @click="onClose"><CloseOutlined /></a-button>
+		</template>
 		<a-form ref="formRef" :model="formData" layout="vertical">
 			<a-form-item label="模块名称：" name="name" :rules="[required('请输入模块名称')]">
 				<a-input v-model:value="formData.name" placeholder="请输入显示名称" allow-clear />
