@@ -53,7 +53,6 @@
 					<a-tag v-else>已停用</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
-
 					<a-space>
 						<a @click="grantMenuFormRef.onOpen(record)">授权</a>
 						<a-divider type="vertical" />
@@ -270,8 +269,5 @@
 <style scoped>
 	.ant-form-item {
 		margin-bottom: 0 !important;
-	}
-	.snowy-button-left {
-		margin-left: 8px;
 	}
 </style>
