@@ -86,7 +86,7 @@
 								</a-tooltip>
 								<a-divider type="vertical" />
 								<a-tooltip title="删除">
-									<a-popconfirm title="确认删除？" @confirm="deleteUser(record)">
+									<a-popconfirm title="确认删除吗？" @confirm="deleteUser(record)">
 										<a style="color:#FF4D4F;"><DeleteOutlined/></a>
 									</a-popconfirm>
 								</a-tooltip>
@@ -211,7 +211,7 @@
 			dataIndex: 'action',
 			align: 'center',
 			resizable: true,
-			width: 220
+			width: 200
 		}
 	]
 	const selectedRowKeys = ref([])

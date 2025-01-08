@@ -27,7 +27,7 @@
 			:columns="columns"
 			:data="loadData"
 			:alert="options.alert.show"
-			:scroll="{ x: 1200 }"
+			:scroll="{ x: 1000 }"
 			bordered
 			:row-key="(record) => record.id"
 			:row-selection="options.rowSelection"
@@ -54,36 +54,42 @@
 					<a-tag v-else>已停用</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
-					<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
-					<a-divider type="vertical" />
-					<a-button type="link" size="small" @click="grantMenuFormRef.onOpen(record)">授权</a-button>
-					<a-divider type="vertical" />
-					<a-popconfirm title="确定要删除此角色吗？" @confirm="deleteRole(record)">
-						<a-button type="link" size="small" danger>删除</a-button>
-					</a-popconfirm>
-					<a-divider type="vertical" />
-					<a-dropdown>
-						<a class="ant-dropdown-link">
-							授权
-							<DownOutlined />
-						</a>
-						<template #overlay>
-							<a-menu>
-								<a-menu-item>
-									<a @click="grantResourceFormRef.onOpen(record)">授权资源</a>
-								</a-menu-item>
-								<a-menu-item>
-									<a @click="grantMobileResourceFormRef.onOpen(record)">授权移动端资源</a>
-								</a-menu-item>
-								<a-menu-item>
-									<a @click="grantPermissionFormRef.onOpen(record)">授权权限</a>
-								</a-menu-item>
-								<a-menu-item>
-									<a @click="openRoleUserSelector(record)">授权用户</a>
-								</a-menu-item>
-							</a-menu>
-						</template>
-					</a-dropdown>
+
+					<a-space>
+						<a @click="grantMenuFormRef.onOpen(record)">授权</a>
+						<a-divider type="vertical" />
+						<a-tooltip title="编辑">
+							<a @click="editFormRef.onOpen(record)"><FormOutlined /></a>
+						</a-tooltip>
+						<a-divider type="vertical" />
+						<a-tooltip title="删除">
+							<a-popconfirm title="确认删除吗？" @confirm="deleteRole(record)">
+								<a style="color:#FF4D4F;"><DeleteOutlined/></a>
+							</a-popconfirm>
+						</a-tooltip>
+					</a-space>
+<!--					<a-dropdown>-->
+<!--						<a class="ant-dropdown-link">-->
+<!--							授权-->
+<!--							<DownOutlined />-->
+<!--						</a>-->
+<!--						<template #overlay>-->
+<!--							<a-menu>-->
+<!--								<a-menu-item>-->
+<!--									<a @click="grantResourceFormRef.onOpen(record)">授权资源</a>-->
+<!--								</a-menu-item>-->
+<!--								<a-menu-item>-->
+<!--									<a @click="grantMobileResourceFormRef.onOpen(record)">授权移动端资源</a>-->
+<!--								</a-menu-item>-->
+<!--								<a-menu-item>-->
+<!--									<a @click="grantPermissionFormRef.onOpen(record)">授权权限</a>-->
+<!--								</a-menu-item>-->
+<!--								<a-menu-item>-->
+<!--									<a @click="openRoleUserSelector(record)">授权用户</a>-->
+<!--								</a-menu-item>-->
+<!--							</a-menu>-->
+<!--						</template>-->
+<!--					</a-dropdown>-->
 				</template>
 			</template>
 		</s-table>
@@ -161,7 +167,7 @@
 			dataIndex: 'action',
 			align: 'center',
 			resizable: true,
-			width: 200
+			width: 150
 		}
 	]
 	const selectedRowKeys = ref([])

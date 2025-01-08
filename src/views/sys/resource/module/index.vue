@@ -59,11 +59,17 @@
 					<a-tag v-else>已停用</a-tag>
 				</template>
 				<template v-if="column.dataIndex === 'action'">
-					<a-button type="link" size="small" @click="editFormRef.onOpen(record)">编辑</a-button>
-					<a-divider type="vertical" />
-					<a-popconfirm title="确定要删除此模块吗？" @confirm="deleteModule(record)">
-						<a-button type="link" size="small" danger>删除</a-button>
-					</a-popconfirm>
+					<a-space>
+						<a-tooltip title="编辑">
+							<a @click="editFormRef.onOpen(record)"><FormOutlined /></a>
+						</a-tooltip>
+						<a-divider type="vertical" />
+						<a-tooltip title="删除">
+							<a-popconfirm title="确认删除吗？" @confirm="deleteModule(record)">
+								<a style="color:#FF4D4F;"><DeleteOutlined/></a>
+							</a-popconfirm>
+						</a-tooltip>
+					</a-space>
 				</template>
 			</template>
 		</s-table>
@@ -120,7 +126,7 @@
 			title: '操作',
 			dataIndex: 'action',
 			align: 'center',
-			width: 200
+			width: 100
 		}
 	]
 	let selectedRowKeys = ref([])
