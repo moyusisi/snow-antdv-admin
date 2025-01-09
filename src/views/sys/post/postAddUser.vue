@@ -50,7 +50,7 @@
 							 ref="tableRef"
 							 :columns="columns"
 							 :data-source="tableData"
-							 :row-key="(record) => record.code"
+							 :row-key="(record) => record.account"
 							 :row-selection="rowSelection"
 							 :pagination="paginationRef"
 							 @change="handleTableChange"
@@ -244,7 +244,7 @@
 			return
 		}
 		let data = { code: group.value.code, codeSet: selectedRowKeys.value }
-		postApi.postAddRole(data).then(() => {
+		postApi.postAddUser(data).then(() => {
 			emit('successful')
 			// 添加之后重新加载数据
 			loadTableData()
