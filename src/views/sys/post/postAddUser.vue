@@ -175,7 +175,7 @@
 		// 当前页码
 		current: 1,
 		// 每页显示条数
-		pageSize: 1,
+		pageSize: 10,
 		// 总条数，需要通过接口获取
 		total: 0,
 		// 显示总记录数
@@ -234,6 +234,7 @@
 	// 重置
 	const reset = () => {
 		searchFormData.value = {}
+		paginationRef.value.current = 1
 		loadTableData()
 	}
 	// 添加记录
