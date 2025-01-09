@@ -40,4 +40,16 @@ export default {
 	postDeleteRole(data) {
 		return service.postJson('/api/sys/post/deleteRole', data)
 	},
+	// 查询岗位包含的用户列表
+	postUserList(data) {
+		return service.postJson('/api/sys/post/userList', data)
+	},
+	// 岗位新增用户
+	postAddUser(data) {
+		return service.postJson('/api/sys/post/addUser', data)
+	},
+	// 岗位移除用户
+	postDeleteUser(data) {
+		return service.postJson('/api/sys/post/deleteUser', data)
+	},
 }

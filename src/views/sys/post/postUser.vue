@@ -72,6 +72,7 @@
 	import { Empty } from "ant-design-vue";
 	import { h } from "vue";
 	import { PlusOutlined, MinusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
+	import roleApi from "@/api/sys/roleApi";
 
 	const store = globalStore()
 	const columns = [
@@ -188,6 +189,18 @@
 		tableRef.value.refresh(true)
 	}
 
+	// 表格查询 返回 Promise 对象
+	const loadTableData = async () => {
+		selectedRowKeys.value = []
+		let param = Object.assign({ "code": group.value.code }, searchFormData.value)
+		const res = await postApi.postUserList(param)
+		tableData.value = res
+	}
+	// 重置
+	const reset = () => {
+		searchFormData.value = {}
+		loadTableData()
+	}
 	// 调用这个函数将子组件的一些数据和方法暴露出去
 	defineExpose({
 		onOpen
