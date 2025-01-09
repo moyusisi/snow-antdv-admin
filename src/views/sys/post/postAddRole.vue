@@ -14,7 +14,7 @@
 		<!-- 页面内容 -->
 		<a-row :gutter="8">
 			<a-col :span="24">
-				<a-card size="small" title="全部角色列表">
+				<a-card size="small">
 					<!-- 上方查询框 -->
 					<a-form ref="searchFormRef" :model="searchFormData">
 						<a-row :gutter="16">
@@ -51,8 +51,6 @@
 								<a-tag v-else>已停用</a-tag>
 							</template>
 							<template v-if="column.dataIndex === 'action'">
-								<a-space>
-								</a-space>
 							</template>
 						</template>
 					</a-table>
@@ -75,7 +73,7 @@
 
 	import { useGlobalStore } from "@/store";
 	import { h } from "vue";
-	import { PlusOutlined, MinusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
+	import { PlusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
 	import { message } from "ant-design-vue";
 
 	const store = useGlobalStore()
@@ -153,10 +151,10 @@
 
 	// 打开抽屉
 	const onOpen = (record) => {
-		visible.value = true
 		group.value = record;
 		// 加载数据
 		loadTableData()
+		visible.value = true
 	}
 	// 关闭抽屉
 	const onClose = () => {

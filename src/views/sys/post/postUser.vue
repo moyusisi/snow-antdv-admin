@@ -44,8 +44,8 @@
 							</a-col>
 							<a-col :span="8" style="text-align: right">
 								<a-space>
-									<a-button type="dashed" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加用户</a-button>
-									<a-button type="dashed" danger  :icon="h(MinusOutlined)">移除用户</a-button>
+									<a-button type="dashed" @click="postAddUserRef.onOpen(group, treeData)" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加用户</a-button>
+									<a-button type="dashed" danger @click="delRows" :icon="h(MinusOutlined)">移除用户</a-button>
 								</a-space>
 							</a-col>
 						</a-row>
@@ -57,20 +57,37 @@
 							 :row-key="(record) => record.code"
 							 :row-selection="rowSelection"
 							 bordered>
+						<template #bodyCell="{ column, record }">
+							<template v-if="column.dataIndex === 'gender'">
+								<a-tag v-if="record.gender === 1" color="blue">男</a-tag>
+								<a-tag v-else-if="record.gender === 2" color="pink">女</a-tag>
+								<a-tag v-else>未知</a-tag>
+							</template>
+							<template v-if="column.dataIndex === 'status'">
+								<a-tag v-if="record.status === 0" color="green">正常</a-tag>
+								<a-tag v-else>已停用</a-tag>
+							</template>
+							<template v-if="column.dataIndex === 'action'">
+							</template>
+						</template>
 					</a-table>
 				</a-card>
 			</a-col>
 		</a-row>
+
+		<!-- 弹窗 -->
+		<PostAddUser ref="postAddUserRef" @successful="handleSuccess()" />
+
 	</a-drawer>
 </template>
 
 <script setup>
 	import postApi from '@/api/sys/postApi'
 
-	import { globalStore } from "@/store";
-	import { Empty } from "ant-design-vue";
+	import { Empty, message } from "ant-design-vue";
 	import { h } from "vue";
 	import { PlusOutlined, MinusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
+	import PostAddUser from "./postAddUser.vue";
 
 	const columns = [
 		{
@@ -82,10 +99,17 @@
 		},
 		{
 			title: '账号',
-			dataIndex: 'code',
+			dataIndex: 'account',
 			align: 'center',
 			resizable: true,
-			width: 100
+			width: 100,
+			ellipsis: true
+		},
+		{
+			title: '性别',
+			dataIndex: 'gender',
+			align: 'center',
+			width: 80
 		},
 		{
 			title: '组织机构',
@@ -93,13 +117,34 @@
 			resizable: true,
 			width: 200,
 			ellipsis: true
+		},
+		{
+			title: '手机',
+			dataIndex: 'phone',
+			align: 'center',
+			width: 150
+		},
+		{
+			title: '状态',
+			dataIndex: 'status',
+			align: 'center',
+			width: 80
+		},
+		{
+			title: '操作',
+			dataIndex: 'action',
+			align: 'center',
+			resizable: true,
+			width: 200
 		}
 	]
 
 	// 默认是关闭状态
 	const visible = ref(false)
 	const group = ref()
+	const title = ref()
 	const emit = defineEmits({ successful: null })
+	const postAddUserRef = ref()
 	// 节点树
 	const treeData = ref([])
 	// 默认展开的节点(顶级)
@@ -126,23 +171,28 @@
 		}
 	});
 
-	const title = computed(() => {
-		return "用户组-" + group.value.name + "-已授权用户列表"
-	})
 	const drawerWidth = computed(() => {
 		return `calc(100%)`
 	})
 
 	// 打开抽屉
 	const onOpen = (record, tree) => {
-		visible.value = true
 		treeData.value = tree
 		defaultExpandedKeys.value = [tree[0]?.code]
 		group.value = record;
+		title.value = record.name + "-已授权用户列表"
+		// 加载数据
 		loadTableData()
+		visible.value = true
 	}
 	// 关闭抽屉
 	const onClose = () => {
+		// 表单清空
+		searchFormData.value = {}
+		// table数据清空
+		tableData.value = []
+		selectedRowKeys.value = []
+		// 关闭
 		visible.value = false
 	}
 	// 点击树查询
@@ -155,7 +205,7 @@
 		loadTableData()
 	}
 
-	// 表格查询 返回 Promise 对象
+	// 表格查询
 	const loadTableData = async () => {
 		selectedRowKeys.value = []
 		let param = Object.assign({ "code": group.value.code }, searchFormData.value)
@@ -165,6 +215,22 @@
 	// 重置
 	const reset = () => {
 		searchFormData.value = {}
+		loadTableData()
+	}
+	// 删减记录
+	const delRows = () => {
+		if (selectedRowKeys.value.length < 1) {
+			message.warning('请选择一条或多条数据')
+			return
+		}
+		let data = { code: group.value.code, codeSet: selectedRowKeys.value }
+		postApi.postDeleteUser(data).then(() => {
+			// 删掉之后重新加载数据
+			loadTableData()
+		})
+	}
+	// 成功回调
+	const handleSuccess = () => {
 		loadTableData()
 	}
 	// 调用这个函数将子组件的一些数据和方法暴露出去
