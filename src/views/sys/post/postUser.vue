@@ -33,12 +33,12 @@
 						<a-row :gutter="16">
 							<a-col :span="8">
 								<a-form-item name="searchKey">
-									<a-input v-model:value="searchFormData.searchKey" placeholder="请输入用户名" allowClear />
+									<a-input v-model:value="searchFormData.searchKey" placeholder="请输入关键词" allowClear />
 								</a-form-item>
 							</a-col>
 							<a-col :span="8">
 								<a-space>
-									<a-button type="primary" :icon="h(SearchOutlined)" @click="tableRef.refresh(true)">查询</a-button>
+									<a-button type="primary" :icon="h(SearchOutlined)" @click="loadTableData()">查询</a-button>
 									<a-button :icon="h(RedoOutlined)" @click="reset">重置</a-button>
 								</a-space>
 							</a-col>
@@ -186,7 +186,7 @@
 		} else {
 			delete searchFormData.value.orgCode
 		}
-		tableRef.value.refresh(true)
+		loadTableData()
 	}
 
 	// 表格查询 返回 Promise 对象

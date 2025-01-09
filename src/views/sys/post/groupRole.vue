@@ -200,9 +200,6 @@
 	// 重置
 	const reset = () => {
 		searchFormData.value = {}
-		tableData.value = []
-		selectedRowKeys.value = []
-		selectedRecords.value = []
 		loadTableData()
 	}
 	// 添加记录
