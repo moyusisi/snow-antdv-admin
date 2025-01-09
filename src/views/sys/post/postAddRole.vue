@@ -187,20 +187,10 @@
 			message.warning('请选择一条或多条数据')
 			return
 		}
-		let allList = []
-		let list = []
-		for (let item1 of allList) {
-			let flag = true
-			for (let item2 of list) {
-				if (item1.code === item2.code) {
-					flag = false
-				}
-			}
-			if (flag) {
-				list.push(item1)
-			}
-		}
-		selectedRowKeys.value = []
+		let data = { code: group.value.code, codeSet: selectedRowKeys.value }
+		postApi.postAddRole(data)
+		// 删掉之后重新加载数据
+		loadTableData()
 	}
 
 	// 验证并提交数据
