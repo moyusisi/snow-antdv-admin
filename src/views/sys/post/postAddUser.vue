@@ -52,6 +52,8 @@
 							 :data-source="tableData"
 							 :row-key="(record) => record.code"
 							 :row-selection="rowSelection"
+							 :pagination="paginationRef"
+							 @change="handleTableChange"
 							 bordered>
 						<template #bodyCell="{ column, record }">
 							<template v-if="column.dataIndex === 'gender'">
@@ -168,7 +170,19 @@
 			console.log('onChange,selectedKeys:', selectedKeys);
 		}
 	});
-
+	// 表格的分页配置
+	const paginationRef = ref({
+		// 当前页码
+		current: 1,
+		// 每页显示条数
+		pageSize: 1,
+		// 总条数，需要通过接口获取
+		total: 0,
+		// 显示总记录数
+		showTotal: (total) => `共 ${total} 条记录`,
+		// 是否可改变每页显示条数
+		showSizeChanger: true,
+	})
 	const title = computed(() => {
 		return group.value.name + "-添加用户"
 	})
@@ -183,7 +197,7 @@
 		defaultExpandedKeys.value = [tree[0]?.code]
 		group.value = record;
 		// 加载数据
-		// loadTableData()
+		loadTableData()
 		visible.value = true
 	}
 	// 关闭抽屉
@@ -199,19 +213,24 @@
 		}
 		tableRef.value.refresh(true)
 	}
-	// 表格查询 返回 Promise 对象
-	// 表格查询 返回 Promise 对象
-	const loadTableData = (parameter) => {
-		return userApi.userPage(Object.assign(parameter, searchFormData.value)).then((res) => {
-			return res
+	// 表格查询
+	const loadTableData = async () => {
+		selectedRowKeys.value = []
+		let param = { pageNum: paginationRef.value.current, pageSize: paginationRef.value.pageSize }
+		const res = await userApi.userPage(Object.assign(param, searchFormData.value))
+		paginationRef.value.total = res.total
+		tableData.value = res.records
+	}
+	// 分页、排序、筛选等操作变化时，会触发 change 事件
+	const handleTableChange = (pagination, filters, sorter) => {
+		paginationRef.value.current = pagination.current
+		paginationRef.value.pageSize = pagination.pageSize
+		let param = { pageNum: pagination.current, pageSize: pagination.pageSize }
+		userApi.userPage(Object.assign(param, searchFormData.value)).then((res) => {
+			paginationRef.value.total = res.total
+			tableData.value = res.records
 		})
 	}
-	// const loadTableData = async () => {
-	// 	selectedRowKeys.value = []
-	// 	let param = Object.assign({ "code": group.value.code }, searchFormData.value)
-	// 	const res = await roleApi.roleList(param)
-	// 	tableData.value = res
-	// }
 	// 重置
 	const reset = () => {
 		searchFormData.value = {}
