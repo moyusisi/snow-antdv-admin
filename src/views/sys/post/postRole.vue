@@ -194,6 +194,8 @@
 		postApi.postDeleteRole(data).then(() => {
 			tableRef.value.clearRefreshSelected()
 		})
+		// 删掉之后重新加载数据
+		loadTableData()
 	}
 	// 验证并提交数据
 	const onSubmit = () => {
