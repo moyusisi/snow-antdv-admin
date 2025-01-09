@@ -31,7 +31,7 @@
 							</a-col>
 							<a-col :span="8" style="text-align: right">
 								<a-space>
-									<a-button type="dashed" @click="postAddRoleRef.onOpen(record)" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加角色</a-button>
+									<a-button type="dashed" @click="postAddRoleRef.onOpen(group)" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加角色</a-button>
 									<a-button type="dashed" danger @click="delRows" :icon="h(MinusOutlined)">移除角色</a-button>
 								</a-space>
 							</a-col>

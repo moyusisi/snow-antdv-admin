@@ -148,7 +148,6 @@
 		group.value = record;
 		// 加载数据
 		loadTableData()
-		loadToTableData()
 	}
 	// 关闭抽屉
 	const onClose = () => {
@@ -169,8 +168,8 @@
 	const loadTableData = async () => {
 		selectedRowKeys.value = []
 		selectedRecords.value = []
-		const res = await roleApi.roleList(searchFormData.value)
-		tableData.value = res
+		// const res = await roleApi.roleList(searchFormData.value)
+		// tableData.value = res
 	}
 	// 表格查询 返回 Promise 对象
 	const loadToTableData = async () => {

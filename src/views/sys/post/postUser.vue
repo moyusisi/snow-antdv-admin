@@ -126,11 +126,6 @@
 		}
 	});
 
-	// 使用状态options（0正常 1停用）
-	const statusOptions = [
-		{ label: "正常", value: 0 },
-		{ label: "已停用", value: 1 }
-	]
 	const title = computed(() => {
 		return "用户组-" + group.value.name + "-已授权用户列表"
 	})
@@ -139,10 +134,10 @@
 	})
 
 	// 打开抽屉
-	const onOpen = (record, tradeData) => {
+	const onOpen = (record, tree) => {
 		visible.value = true
-		treeData.value = tradeData
-		defaultExpandedKeys.value = [tradeData[0]?.code]
+		treeData.value = tree
+		defaultExpandedKeys.value = [tree[0]?.code]
 		group.value = record;
 		loadTableData()
 	}
