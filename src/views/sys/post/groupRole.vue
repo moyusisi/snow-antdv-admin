@@ -167,6 +167,7 @@
 		group.value = record;
 		// 加载数据
 		loadTableData()
+		loadToTableData()
 	}
 	// 关闭抽屉
 	const onClose = () => {
@@ -189,6 +190,12 @@
 		selectedRecords.value = []
 		const res = await roleApi.roleList(searchFormData.value)
 		tableData.value = res
+	}
+	// 表格查询 返回 Promise 对象
+	const loadToTableData = async () => {
+		// 查询指定岗位已包含的角色
+		const res = await postApi.postRoleList({ "code": group.value.code })
+		toTableData.value = res
 	}
 	// 重置
 	const reset = () => {
@@ -242,15 +249,16 @@
 	}
 	// 验证并提交数据
 	const onSubmit = () => {
-		formRef.value.validate().then(() => {
-			submitLoading.value = true
-			postApi.addPost(formData.value).then(() => {
-				emit('successful')
-				onClose()
-			}).finally(() => {
-				submitLoading.value = false
-			})
-		}).catch(() => {
+		submitLoading.value = true
+		let codeList = []
+		for (let item of toTableData.value) {
+			codeList.push(item.code)
+		}
+		postApi.postAddRole({ "code": group.value.code, "codeSet": codeList }).then(() => {
+			emit('successful')
+			onClose()
+		}).finally(() => {
+			submitLoading.value = false
 		})
 	}
 	// 调用这个函数将子组件的一些数据和方法暴露出去

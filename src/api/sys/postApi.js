@@ -28,4 +28,12 @@ export default {
 	editPost(data) {
 		return service.postJson('/api/sys/post/edit', data)
 	},
+	// 查询岗位包含的角色列表
+	postRoleList(data) {
+		return service.postJson('/api/sys/post/roleList', data)
+	},
+	// 岗位新增角色
+	postAddRole(data) {
+		return service.postJson('/api/sys/post/addRole', data)
+	},
 }
