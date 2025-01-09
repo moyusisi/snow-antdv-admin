@@ -36,4 +36,8 @@ export default {
 	postAddRole(data) {
 		return service.postJson('/api/sys/post/addRole', data)
 	},
+	// 岗位移除角色
+	postDeleteRole(data) {
+		return service.postJson('/api/sys/post/deleteRole', data)
+	},
 }
