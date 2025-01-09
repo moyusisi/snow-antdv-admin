@@ -62,13 +62,6 @@
 				</a-card>
 			</a-col>
 		</a-row>
-		<!-- 底部内容 -->
-		<template #footer>
-			<a-space>
-				<a-button @click="onClose">关闭</a-button>
-				<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
-			</a-space>
-		</template>
 	</a-drawer>
 </template>
 
@@ -126,7 +119,6 @@
 	const visible = ref(false)
 	const group = ref()
 	const emit = defineEmits({ successful: null })
-	const submitLoading = ref(false)
 	// 表单数据
 	const searchFormRef = ref()
 	const searchFormData = ref({})
@@ -196,20 +188,6 @@
 		})
 		// 删掉之后重新加载数据
 		loadTableData()
-	}
-	// 验证并提交数据
-	const onSubmit = () => {
-		submitLoading.value = true
-		let codeList = []
-		for (let item of toTableData.value) {
-			codeList.push(item.code)
-		}
-		postApi.postAddRole({ "code": group.value.code, "codeSet": codeList }).then(() => {
-			emit('successful')
-			onClose()
-		}).finally(() => {
-			submitLoading.value = false
-		})
 	}
 	// 调用这个函数将子组件的一些数据和方法暴露出去
 	defineExpose({
