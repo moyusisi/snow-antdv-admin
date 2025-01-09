@@ -2,7 +2,7 @@
 	<a-row :gutter="8">
 		<!-- 左侧组织树 -->
 		<a-col :span="5">
-			<a-card size="small" :bordered="false" :loading="cardLoading" :bodyStyle="{paddingLeft:'5px', paddingRight:'5px'}">
+			<a-card size="small" :loading="cardLoading" :bodyStyle="{paddingLeft:'5px', paddingRight:'5px'}">
 				<a-tree
 					v-if="treeData.length > 0"
 					v-model:expandedKeys="defaultExpandedKeys"
@@ -15,7 +15,7 @@
 		</a-col>
 		<!-- 右侧内容 -->
 		<a-col :span="19">
-			<a-card size="small" :bordered="false" class="xn-mb10">
+			<a-card size="small">
 				<a-form ref="searchFormRef" :model="searchFormData">
 					<a-row :gutter="24">
 						<a-col :span="8">
@@ -37,7 +37,7 @@
 					</a-row>
 				</a-form>
 			</a-card>
-			<a-card size="small" :bordered="false">
+			<a-card size="small">
 				<s-table
 					ref="tableRef"
 					:columns="columns"

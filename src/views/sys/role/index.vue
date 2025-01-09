@@ -1,5 +1,5 @@
 <template>
-	<a-card :bordered="false" class="xn-mb10">
+	<a-card size="small">
 		<a-form ref="searchFormRef" :model="searchFormData">
 			<a-row :gutter="24">
 				<a-col :span="8">
@@ -21,7 +21,7 @@
 			</a-row>
 		</a-form>
 	</a-card>
-	<a-card :bordered="false">
+	<a-card size="small">
 		<s-table
 			ref="tableRef"
 			:columns="columns"

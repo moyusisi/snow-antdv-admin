@@ -1,6 +1,6 @@
 <template>
 	<!-- 上方模块选择 -->
-	<a-card :bordered="false" class="xn-mb10">
+	<a-card size="small">
 		<a-space>
 			<a-radio-group v-model:value="moduleId" button-style="solid">
 				<a-radio-button v-for="module in moduleList" :key="module.code" :value="module.code" @click="moduleClick(module.code)">
@@ -10,7 +10,7 @@
 		</a-space>
 	</a-card>
 	<!-- 内容区域 -->
-	<a-card :bordered="false" class="mt-2">
+	<a-card size="small">
 		<s-table
 			ref="tableRef"
 			:columns="columns"

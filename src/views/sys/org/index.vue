@@ -1,8 +1,8 @@
 <template>
-	<a-row :gutter="10">
+	<a-row :gutter="8">
 		<!-- 左侧组织树 -->
-		<a-col :xs="24" :sm="24" :md="24" :lg="5" :xl="5">
-			<a-card :bordered="false" :loading="cardLoading">
+		<a-col :span="5">
+			<a-card size="small" :loading="cardLoading" :bodyStyle="{paddingLeft:'5px', paddingRight:'5px'}">
 				<a-tree
 					v-if="treeData.length > 0"
 					v-model:expandedKeys="defaultExpandedKeys"
@@ -14,8 +14,8 @@
 			</a-card>
 		</a-col>
 		<!-- 右侧内容 -->
-		<a-col :xs="24" :sm="24" :md="24" :lg="19" :xl="19">
-			<a-card :bordered="false" class="xn-mb10">
+		<a-col :span="19">
+			<a-card size="small">
 				<a-form ref="searchFormRef" :model="searchFormState">
 					<a-row :gutter="24">
 						<a-col :span="8">
@@ -37,7 +37,7 @@
 					</a-row>
 				</a-form>
 			</a-card>
-			<a-card :bordered="false">
+			<a-card size="small">
 				<s-table
 					ref="tableRef"
 					:columns="columns"
