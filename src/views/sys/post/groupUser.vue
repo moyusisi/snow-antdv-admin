@@ -4,7 +4,7 @@
 		:title="title"
 		:width="drawerWidth"
 		:closable="false"
-		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
+		:footerStyle="{display: 'flex', justifyContent: 'flex-end'}"
 		:destroy-on-close="true"
 		@close="onClose"
 	>

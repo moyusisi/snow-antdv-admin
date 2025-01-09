@@ -4,7 +4,7 @@
 		title="编辑分组(角色组、用户组、岗位)"
 		:width="drawerWidth"
 		:closable="false"
-		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
+		:footerStyle="{display: 'flex', justifyContent: 'flex-end'}"
 		:destroy-on-close="true"
 		@close="onClose"
 	>

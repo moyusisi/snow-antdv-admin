@@ -4,7 +4,7 @@
 		:title="title"
 		:width="drawerWidth"
 		:closable="false"
-		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
+		:footerStyle="{display: 'flex', justifyContent: 'flex-end'}"
 		:destroy-on-close="true"
 		@close="onClose"
 	>
@@ -188,9 +188,10 @@
 			return
 		}
 		let data = { code: group.value.code, codeSet: selectedRowKeys.value }
-		postApi.postAddRole(data)
-		// 删掉之后重新加载数据
-		loadTableData()
+		postApi.postAddRole(data).then(() => {
+			// 添加之后重新加载数据
+			loadTableData()
+		})
 	}
 
 	// 验证并提交数据

@@ -4,7 +4,7 @@
 		:title="title"
 		:width="drawerWidth"
 		:closable="false"
-		:footerStyle="{'display': 'flex', 'justify-content': 'flex-end' }"
+		:footerStyle="{display: 'flex', justifyContent: 'flex-end'}"
 		:destroy-on-close="true"
 		@close="onClose"
 	>
@@ -15,7 +15,7 @@
 		<a-row :gutter="8">
 			<!-- 左侧组织树 -->
 			<a-col :span="5">
-				<a-card size="small" :loading="cardLoading" bodyStyle="padding-left:5px;padding-right:5px;">
+				<a-card size="small" :loading="cardLoading" :bodyStyle="{paddingLeft:'5px', paddingRight:'5px'}">
 					<a-tree
 						v-if="treeData.length > 0"
 						v-model:expandedKeys="defaultExpandedKeys"
