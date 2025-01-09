@@ -12,10 +12,10 @@
 			<a-button type="primary" size="small" @click="onClose"><CloseOutlined /></a-button>
 		</template>
 		<!-- 页面内容 -->
-		<a-row :gutter="20">
-			<a-col :span="12">
-				<!-- 上方查询框 -->
+		<a-row :gutter="8">
+			<a-col :span="24">
 				<a-card size="small" title="全部角色列表">
+					<!-- 上方查询框 -->
 					<a-form ref="searchFormRef" :model="searchFormData">
 						<a-row :gutter="16">
 							<a-col :span="8">
@@ -30,36 +30,17 @@
 								</a-space>
 							</a-col>
 							<a-col :span="8" style="text-align: right">
-								<a-form-item>
-									<a-button type="dashed" :icon="h(PlusOutlined)" @click="addRows" style="color: #52C41AFF; border-color: #52C41AFF">添加</a-button>
-								</a-form-item>
+								<a-button type="dashed" @click="addRows" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加</a-button>
 							</a-col>
 						</a-row>
 					</a-form>
+					<!-- 数据列表 -->
 					<a-table size="small"
 							 ref="tableRef"
 							 :columns="columns"
 							 :data-source="tableData"
 							 :row-key="(record) => record.code"
 							 :row-selection="rowSelection"
-							 bordered>
-					</a-table>
-				</a-card>
-			</a-col>
-			<a-col :span="12">
-				<!-- 上方查询框 -->
-				<a-card size="small" title="已授权角色列表">
-					<a-form  style="text-align: right">
-						<a-form-item>
-							<a-button type="dashed" danger @click="delRows" :icon="h(MinusOutlined)">移除</a-button>
-						</a-form-item>
-					</a-form>
-					<a-table size="small"
-							 ref="toTableRef"
-							 :columns="toColumns"
-							 :data-source="toTableData"
-							 :row-key="(record) => record.code"
-							 :row-selection="toRowSelection"
 							 bordered>
 					</a-table>
 				</a-card>
