@@ -197,8 +197,12 @@
 	// 验证并提交数据
 	const onSubmit = () => {
 		submitLoading.value = true
-		let codeList = []
-		postApi.postAddRole({ "code": group.value.code, "codeSet": codeList }).then(() => {
+		if (selectedRowKeys.value.length < 1) {
+			message.warning('请选择一条或多条数据')
+			return
+		}
+		let data = { code: group.value.code, codeSet: selectedRowKeys.value }
+		postApi.postAddRole(data).then(() => {
 			emit('successful')
 			onClose()
 		}).finally(() => {
@@ -214,9 +218,5 @@
 <style scoped>
 	.ant-form-item {
 		margin-bottom: 10px !important;
-	}
-	.selectorTree {
-		max-height: 600px;
-		overflow: auto;
 	}
 </style>
