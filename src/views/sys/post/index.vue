@@ -81,7 +81,7 @@
 								</a-tooltip>
 								<a-divider type="vertical" />
 								<a-tooltip title="授权用户">
-									<a style="color:#53C61D;" @click="groupUserRef.onOpen(record, treeData)"><UserAddOutlined /></a>
+									<a style="color:#53C61D;" @click="postUserRef.onOpen(record, treeData)"><UserAddOutlined /></a>
 								</a-tooltip>
 								<a-divider type="vertical" />
 								<a-tooltip title="编辑">
@@ -104,6 +104,7 @@
 	<AddForm ref="addFormRef" @successful="tableRef.refresh()" />
 	<GroupUser ref="groupUserRef" @successful="handleSuccess()" />
 	<GroupRole ref="groupRoleRef" @successful="handleSuccess()" />
+	<PostUser ref="postUserRef" @successful="handleSuccess()" />
 </template>
 
 <script setup>
@@ -116,6 +117,7 @@
 	import EditForm from './editForm.vue'
 	import GroupUser from './groupUser.vue'
 	import GroupRole from './groupRole.vue'
+	import PostUser from './postUser.vue'
 
 	const columns = [
 		{
@@ -182,6 +184,7 @@
 	const addFormRef = ref()
 	const editFormRef = ref()
 	const groupUserRef = ref()
+	const postUserRef = ref()
 	const groupRoleRef = ref()
 	const searchFormRef = ref()
 	const searchFormData = ref({})
