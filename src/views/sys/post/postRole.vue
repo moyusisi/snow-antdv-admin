@@ -45,19 +45,19 @@
 							 :row-key="(record) => record.code"
 							 :row-selection="rowSelection"
 							 bordered>
-							<template #bodyCell="{ column, record }">
-								<template v-if="column.dataIndex === 'code'">
-									<a-tag v-if="record.code" :bordered="false">{{ record.code }}</a-tag>
-								</template>
-								<template v-if="column.dataIndex === 'status'">
-									<a-tag v-if="record.status === 0" color="green">正常</a-tag>
-									<a-tag v-else>已停用</a-tag>
-								</template>
-								<template v-if="column.dataIndex === 'action'">
-									<a-space>
-									</a-space>
-								</template>
+						<template #bodyCell="{ column, record }">
+							<template v-if="column.dataIndex === 'code'">
+								<a-tag v-if="record.code" :bordered="false">{{ record.code }}</a-tag>
 							</template>
+							<template v-if="column.dataIndex === 'status'">
+								<a-tag v-if="record.status === 0" color="green">正常</a-tag>
+								<a-tag v-else>已停用</a-tag>
+							</template>
+							<template v-if="column.dataIndex === 'action'">
+								<a-space>
+								</a-space>
+							</template>
+						</template>
 					</a-table>
 				</a-card>
 			</a-col>
