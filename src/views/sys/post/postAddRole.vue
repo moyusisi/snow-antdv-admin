@@ -42,6 +42,19 @@
 							 :row-key="(record) => record.code"
 							 :row-selection="rowSelection"
 							 bordered>
+						<template #bodyCell="{ column, record }">
+							<template v-if="column.dataIndex === 'code'">
+								<a-tag v-if="record.code" :bordered="false">{{ record.code }}</a-tag>
+							</template>
+							<template v-if="column.dataIndex === 'status'">
+								<a-tag v-if="record.status === 0" color="green">正常</a-tag>
+								<a-tag v-else>已停用</a-tag>
+							</template>
+							<template v-if="column.dataIndex === 'action'">
+								<a-space>
+								</a-space>
+							</template>
+						</template>
 					</a-table>
 				</a-card>
 			</a-col>
@@ -77,22 +90,32 @@
 			title: '唯一编码',
 			dataIndex: 'code',
 			resizable: true,
-			width: 100
-		}
-	]
-	// 右边结果数据表的字段
-	const toColumns = [
+			width: 200
+		},
 		{
-			title: '角色名称',
-			dataIndex: 'name',
-			resizable: true,
+			title: '状态',
+			dataIndex: 'status',
+			align: 'center',
 			width: 100
 		},
 		{
-			title: '唯一编码',
-			dataIndex: 'code',
+			title: '创建时间',
+			dataIndex: 'createTime',
+			align: 'center',
+			width: 160
+		},
+		{
+			title: '更新时间',
+			dataIndex: 'updateTime',
+			align: 'center',
+			width: 160
+		},
+		{
+			title: '操作',
+			dataIndex: 'action',
+			align: 'center',
 			resizable: true,
-			width: 100
+			width: 150
 		}
 	]
 
@@ -110,30 +133,16 @@
 	const tableData = ref([])
 	// 已选中的菜单(loadTableData中会更新)
 	const selectedRowKeys = ref([])
-	const selectedRecords = ref([])
 	// 列表选择配置
 	const rowSelection = ref({
 		checkStrictly: false,
 		selectedRowKeys: selectedRowKeys,
 		onChange: (selectedKeys, selectedRows) => {
 			selectedRowKeys.value = selectedKeys
-			selectedRecords.value = selectedRows
 			console.log('onChange,selectedKeys:', selectedKeys);
 		}
 	});
 
-	// 右侧table数据
-	const toTableRef = ref()
-	const toTableData = ref([])
-	const toSelectedRowKeys = ref([])
-	const toRowSelection = ref({
-		checkStrictly: false,
-		selectedRowKeys: toSelectedRowKeys,
-		onChange: (selectedKeys, selectedRows) => {
-			toSelectedRowKeys.value = selectedKeys
-			console.log('onChange,selectedKeys:', selectedKeys);
-		}
-	});
 	const title = computed(() => {
 		return group.value.name + "-添加角色"
 	})
@@ -156,10 +165,6 @@
 		// table数据清空
 		tableData.value = []
 		selectedRowKeys.value = []
-		selectedRecords.value = []
-		// 右边table清空
-		toTableData.value = []
-		toSelectedRowKeys.value = []
 		// 关闭
 		visible.value = false
 	}
@@ -167,15 +172,9 @@
 	// 表格查询 返回 Promise 对象
 	const loadTableData = async () => {
 		selectedRowKeys.value = []
-		selectedRecords.value = []
-		// const res = await roleApi.roleList(searchFormData.value)
-		// tableData.value = res
-	}
-	// 表格查询 返回 Promise 对象
-	const loadToTableData = async () => {
-		// 查询指定岗位已包含的角色
-		const res = await postApi.postRoleList({ "code": group.value.code })
-		toTableData.value = res
+		let param = Object.assign({ "code": group.value.code }, searchFormData.value)
+		const res = await roleApi.roleList(param)
+		tableData.value = res
 	}
 	// 重置
 	const reset = () => {
@@ -188,7 +187,7 @@
 			message.warning('请选择一条或多条数据')
 			return
 		}
-		let allList = toTableData.value.concat(selectedRecords.value)
+		let allList = []
 		let list = []
 		for (let item1 of allList) {
 			let flag = true
@@ -202,35 +201,12 @@
 			}
 		}
 		selectedRowKeys.value = []
-		selectedRecords.value = []
-		toTableData.value = list
 	}
-	// 删减记录
-	const delRows = () => {
-		if (toSelectedRowKeys.value.length < 1) {
-			message.warning('请选择一条或多条数据')
-			return
-		}
-		let list = []
-		for (let item of toTableData.value) {
-			let flag = true
-			if (toSelectedRowKeys.value.indexOf(item.code) > -1) {
-				flag = false
-			}
-			if (flag) {
-				list.push(item)
-			}
-		}
-		toSelectedRowKeys.value = []
-		toTableData.value = list
-	}
+
 	// 验证并提交数据
 	const onSubmit = () => {
 		submitLoading.value = true
 		let codeList = []
-		for (let item of toTableData.value) {
-			codeList.push(item.code)
-		}
 		postApi.postAddRole({ "code": group.value.code, "codeSet": codeList }).then(() => {
 			emit('successful')
 			onClose()
