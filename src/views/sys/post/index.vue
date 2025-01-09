@@ -102,7 +102,6 @@
 	</a-row>
 	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />
 	<AddForm ref="addFormRef" @successful="tableRef.refresh()" />
-	<GroupUser ref="groupUserRef" @successful="handleSuccess()" />
 	<PostRole ref="postRoleRef" @successful="handleSuccess()" />
 	<PostUser ref="postUserRef" @successful="handleSuccess()" />
 </template>
@@ -115,7 +114,6 @@
 	import { PlusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
-	import GroupUser from './groupUser.vue'
 	import PostRole from './postRole.vue'
 	import PostUser from './postUser.vue'
 

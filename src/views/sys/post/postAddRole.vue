@@ -12,10 +12,10 @@
 			<a-button type="primary" size="small" @click="onClose"><CloseOutlined /></a-button>
 		</template>
 		<!-- 页面内容 -->
-		<a-row :gutter="8">
-			<a-col :span="24">
-				<a-card size="small">
-					<!-- 上方查询框 -->
+		<a-row :gutter="20">
+			<a-col :span="12">
+				<!-- 上方查询框 -->
+				<a-card size="small" title="全部角色列表">
 					<a-form ref="searchFormRef" :model="searchFormData">
 						<a-row :gutter="16">
 							<a-col :span="8">
@@ -30,14 +30,12 @@
 								</a-space>
 							</a-col>
 							<a-col :span="8" style="text-align: right">
-								<a-space>
-									<a-button type="dashed" @click="postAddRoleRef.onOpen(record)" :icon="h(PlusOutlined)" style="color: #52C41AFF; border-color: #52C41AFF">添加角色</a-button>
-									<a-button type="dashed" danger @click="delRows" :icon="h(MinusOutlined)">移除角色</a-button>
-								</a-space>
+								<a-form-item>
+									<a-button type="dashed" :icon="h(PlusOutlined)" @click="addRows" style="color: #52C41AFF; border-color: #52C41AFF">添加</a-button>
+								</a-form-item>
 							</a-col>
 						</a-row>
 					</a-form>
-					<!-- 数据列表 -->
 					<a-table size="small"
 							 ref="tableRef"
 							 :columns="columns"
@@ -45,38 +43,46 @@
 							 :row-key="(record) => record.code"
 							 :row-selection="rowSelection"
 							 bordered>
-							<template #bodyCell="{ column, record }">
-								<template v-if="column.dataIndex === 'code'">
-									<a-tag v-if="record.code" :bordered="false">{{ record.code }}</a-tag>
-								</template>
-								<template v-if="column.dataIndex === 'status'">
-									<a-tag v-if="record.status === 0" color="green">正常</a-tag>
-									<a-tag v-else>已停用</a-tag>
-								</template>
-								<template v-if="column.dataIndex === 'action'">
-									<a-space>
-									</a-space>
-								</template>
-							</template>
+					</a-table>
+				</a-card>
+			</a-col>
+			<a-col :span="12">
+				<!-- 上方查询框 -->
+				<a-card size="small" title="已授权角色列表">
+					<a-form  style="text-align: right">
+						<a-form-item>
+							<a-button type="dashed" danger @click="delRows" :icon="h(MinusOutlined)">移除</a-button>
+						</a-form-item>
+					</a-form>
+					<a-table size="small"
+							 ref="toTableRef"
+							 :columns="toColumns"
+							 :data-source="toTableData"
+							 :row-key="(record) => record.code"
+							 :row-selection="toRowSelection"
+							 bordered>
 					</a-table>
 				</a-card>
 			</a-col>
 		</a-row>
-
-		<!-- 弹窗 -->
-		<PostAddRole ref="postAddRoleRef" @successful="handleSuccess()" />
-
+		<!-- 底部内容 -->
+		<template #footer>
+			<a-space>
+				<a-button @click="onClose">关闭</a-button>
+				<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
+			</a-space>
+		</template>
 	</a-drawer>
 </template>
 
 <script setup>
 	import postApi from '@/api/sys/postApi'
+	import roleApi from "@/api/sys/roleApi"
 
 	import { useGlobalStore } from "@/store";
 	import { h } from "vue";
 	import { PlusOutlined, MinusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
 	import { message } from "ant-design-vue";
-	import PostAddRole from './postAddRole.vue'
 
 	const store = useGlobalStore()
 	const columns = [
@@ -90,32 +96,22 @@
 			title: '唯一编码',
 			dataIndex: 'code',
 			resizable: true,
-			width: 200
-		},
+			width: 100
+		}
+	]
+	// 右边结果数据表的字段
+	const toColumns = [
 		{
-			title: '状态',
-			dataIndex: 'status',
-			align: 'center',
+			title: '角色名称',
+			dataIndex: 'name',
+			resizable: true,
 			width: 100
 		},
 		{
-			title: '创建时间',
-			dataIndex: 'createTime',
-			align: 'center',
-			width: 160
-		},
-		{
-			title: '更新时间',
-			dataIndex: 'updateTime',
-			align: 'center',
-			width: 160
-		},
-		{
-			title: '操作',
-			dataIndex: 'action',
-			align: 'center',
+			title: '唯一编码',
+			dataIndex: 'code',
 			resizable: true,
-			width: 150
+			width: 100
 		}
 	]
 
@@ -123,7 +119,7 @@
 	const visible = ref(false)
 	const group = ref()
 	const emit = defineEmits({ successful: null })
-	const postAddRoleRef = ref()
+	const submitLoading = ref(false)
 	// 表单数据
 	const searchFormRef = ref()
 	const searchFormData = ref({})
@@ -133,18 +129,32 @@
 	const tableData = ref([])
 	// 已选中的菜单(loadTableData中会更新)
 	const selectedRowKeys = ref([])
+	const selectedRecords = ref([])
 	// 列表选择配置
 	const rowSelection = ref({
 		checkStrictly: false,
 		selectedRowKeys: selectedRowKeys,
 		onChange: (selectedKeys, selectedRows) => {
 			selectedRowKeys.value = selectedKeys
+			selectedRecords.value = selectedRows
 			console.log('onChange,selectedKeys:', selectedKeys);
 		}
 	});
 
+	// 右侧table数据
+	const toTableRef = ref()
+	const toTableData = ref([])
+	const toSelectedRowKeys = ref([])
+	const toRowSelection = ref({
+		checkStrictly: false,
+		selectedRowKeys: toSelectedRowKeys,
+		onChange: (selectedKeys, selectedRows) => {
+			toSelectedRowKeys.value = selectedKeys
+			console.log('onChange,selectedKeys:', selectedKeys);
+		}
+	});
 	const title = computed(() => {
-		return group.value.name + "-已授权角色列表"
+		return group.value.name + "-添加角色"
 	})
 	// 抽屉宽度
 	const drawerWidth = computed(() => {
@@ -157,6 +167,7 @@
 		group.value = record;
 		// 加载数据
 		loadTableData()
+		loadToTableData()
 	}
 	// 关闭抽屉
 	const onClose = () => {
@@ -165,6 +176,10 @@
 		// table数据清空
 		tableData.value = []
 		selectedRowKeys.value = []
+		selectedRecords.value = []
+		// 右边table清空
+		toTableData.value = []
+		toSelectedRowKeys.value = []
 		// 关闭
 		visible.value = false
 	}
@@ -172,31 +187,76 @@
 	// 表格查询 返回 Promise 对象
 	const loadTableData = async () => {
 		selectedRowKeys.value = []
-		let param = Object.assign({ "code": group.value.code }, searchFormData.value)
-		const res = await postApi.postRoleList(param)
+		selectedRecords.value = []
+		const res = await roleApi.roleList(searchFormData.value)
 		tableData.value = res
+	}
+	// 表格查询 返回 Promise 对象
+	const loadToTableData = async () => {
+		// 查询指定岗位已包含的角色
+		const res = await postApi.postRoleList({ "code": group.value.code })
+		toTableData.value = res
 	}
 	// 重置
 	const reset = () => {
 		searchFormData.value = {}
 		loadTableData()
 	}
-	// 删减记录
-	const delRows = () => {
+	// 添加记录
+	const addRows = () => {
 		if (selectedRowKeys.value.length < 1) {
 			message.warning('请选择一条或多条数据')
 			return
 		}
-		let data = { code: group.value.code, codeSet: selectedRowKeys.value }
-		postApi.postDeleteRole(data).then(() => {
-			tableRef.value.clearRefreshSelected()
-		})
-		// 删掉之后重新加载数据
-		loadTableData()
+		let allList = toTableData.value.concat(selectedRecords.value)
+		let list = []
+		for (let item1 of allList) {
+			let flag = true
+			for (let item2 of list) {
+				if (item1.code === item2.code) {
+					flag = false
+				}
+			}
+			if (flag) {
+				list.push(item1)
+			}
+		}
+		selectedRowKeys.value = []
+		selectedRecords.value = []
+		toTableData.value = list
 	}
-	// 成功回调
-	const handleSuccess = () => {
-		loadTableData()
+	// 删减记录
+	const delRows = () => {
+		if (toSelectedRowKeys.value.length < 1) {
+			message.warning('请选择一条或多条数据')
+			return
+		}
+		let list = []
+		for (let item of toTableData.value) {
+			let flag = true
+			if (toSelectedRowKeys.value.indexOf(item.code) > -1) {
+				flag = false
+			}
+			if (flag) {
+				list.push(item)
+			}
+		}
+		toSelectedRowKeys.value = []
+		toTableData.value = list
+	}
+	// 验证并提交数据
+	const onSubmit = () => {
+		submitLoading.value = true
+		let codeList = []
+		for (let item of toTableData.value) {
+			codeList.push(item.code)
+		}
+		postApi.postAddRole({ "code": group.value.code, "codeSet": codeList }).then(() => {
+			emit('successful')
+			onClose()
+		}).finally(() => {
+			submitLoading.value = false
+		})
 	}
 	// 调用这个函数将子组件的一些数据和方法暴露出去
 	defineExpose({
