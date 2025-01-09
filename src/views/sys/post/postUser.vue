@@ -65,16 +65,13 @@
 </template>
 
 <script setup>
-	import orgApi from '@/api/sys/orgApi'
 	import postApi from '@/api/sys/postApi'
 
 	import { globalStore } from "@/store";
 	import { Empty } from "ant-design-vue";
 	import { h } from "vue";
 	import { PlusOutlined, MinusOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
-	import roleApi from "@/api/sys/roleApi";
 
-	const store = globalStore()
 	const columns = [
 		{
 			title: '姓名',
@@ -85,7 +82,7 @@
 		},
 		{
 			title: '账号',
-			dataIndex: 'account',
+			dataIndex: 'code',
 			align: 'center',
 			resizable: true,
 			width: 100
@@ -96,23 +93,6 @@
 			resizable: true,
 			width: 200,
 			ellipsis: true
-		}
-	]
-	// 右边结果数据表的字段
-	const toColumns = [
-		{
-			title: '姓名',
-			dataIndex: 'name',
-			align: 'center',
-			resizable: true,
-			width: 100
-		},
-		{
-			title: '账号',
-			dataIndex: 'account',
-			align: 'center',
-			resizable: true,
-			width: 100
 		}
 	]
 
@@ -164,16 +144,7 @@
 		treeData.value = tradeData
 		defaultExpandedKeys.value = [tradeData[0]?.code]
 		group.value = record;
-
-		// // 获取组织信息
-		// postApi.postDetail({ code: record.code }).then((res) => {
-		// 	formData.value = res
-		// })
-		// // 获取组织树并加入顶级节点
-		// orgApi.orgTree({}).then((res) => {
-		// 	treeData.value = res
-		// 	defaultExpandedKeys.value = [res[0]?.code]
-		// })
+		loadTableData()
 	}
 	// 关闭抽屉
 	const onClose = () => {
