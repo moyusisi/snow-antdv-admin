@@ -174,7 +174,7 @@
 	})
 	// 抽屉宽度
 	const drawerWidth = computed(() => {
-		return store.menuIsCollapse ? `calc(100% - 80px)` : `calc(100% - 210px)`
+		return `calc(100% - 80px)`
 	})
 
 	// 打开抽屉
@@ -183,7 +183,7 @@
 		defaultExpandedKeys.value = [tree[0]?.code]
 		group.value = record;
 		// 加载数据
-		loadTableData()
+		// loadTableData()
 		visible.value = true
 	}
 	// 关闭抽屉
