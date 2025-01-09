@@ -27,8 +27,8 @@
 				</a-card>
 			</a-col>
 			<a-col :span="19">
-				<!-- 上方查询框 -->
 				<a-card size="small">
+					<!-- 上方查询框 -->
 					<a-form ref="searchFormRef" :model="searchFormData">
 						<a-row :gutter="16">
 							<a-col :span="8">
