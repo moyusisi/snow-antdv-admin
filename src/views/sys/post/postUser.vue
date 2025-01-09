@@ -54,7 +54,7 @@
 							 ref="tableRef"
 							 :columns="columns"
 							 :data-source="tableData"
-							 :row-key="(record) => record.code"
+							 :row-key="(record) => record.account"
 							 :row-selection="rowSelection"
 							 bordered>
 						<template #bodyCell="{ column, record }">
