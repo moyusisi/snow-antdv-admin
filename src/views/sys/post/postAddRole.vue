@@ -63,7 +63,7 @@
 		<template #footer>
 			<a-space>
 				<a-button @click="onClose">关闭</a-button>
-				<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>
+<!--				<a-button type="primary" :loading="submitLoading" @click="onSubmit">保存</a-button>-->
 			</a-space>
 		</template>
 	</a-drawer>
@@ -189,6 +189,7 @@
 		}
 		let data = { code: group.value.code, codeSet: selectedRowKeys.value }
 		postApi.postAddRole(data).then(() => {
+			emit('successful')
 			// 添加之后重新加载数据
 			loadTableData()
 		})
