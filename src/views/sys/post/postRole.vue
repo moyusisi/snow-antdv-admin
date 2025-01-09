@@ -122,6 +122,7 @@
 	// 默认是关闭状态
 	const visible = ref(false)
 	const group = ref()
+	const title = ref()
 	const emit = defineEmits({ successful: null })
 	const postAddRoleRef = ref()
 	// 表单数据
@@ -143,9 +144,6 @@
 		}
 	});
 
-	const title = computed(() => {
-		return group.value.name + "-已授权角色列表"
-	})
 	// 抽屉宽度
 	const drawerWidth = computed(() => {
 		return store.menuIsCollapse ? `calc(100% - 80px)` : `calc(100% - 210px)`
@@ -153,10 +151,11 @@
 
 	// 打开抽屉
 	const onOpen = (record) => {
-		visible.value = true
 		group.value = record;
+		title.value = record.name + "-已授权角色列表"
 		// 加载数据
 		loadTableData()
+		visible.value = true
 	}
 	// 关闭抽屉
 	const onClose = () => {
@@ -189,10 +188,9 @@
 		}
 		let data = { code: group.value.code, codeSet: selectedRowKeys.value }
 		postApi.postDeleteRole(data).then(() => {
-			tableRef.value.clearRefreshSelected()
+			// 删掉之后重新加载数据
+			loadTableData()
 		})
-		// 删掉之后重新加载数据
-		loadTableData()
 	}
 	// 成功回调
 	const handleSuccess = () => {
