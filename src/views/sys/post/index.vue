@@ -77,7 +77,7 @@
 						<template v-if="column.dataIndex === 'action'">
 							<a-space>
 								<a-tooltip title="授权角色">
-									<a style="color:#53C61D;" @click="groupRoleRef.onOpen(record)"><UnorderedListOutlined /></a>
+									<a style="color:#53C61D;" @click="postRoleRef.onOpen(record)"><UnorderedListOutlined /></a>
 								</a-tooltip>
 								<a-divider type="vertical" />
 								<a-tooltip title="授权用户">
@@ -103,7 +103,7 @@
 	<EditForm ref="editFormRef" @successful="tableRef.refresh()" />
 	<AddForm ref="addFormRef" @successful="tableRef.refresh()" />
 	<GroupUser ref="groupUserRef" @successful="handleSuccess()" />
-	<GroupRole ref="groupRoleRef" @successful="handleSuccess()" />
+	<PostRole ref="postRoleRef" @successful="handleSuccess()" />
 	<PostUser ref="postUserRef" @successful="handleSuccess()" />
 </template>
 
@@ -116,7 +116,7 @@
 	import AddForm from './addForm.vue'
 	import EditForm from './editForm.vue'
 	import GroupUser from './groupUser.vue'
-	import GroupRole from './groupRole.vue'
+	import PostRole from './postRole.vue'
 	import PostUser from './postUser.vue'
 
 	const columns = [
@@ -185,7 +185,7 @@
 	const editFormRef = ref()
 	const groupUserRef = ref()
 	const postUserRef = ref()
-	const groupRoleRef = ref()
+	const postRoleRef = ref()
 	const searchFormRef = ref()
 	const searchFormData = ref({})
 	// 默认展开的节点
